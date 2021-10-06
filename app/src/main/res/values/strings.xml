@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">پوست و مو</string>
+    <string name="search_hint">جستجو...</string>
+    <string name="username_hint">نام کاربری</string>
+    <string name="password_hint">رمز عبور</string>
+    <string name="login">ورود</string>
+    <string name="close">بستن</string>
+    <string name="description">توضیحات</string>
+    <string name="ip_address_hint">لطفا آی پی را وارد نمایید</string>
+    <string name="port_hint">لطفا پورت را وارد نمایید</string>
+    <string name="center_name_hint">لطفا نام مرکز را وارد نمایید</string>
+    <string name="no_patient">نتیجه ای یافت نشد</string>
+    <string name="success_delete_attachment_message">فایل با موفقیت حذف شد</string>
+    <string name="success_attach_message">افزودن فایل موفقیت آمیز بود</string>
+    <string name="timeout_exception_happen_message">اتصال به اینترنت با خطا مواجه شد</string>
+    <string name="no_exist_server_message">سرور موجود نمی باشد</string>
+    <string name="not_selected_file_message">هنوز فایلی انتخاب نشده است</string>
+    <string name="camera_access_denied_message">اجازه دسترسی به دوربین داده نشد</string>
+    <string name="storage_access_denied_message">اجازه دسترسی به حافظه داده نشد</string>
+    <string name="question_delete_file_message">آیا می خواهید فایل موردنظر را حذف نمایید؟</string>
+    <string name="logout_title">خروج از حساب کاربری</string>
+    <string name="see_attachments_title">مشاهده مستندات</string>
+</resources>
