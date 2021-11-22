@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -286,99 +285,76 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private void handleEvents() {
-        binding.fabAddNewFile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent starter = AttachmentContainerActivity.start(getContext(), sickID);
-                startActivity(starter);
-            }
+        binding.fabAddNewFile.setOnClickListener(view -> {
+            Intent starter = AttachmentContainerActivity.start(getContext(), sickID);
+            startActivity(starter);
         });
     }
 
     private void setupObserver() {
-        viewModel.getPatientAttachmentsResultSingleLiveEvent().observe(getViewLifecycleOwner(), new Observer<AttachResult>() {
-            @Override
-            public void onChanged(AttachResult attachResult) {
-                if (attachResult != null) {
-                    if (attachResult.getErrorCode().equals("0")) {
-                        showAttachments(attachResult);
-                    } else {
-                        binding.progressBarLoading.setVisibility(View.GONE);
-                        handleError(attachResult.getError());
-                    }
-                }
-            }
-        });
-
-        viewModel.getAttachInfoResultSingleLiveEvent().observe(getViewLifecycleOwner(), new Observer<AttachResult>() {
-            @Override
-            public void onChanged(AttachResult attachResult) {
-                if (attachResult != null) {
-                    if (attachResult.getErrorCode().equals("0")) {
-                        if (attachResult.getAttachs().length != 0) {
-                            AttachResult.AttachInfo attachInfo = attachResult.getAttachs()[0];
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        String filePath = writeToExternalStorage(attachInfo);
-                                        viewModel.getFinishWriteToStorage().postValue(filePath);
-                                    } catch (IOException e) {
-                                        Log.e(TAG, e.getMessage());
-                                    }
-                                }
-                            }).start();
-                        }
-                    } else {
-                        binding.progressBarLoading.setVisibility(View.GONE);
-                        handleError(attachResult.getError());
-                    }
-                }
-            }
-        });
-
-        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String message) {
-                binding.progressBarLoading.setVisibility(View.GONE);
-                handleError(message);
-            }
-        });
-
-        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String message) {
-                binding.progressBarLoading.setVisibility(View.GONE);
-                handleError(message);
-            }
-        });
-
-        viewModel.getFinishWriteToStorage().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String filePath) {
-                if (!filePath.isEmpty()) {
-                    binding.progressBarLoading.setVisibility(View.GONE);
-                    binding.recyclerViewAttachmentFile.setVisibility(View.VISIBLE);
-                    setupAdapter();
-                }
-                index++;
-                if (index < attachIDList.size()) {
-                    fetchAttachInfo(attachIDList.get(index));
+        viewModel.getPatientAttachmentsResultSingleLiveEvent().observe(getViewLifecycleOwner(), attachResult -> {
+            if (attachResult != null) {
+                if (attachResult.getErrorCode().equals("0")) {
+                    showAttachments(attachResult);
                 } else {
                     binding.progressBarLoading.setVisibility(View.GONE);
+                    handleError(attachResult.getError());
                 }
             }
         });
 
-        viewModel.getPhotoClicked().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String filePath) {
-                File file = new File(filePath);
-                String fileName = file.getName().replace(".jpg", "");
-                int attachID = Integer.parseInt(fileName);
-                Intent starter = FullScreenPhotoContainerActivity.start(getContext(), filePath, attachID);
-                startActivity(starter);
+        viewModel.getAttachInfoResultSingleLiveEvent().observe(getViewLifecycleOwner(), attachResult -> {
+            if (attachResult != null) {
+                if (attachResult.getErrorCode().equals("0")) {
+                    if (attachResult.getAttachs().length != 0) {
+                        AttachResult.AttachInfo attachInfo = attachResult.getAttachs()[0];
+                        new Thread(() -> {
+                            try {
+                                Log.d("Arezoo", "qqqqqq");
+                                String filePath = writeToExternalStorage(attachInfo);
+                                viewModel.getFinishWriteToStorage().postValue(filePath);
+                            } catch (IOException e) {
+                                Log.e(TAG, e.getMessage());
+                            }
+                        }).start();
+                    }
+                } else {
+                    binding.progressBarLoading.setVisibility(View.GONE);
+                    handleError(attachResult.getError());
+                }
             }
+        });
+
+        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+            binding.progressBarLoading.setVisibility(View.GONE);
+            handleError(message);
+        });
+
+        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+            binding.progressBarLoading.setVisibility(View.GONE);
+            handleError(message);
+        });
+
+        viewModel.getFinishWriteToStorage().observe(getViewLifecycleOwner(), filePath -> {
+            if (!filePath.isEmpty()) {
+                binding.progressBarLoading.setVisibility(View.GONE);
+                binding.recyclerViewAttachmentFile.setVisibility(View.VISIBLE);
+                setupAdapter();
+            }
+            index++;
+            if (index < attachIDList.size()) {
+                fetchAttachInfo(attachIDList.get(index));
+            } else {
+                binding.progressBarLoading.setVisibility(View.GONE);
+            }
+        });
+
+        viewModel.getPhotoClicked().observe(getViewLifecycleOwner(), filePath -> {
+            File file = new File(filePath);
+            String fileName = file.getName().replace(".jpg", "");
+            int attachID = Integer.parseInt(fileName);
+            Intent starter = FullScreenPhotoContainerActivity.start(getContext(), filePath, attachID);
+            startActivity(starter);
         });
     }
 }

@@ -22,9 +22,9 @@
         <activity
             android:name=".ui.activity.AttachmentContainerActivity"
             android:screenOrientation="portrait" />
-        <activity
+        <!--<activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
+            android:theme="@style/Base.Theme.AppCompat" />-->
         <activity
             android:name=".ui.activity.PhotoGalleryContainerActivity"
             android:screenOrientation="portrait" />
@@ -51,5 +51,11 @@
                 android:resource="@xml/file_path" />
         </provider>
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
 
 </manifest>

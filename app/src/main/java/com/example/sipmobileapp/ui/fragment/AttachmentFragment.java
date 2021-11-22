@@ -169,7 +169,7 @@ public class AttachmentFragment extends Fragment {
     }
 
     private void requestCameraPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
+        requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
     }
 
     private void openCamera() {
@@ -221,26 +221,23 @@ public class AttachmentFragment extends Fragment {
     }
 
     private void setupObserver() {
-        viewModel.getAttachResultSingleLiveEvent().observe(getViewLifecycleOwner(), new Observer<AttachResult>() {
-            @Override
-            public void onChanged(AttachResult attachResult) {
-                binding.progressBarLoading.setVisibility(View.GONE);
-                binding.ivSend.setEnabled(true);
-                binding.ivCamera.setEnabled(true);
-                binding.edTxtDescription.setEnabled(true);
-                binding.ivRotate.setEnabled(true);
-                binding.ivAttach.setEnabled(true);
+        viewModel.getAttachResultSingleLiveEvent().observe(getViewLifecycleOwner(), attachResult -> {
+            binding.progressBarLoading.setVisibility(View.GONE);
+            binding.ivSend.setEnabled(true);
+            binding.ivCamera.setEnabled(true);
+            binding.edTxtDescription.setEnabled(true);
+            binding.ivRotate.setEnabled(true);
+            binding.ivAttach.setEnabled(true);
 
-                if (attachResult != null) {
-                    if (attachResult.getErrorCode().equals("0")) {
-                        if (attachResult.getAttachs().length != 0) {
-                            int attachID = attachResult.getAttachs()[0].getAttachID();
-                            EventBus.getDefault().postSticky(new RefreshEvent(attachID));
-                        }
-                        showSuccessDialog(getString(R.string.success_attach_message));
-                    } else {
-                        handleError(attachResult.getError());
+            if (attachResult != null) {
+                if (attachResult.getErrorCode().equals("0")) {
+                    if (attachResult.getAttachs().length != 0) {
+                        int attachID = attachResult.getAttachs()[0].getAttachID();
+                        EventBus.getDefault().postSticky(new RefreshEvent(attachID));
                     }
+                    showSuccessDialog(getString(R.string.success_attach_message));
+                } else {
+                    handleError(attachResult.getError());
                 }
             }
         });
@@ -369,12 +366,7 @@ public class AttachmentFragment extends Fragment {
                     attachParameter.setAttachTypeID(1);
                     attachParameter.setImageTypeID(2);
 
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            attach(attachParameter);
-                        }
-                    }).start();
+                    new Thread(() -> attach(attachParameter)).start();
                 } else {
                     handleError(getString(R.string.not_selected_file_message));
                 }
