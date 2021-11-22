@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -69,25 +68,20 @@ public class AttachAgainDialogFragment extends DialogFragment {
     }
 
     private void initViews() {
+        assert getArguments() != null;
         String message = getArguments().getString(ARGS_MESSAGE);
         binding.txtQuestion.setText(message);
     }
 
     private void handleEvents() {
-        binding.btnNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewModel.getNoAttachAgain().setValue(true);
-                dismiss();
-            }
+        binding.btnNo.setOnClickListener(view -> {
+            viewModel.getNoAttachAgain().setValue(true);
+            dismiss();
         });
 
-        binding.btnYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewModel.getYesAttachAgain().setValue(true);
-                dismiss();
-            }
+        binding.btnYes.setOnClickListener(view -> {
+            viewModel.getYesAttachAgain().setValue(true);
+            dismiss();
         });
     }
 }

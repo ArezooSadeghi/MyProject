@@ -16,8 +16,7 @@ public class AttachResultDeserializer implements JsonDeserializer<AttachResult> 
 
         JsonObject bodyObject = json.getAsJsonObject();
         Gson gson = new Gson();
-        AttachResult attachResult = gson.fromJson(bodyObject.toString(), AttachResult.class);
 
-        return attachResult;
+        return gson.fromJson(bodyObject.toString(), AttachResult.class);
     }
 }

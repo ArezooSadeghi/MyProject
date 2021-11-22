@@ -1,10 +1,13 @@
 package com.example.sipmobileapp.repository;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.database.SipMobileAppDBHelper;
@@ -33,6 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SipMobileAppRepository {
+    @SuppressLint("StaticFieldLeak")
     public static SipMobileAppRepository sInstance;
     private Context context;
     private SQLiteDatabase mDatabase;
@@ -206,19 +210,20 @@ public class SipMobileAppRepository {
 
     public void deleteServerData(ServerData serverData) {
         String whereClause = "centerName=?";
-        String whereArgs[] = {serverData.getCenterName()};
+        String[] whereArgs = {serverData.getCenterName()};
         mDatabase.delete(SipMobileAppSchema.ServerDataTable.NAME, whereClause, whereArgs);
     }
 
     public void login(String path, UserResult.UserParameter userParameter) {
         sipMobileAppService.login(path, userParameter).enqueue(new Callback<UserResult>() {
             @Override
-            public void onResponse(Call<UserResult> call, Response<UserResult> response) {
+            public void onResponse(@NonNull Call<UserResult> call, @NonNull Response<UserResult> response) {
                 if (response.isSuccessful()) {
                     loginResultSingleLiveEvent.setValue(response.body());
                 } else {
                     try {
                         Gson gson = new Gson();
+                        assert response.errorBody() != null;
                         UserResult userResult = gson.fromJson(response.errorBody().string(), UserResult.class);
                         loginResultSingleLiveEvent.setValue(userResult);
                     } catch (IOException e) {
@@ -228,7 +233,7 @@ public class SipMobileAppRepository {
             }
 
             @Override
-            public void onFailure(Call<UserResult> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserResult> call, @NonNull Throwable t) {
                 if (t instanceof NoConnectivityException) {
                     noConnectionExceptionHappenSingleLiveEvent.setValue(t.getMessage());
                 } else if (t instanceof SocketTimeoutException) {
@@ -243,12 +248,13 @@ public class SipMobileAppRepository {
     public void fetchPatients(String path, String userLoginKey, String patientName) {
         sipMobileAppService.fetchPatients(path, userLoginKey, patientName).enqueue(new Callback<PatientResult>() {
             @Override
-            public void onResponse(Call<PatientResult> call, Response<PatientResult> response) {
+            public void onResponse(@NonNull Call<PatientResult> call, @NonNull Response<PatientResult> response) {
                 if (response.isSuccessful()) {
                     patientsResultSingleLiveEvent.setValue(response.body());
                 } else {
                     try {
                         Gson gson = new Gson();
+                        assert response.errorBody() != null;
                         PatientResult patientResult = gson.fromJson(response.errorBody().string(), PatientResult.class);
                         patientsResultSingleLiveEvent.setValue(patientResult);
                     } catch (IOException e) {
@@ -258,7 +264,7 @@ public class SipMobileAppRepository {
             }
 
             @Override
-            public void onFailure(Call<PatientResult> call, Throwable t) {
+            public void onFailure(@NonNull Call<PatientResult> call, @NonNull Throwable t) {
                 if (t instanceof NoConnectivityException) {
                     noConnectionExceptionHappenSingleLiveEvent.setValue(t.getMessage());
                 } else if (t instanceof SocketTimeoutException) {
@@ -273,12 +279,13 @@ public class SipMobileAppRepository {
     public void fetchPatientAttachments(String path, String userLoginKey, int sickID) {
         sipMobileAppService.fetchPatientAttachments(path, userLoginKey, sickID).enqueue(new Callback<AttachResult>() {
             @Override
-            public void onResponse(Call<AttachResult> call, Response<AttachResult> response) {
+            public void onResponse(@NonNull Call<AttachResult> call, @NonNull Response<AttachResult> response) {
                 if (response.isSuccessful()) {
                     patientAttachmentsResultSingleLiveEvent.setValue(response.body());
                 } else {
                     try {
                         Gson gson = new Gson();
+                        assert response.errorBody() != null;
                         AttachResult attachResult = gson.fromJson(response.errorBody().string(), AttachResult.class);
                         patientAttachmentsResultSingleLiveEvent.setValue(attachResult);
                     } catch (IOException e) {
@@ -288,7 +295,7 @@ public class SipMobileAppRepository {
             }
 
             @Override
-            public void onFailure(Call<AttachResult> call, Throwable t) {
+            public void onFailure(@NonNull Call<AttachResult> call, @NonNull Throwable t) {
                 if (t instanceof NoConnectivityException) {
                     noConnectionExceptionHappenSingleLiveEvent.setValue(t.getMessage());
                 } else if (t instanceof SocketTimeoutException) {
@@ -303,12 +310,13 @@ public class SipMobileAppRepository {
     public void fetchAttachInfo(String path, String userLoginKey, int attachID) {
         sipMobileAppService.fetchAttachInfo(path, userLoginKey, attachID).enqueue(new Callback<AttachResult>() {
             @Override
-            public void onResponse(Call<AttachResult> call, Response<AttachResult> response) {
+            public void onResponse(@NonNull Call<AttachResult> call, @NonNull Response<AttachResult> response) {
                 if (response.isSuccessful()) {
                     attachInfoResultSingleLiveEvent.setValue(response.body());
                 } else {
                     try {
                         Gson gson = new Gson();
+                        assert response.errorBody() != null;
                         AttachResult attachResult = gson.fromJson(response.errorBody().string(), AttachResult.class);
                         attachInfoResultSingleLiveEvent.setValue(attachResult);
                     } catch (IOException e) {
@@ -318,7 +326,7 @@ public class SipMobileAppRepository {
             }
 
             @Override
-            public void onFailure(Call<AttachResult> call, Throwable t) {
+            public void onFailure(@NonNull Call<AttachResult> call, @NonNull Throwable t) {
                 if (t instanceof NoConnectivityException) {
                     noConnectionExceptionHappenSingleLiveEvent.setValue(t.getMessage());
                 } else if (t instanceof SocketTimeoutException) {
@@ -333,12 +341,13 @@ public class SipMobileAppRepository {
     public void attach(String path, String userLoginKey, AttachResult.AttachParameter attachParameter) {
         sipMobileAppService.attach(path, userLoginKey, attachParameter).enqueue(new Callback<AttachResult>() {
             @Override
-            public void onResponse(Call<AttachResult> call, Response<AttachResult> response) {
+            public void onResponse(@NonNull Call<AttachResult> call, @NonNull Response<AttachResult> response) {
                 if (response.isSuccessful()) {
                     attachResultSingleLiveEvent.setValue(response.body());
                 } else {
                     try {
                         Gson gson = new Gson();
+                        assert response.errorBody() != null;
                         AttachResult attachResult = gson.fromJson(response.errorBody().string(), AttachResult.class);
                         attachResultSingleLiveEvent.setValue(attachResult);
                     } catch (IOException e) {
@@ -348,7 +357,7 @@ public class SipMobileAppRepository {
             }
 
             @Override
-            public void onFailure(Call<AttachResult> call, Throwable t) {
+            public void onFailure(@NonNull Call<AttachResult> call, @NonNull Throwable t) {
                 if (t instanceof NoConnectivityException) {
                     noConnectionExceptionHappenSingleLiveEvent.setValue(t.getMessage());
                 } else if (t instanceof SocketTimeoutException) {
@@ -363,12 +372,13 @@ public class SipMobileAppRepository {
     public void deleteAttach(String path, String userLoginKey, int attachID) {
         sipMobileAppService.deleteAttach(path, userLoginKey, attachID).enqueue(new Callback<AttachResult>() {
             @Override
-            public void onResponse(Call<AttachResult> call, Response<AttachResult> response) {
+            public void onResponse(@NonNull Call<AttachResult> call, @NonNull Response<AttachResult> response) {
                 if (response.isSuccessful()) {
                     deleteAttachResultSingleLiveEvent.setValue(response.body());
                 } else {
                     try {
                         Gson gson = new Gson();
+                        assert response.errorBody() != null;
                         AttachResult attachResult = gson.fromJson(response.errorBody().string(), AttachResult.class);
                         deleteAttachResultSingleLiveEvent.setValue(attachResult);
                     } catch (IOException e) {
@@ -378,7 +388,7 @@ public class SipMobileAppRepository {
             }
 
             @Override
-            public void onFailure(Call<AttachResult> call, Throwable t) {
+            public void onFailure(@NonNull Call<AttachResult> call, @NonNull Throwable t) {
                 if (t instanceof NoConnectivityException) {
                     noConnectionExceptionHappenSingleLiveEvent.setValue(t.getMessage());
                 } else if (t instanceof SocketTimeoutException) {

@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -62,17 +61,15 @@ public class SuccessDialogFragment extends DialogFragment {
     }
 
     private void initViews() {
+        assert getArguments() != null;
         String message = getArguments().getString(ARGS_MESSAGE);
         binding.txtSuccessMessage.setText(message);
     }
 
     private void handleEvents() {
-        binding.btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-                dismiss();
-            }
+        binding.btnClose.setOnClickListener(v -> {
+            getActivity().finish();
+            dismiss();
         });
     }
 }

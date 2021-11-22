@@ -2,7 +2,6 @@ package com.example.sipmobileapp.ui.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -30,13 +29,10 @@ public class RequiredServerDataDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setMessage("لطفا آدرس ip خود را وارد کنید")
-                .setPositiveButton("تایید", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        AddEditServerDataDialogFragment fragment = AddEditServerDataDialogFragment.newInstance("", "", "", true);
-                        fragment.show(getParentFragmentManager(), AddEditServerDataDialogFragment.TAG);
-                        dismiss();
-                    }
+                .setPositiveButton("تایید", (dialogInterface, i) -> {
+                    AddEditServerDataDialogFragment fragment = AddEditServerDataDialogFragment.newInstance("", "", "", true);
+                    fragment.show(getParentFragmentManager(), AddEditServerDataDialogFragment.TAG);
+                    dismiss();
                 })
                 .create();
 

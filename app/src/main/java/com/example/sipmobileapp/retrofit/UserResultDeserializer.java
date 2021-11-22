@@ -1,7 +1,5 @@
 package com.example.sipmobileapp.retrofit;
 
-import android.util.Log;
-
 import com.example.sipmobileapp.model.UserResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
@@ -18,8 +16,7 @@ public class UserResultDeserializer implements JsonDeserializer<UserResult> {
 
         JsonObject bodyObject = json.getAsJsonObject();
         Gson gson = new Gson();
-        UserResult userResult = gson.fromJson(bodyObject.toString(), UserResult.class);
 
-        return userResult;
+        return gson.fromJson(bodyObject.toString(), UserResult.class);
     }
 }

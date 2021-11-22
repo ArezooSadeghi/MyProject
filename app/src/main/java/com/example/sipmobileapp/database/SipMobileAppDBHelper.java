@@ -14,16 +14,14 @@ public class SipMobileAppDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append("CREATE TABLE " + SipMobileAppSchema.ServerDataTable.NAME + " (");
-        stringBuilder.append(SipMobileAppSchema.ServerDataTable.Cols.PRIMARY_KEY + " INTEGER PRIMARY KEY,");
-        stringBuilder.append(SipMobileAppSchema.ServerDataTable.Cols.CENTER_NAME + " TEXT,");
-        stringBuilder.append(SipMobileAppSchema.ServerDataTable.Cols.IP_ADDRESS + " TEXT,");
-        stringBuilder.append(SipMobileAppSchema.ServerDataTable.Cols.PORT + " TEXT");
-        stringBuilder.append(");");
-
-        sqLiteDatabase.execSQL(stringBuilder.toString());
+        String stringBuilder = "CREATE TABLE " + SipMobileAppSchema.ServerDataTable.NAME + " (" +
+                SipMobileAppSchema.ServerDataTable.Cols.PRIMARY_KEY + " INTEGER PRIMARY KEY," +
+                SipMobileAppSchema.ServerDataTable.Cols.CENTER_NAME + " TEXT," +
+                SipMobileAppSchema.ServerDataTable.Cols.IP_ADDRESS + " TEXT," +
+                SipMobileAppSchema.ServerDataTable.Cols.PORT + " TEXT" +
+                ");";
+        sqLiteDatabase.execSQL(stringBuilder);
 
     }
 

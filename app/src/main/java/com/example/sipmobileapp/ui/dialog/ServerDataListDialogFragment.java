@@ -4,13 +4,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -56,11 +54,9 @@ public class ServerDataListDialogFragment extends DialogFragment {
         setupAdapter();
         handleEvents();
 
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(getContext())
                 .setView(mBinding.getRoot())
                 .create();
-
-        return dialog;
     }
 
     private void createViewModel() {
@@ -81,43 +77,29 @@ public class ServerDataListDialogFragment extends DialogFragment {
     }
 
     private void handleEvents() {
-        mBinding.fabAddServerData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AddEditServerDataDialogFragment fragment = AddEditServerDataDialogFragment.newInstance("", "", "", true);
-                fragment.show(getChildFragmentManager(), AddEditServerDataDialogFragment.TAG);
-            }
+        mBinding.fabAddServerData.setOnClickListener(view -> {
+            AddEditServerDataDialogFragment fragment = AddEditServerDataDialogFragment.newInstance("", "", "", true);
+            fragment.show(getChildFragmentManager(), AddEditServerDataDialogFragment.TAG);
         });
     }
 
     private void setupObserver() {
-        viewModel.getInsertNotifyServerDataList().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isServerDataInsert) {
-                setupAdapter();
-            }
+        viewModel.getInsertNotifyServerDataList().observe(this, isServerDataInsert -> setupAdapter());
+
+        viewModel.getEditClicked().observe(this, serverData -> {
+            AddEditServerDataDialogFragment fragment = AddEditServerDataDialogFragment.newInstance(serverData.getCenterName(), serverData.getIpAddress(), serverData.getPort(), false);
+            fragment.show(getChildFragmentManager(), AddEditServerDataDialogFragment.TAG);
         });
 
-        viewModel.getEditClicked().observe(this, new Observer<ServerData>() {
-            @Override
-            public void onChanged(ServerData serverData) {
-                AddEditServerDataDialogFragment fragment = AddEditServerDataDialogFragment.newInstance(serverData.getCenterName(), serverData.getIpAddress(), serverData.getPort(), false);
-                fragment.show(getChildFragmentManager(), AddEditServerDataDialogFragment.TAG);
-            }
-        });
-
-        viewModel.getDeleteClicked().observe(this, new Observer<ServerData>() {
-            @Override
-            public void onChanged(ServerData serverData) {
-                viewModel.deleteServerData(serverData);
-                viewModel.getDeleteNotifySpinner().setValue(true);
-                setupAdapter();
-                List<ServerData> serverDataList = viewModel.getServerDataList();
-                if (serverDataList.size() == 0) {
-                    RequiredServerDataDialogFragment fragment = RequiredServerDataDialogFragment.newInstance();
-                    fragment.show(getParentFragmentManager(), RequiredServerDataDialogFragment.TAG);
-                    dismiss();
-                }
+        viewModel.getDeleteClicked().observe(this, serverData -> {
+            viewModel.deleteServerData(serverData);
+            viewModel.getDeleteNotifySpinner().setValue(true);
+            setupAdapter();
+            List<ServerData> serverDataList = viewModel.getServerDataList();
+            if (serverDataList.size() == 0) {
+                RequiredServerDataDialogFragment fragment = RequiredServerDataDialogFragment.newInstance();
+                fragment.show(getParentFragmentManager(), RequiredServerDataDialogFragment.TAG);
+                dismiss();
             }
         });
     }

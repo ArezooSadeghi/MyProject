@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -61,19 +60,11 @@ public class DeleteQuestionDialogFragment extends DialogFragment {
     }
 
     private void handleEvents() {
-        binding.btnNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        binding.btnNo.setOnClickListener(view -> dismiss());
 
-        binding.btnYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewModel.getYesDelete().setValue(true);
-                dismiss();
-            }
+        binding.btnYes.setOnClickListener(view -> {
+            viewModel.getYesDelete().setValue(true);
+            dismiss();
         });
     }
 }

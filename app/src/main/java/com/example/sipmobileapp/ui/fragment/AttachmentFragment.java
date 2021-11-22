@@ -19,12 +19,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -51,7 +49,7 @@ public class AttachmentFragment extends Fragment {
     private FragmentAttachmentBinding binding;
     private AttachmentViewModel viewModel;
     private ServerData serverData;
-    private String centerName, userLoginKey;
+    private String userLoginKey;
     private Uri photoUri;
     private File photoFile;
     private Bitmap bitmap;
@@ -82,7 +80,7 @@ public class AttachmentFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(
@@ -146,7 +144,7 @@ public class AttachmentFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (grantResults == null || grantResults.length == 0) {
+        if (grantResults.length == 0) {
             return;
         }
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -161,7 +159,7 @@ public class AttachmentFragment extends Fragment {
     }
 
     private void initVariables() {
-        centerName = SipMobileAppPreferences.getCenterName(getContext());
+        String centerName = SipMobileAppPreferences.getCenterName(getContext());
         serverData = viewModel.getServerData(centerName);
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
         sickID = getArguments().getInt(ARGS_SICK_ID);
@@ -181,15 +179,13 @@ public class AttachmentFragment extends Fragment {
             }
             String name = "img_" + new Date().getTime() + ".jpg";
             photoFile = new File(dir, name);
-            if (photoFile != null) {
-                Uri uri = FileProvider.getUriForFile(getContext(), AUTHORITY, photoFile);
-                List<ResolveInfo> activities = getActivity().getPackageManager().queryIntentActivities(starter, PackageManager.MATCH_DEFAULT_ONLY);
-                for (ResolveInfo activity : activities) {
-                    getActivity().grantUriPermission(activity.activityInfo.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                }
-                starter.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                startActivityForResult(starter, REQUEST_CODE_TAKE_PHOTO);
+            Uri uri = FileProvider.getUriForFile(getContext(), AUTHORITY, photoFile);
+            List<ResolveInfo> activities = getActivity().getPackageManager().queryIntentActivities(starter, PackageManager.MATCH_DEFAULT_ONLY);
+            for (ResolveInfo activity : activities) {
+                getActivity().grantUriPermission(activity.activityInfo.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             }
+            starter.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            startActivityForResult(starter, REQUEST_CODE_TAKE_PHOTO);
         }
     }
 
@@ -242,134 +238,105 @@ public class AttachmentFragment extends Fragment {
             }
         });
 
-        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String message) {
-                binding.progressBarLoading.setVisibility(View.GONE);
-                binding.ivSend.setEnabled(true);
-                binding.ivCamera.setEnabled(true);
-                binding.edTxtDescription.setEnabled(true);
-                binding.ivRotate.setEnabled(true);
-                binding.ivAttach.setEnabled(true);
-                handleError(message);
-            }
+        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+            binding.progressBarLoading.setVisibility(View.GONE);
+            binding.ivSend.setEnabled(true);
+            binding.ivCamera.setEnabled(true);
+            binding.edTxtDescription.setEnabled(true);
+            binding.ivRotate.setEnabled(true);
+            binding.ivAttach.setEnabled(true);
+            handleError(message);
         });
 
-        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String message) {
-                binding.progressBarLoading.setVisibility(View.GONE);
-                binding.ivSend.setEnabled(true);
-                binding.ivCamera.setEnabled(true);
-                binding.edTxtDescription.setEnabled(true);
-                binding.ivRotate.setEnabled(true);
-                binding.ivAttach.setEnabled(true);
-                handleError(message);
-            }
+        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+            binding.progressBarLoading.setVisibility(View.GONE);
+            binding.ivSend.setEnabled(true);
+            binding.ivCamera.setEnabled(true);
+            binding.edTxtDescription.setEnabled(true);
+            binding.ivRotate.setEnabled(true);
+            binding.ivAttach.setEnabled(true);
+            handleError(message);
         });
 
-        viewModel.getShowAttachAgainDialog().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean showAttachAgainDialog) {
-                AttachAgainDialogFragment fragment = AttachAgainDialogFragment.newInstance("آیا می خواهید فایل دیگری را اضافه نمایید؟");
-                fragment.show(getParentFragmentManager(), AttachAgainDialogFragment.TAG);
-            }
+        viewModel.getShowAttachAgainDialog().observe(getViewLifecycleOwner(), showAttachAgainDialog -> {
+            AttachAgainDialogFragment fragment = AttachAgainDialogFragment.newInstance("آیا می خواهید فایل دیگری را اضافه نمایید؟");
+            fragment.show(getParentFragmentManager(), AttachAgainDialogFragment.TAG);
         });
 
-        viewModel.getNoAttachAgain().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean noAttachAgain) {
-                getActivity().finish();
-            }
-        });
+        viewModel.getNoAttachAgain().observe(getViewLifecycleOwner(), noAttachAgain -> getActivity().finish());
 
-        viewModel.getYesAttachAgain().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean yesAttachAgain) {
-                photoUri = null;
-                binding.ivPhoto.setImageResource(0);
-                binding.edTxtDescription.setText("");
-                binding.ivNoPhoto.setVisibility(View.VISIBLE);
-                binding.ivPhoto.setVisibility(View.GONE);
-            }
+        viewModel.getYesAttachAgain().observe(getViewLifecycleOwner(), yesAttachAgain -> {
+            photoUri = null;
+            binding.ivPhoto.setImageResource(0);
+            binding.edTxtDescription.setText("");
+            binding.ivNoPhoto.setVisibility(View.VISIBLE);
+            binding.ivPhoto.setVisibility(View.GONE);
         });
     }
 
     private void handleEvents() {
-        binding.ivAttach.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "انتخاب تصویر"), REQUEST_CODE_PICK_PHOTO);
+        binding.ivAttach.setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "انتخاب تصویر"), REQUEST_CODE_PICK_PHOTO);
+        });
+
+        binding.ivRotate.setOnClickListener(view -> {
+            if (photoUri != null) {
+                switch (numberOfRotate) {
+                    case 0:
+                        matrix.postRotate(90);
+                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                        Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
+                        numberOfRotate++;
+                        break;
+                    case 1:
+                        matrix.postRotate(180);
+                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                        Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
+                        numberOfRotate++;
+                        break;
+                    case 2:
+                        matrix.postRotate(270);
+                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                        Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
+                        numberOfRotate = 0;
+                        break;
+                }
+            } else {
+                handleError(getString(R.string.not_selected_file_message));
             }
         });
 
-        binding.ivRotate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (photoUri != null) {
-                    switch (numberOfRotate) {
-                        case 0:
-                            matrix.postRotate(90);
-                            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                            Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
-                            numberOfRotate++;
-                            break;
-                        case 1:
-                            matrix.postRotate(180);
-                            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                            Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
-                            numberOfRotate++;
-                            break;
-                        case 2:
-                            matrix.postRotate(270);
-                            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                            Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
-                            numberOfRotate = 0;
-                            break;
-                    }
-                } else {
-                    handleError(getString(R.string.not_selected_file_message));
-                }
+        binding.ivCamera.setOnClickListener(view -> {
+            if (hasCameraPermission()) {
+                openCamera();
+            } else {
+                requestCameraPermission();
             }
         });
 
-        binding.ivCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (hasCameraPermission()) {
-                    openCamera();
-                } else {
-                    requestCameraPermission();
-                }
-            }
-        });
+        binding.ivSend.setOnClickListener(view -> {
+            if (photoUri != null) {
+                binding.progressBarLoading.setVisibility(View.VISIBLE);
+                binding.ivSend.setEnabled(false);
+                binding.ivRotate.setEnabled(false);
+                binding.ivAttach.setEnabled(false);
+                binding.ivCamera.setEnabled(false);
 
-        binding.ivSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (photoUri != null) {
-                    binding.progressBarLoading.setVisibility(View.VISIBLE);
-                    binding.ivSend.setEnabled(false);
-                    binding.ivRotate.setEnabled(false);
-                    binding.ivAttach.setEnabled(false);
-                    binding.ivCamera.setEnabled(false);
+                AttachResult.AttachParameter attachParameter = new AttachResult().new AttachParameter();
+                String image = convertBitmapToBase64(bitmap);
+                attachParameter.setImage(image);
+                attachParameter.setSickID(sickID);
+                String description = binding.edTxtDescription.getText().toString();
+                attachParameter.setDescription(description);
+                attachParameter.setAttachTypeID(1);
+                attachParameter.setImageTypeID(2);
 
-                    AttachResult.AttachParameter attachParameter = new AttachResult().new AttachParameter();
-                    String image = convertBitmapToBase64(bitmap);
-                    attachParameter.setImage(image);
-                    attachParameter.setSickID(sickID);
-                    String description = binding.edTxtDescription.getText().toString();
-                    attachParameter.setDescription(description);
-                    attachParameter.setAttachTypeID(1);
-                    attachParameter.setImageTypeID(2);
-
-                    new Thread(() -> attach(attachParameter)).start();
-                } else {
-                    handleError(getString(R.string.not_selected_file_message));
-                }
+                new Thread(() -> attach(attachParameter)).start();
+            } else {
+                handleError(getString(R.string.not_selected_file_message));
             }
         });
     }

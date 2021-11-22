@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -44,12 +43,7 @@ public class PhotoGalleryAdapter extends RecyclerView.Adapter<PhotoGalleryAdapte
     public void onBindViewHolder(@NonNull PhotoGalleryHolder holder, int position) {
         String filePath = filePathList.get(position);
         holder.bindFilePath(filePath);
-        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewModel.getPhotoClicked().setValue(filePath);
-            }
-        });
+        holder.binding.getRoot().setOnClickListener(v -> viewModel.getPhotoClicked().setValue(filePath));
     }
 
     @Override

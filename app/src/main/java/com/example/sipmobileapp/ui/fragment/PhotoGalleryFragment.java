@@ -79,7 +79,7 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_photo_gallery,
@@ -149,19 +149,17 @@ public class PhotoGalleryFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION:
-                if (grantResults == null || grantResults.length == 0) {
-                    return;
+        if (requestCode == REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION) {
+            if (grantResults.length == 0) {
+                return;
+            }
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (sickID != 0) {
+                    fetchPatientAttachments(sickID);
                 }
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (sickID != 0) {
-                        fetchPatientAttachments(sickID);
-                    }
-                } else {
-                    handleError(getString(R.string.storage_access_denied_message));
-                }
-                break;
+            } else {
+                handleError(getString(R.string.storage_access_denied_message));
+            }
         }
     }
 
@@ -310,7 +308,6 @@ public class PhotoGalleryFragment extends Fragment {
                         AttachResult.AttachInfo attachInfo = attachResult.getAttachs()[0];
                         new Thread(() -> {
                             try {
-                                Log.d("Arezoo", "qqqqqq");
                                 String filePath = writeToExternalStorage(attachInfo);
                                 viewModel.getFinishWriteToStorage().postValue(filePath);
                             } catch (IOException e) {

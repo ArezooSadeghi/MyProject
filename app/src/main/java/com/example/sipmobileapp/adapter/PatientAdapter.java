@@ -2,7 +2,6 @@ package com.example.sipmobileapp.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,7 +13,6 @@ import com.example.sipmobileapp.databinding.PatientAdapterItemBinding;
 import com.example.sipmobileapp.model.PatientResult;
 import com.example.sipmobileapp.utils.Converter;
 import com.example.sipmobileapp.viewmodel.PatientViewModel;
-import com.skydoves.powermenu.OnMenuItemClickListener;
 import com.skydoves.powermenu.PowerMenu;
 import com.skydoves.powermenu.PowerMenuItem;
 
@@ -46,27 +44,19 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
         PatientResult.PatientInfo patientInfo = patientInfoList.get(position);
         holder.bindPatientInfo(patientInfo);
 
-        holder.binding.ivMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PowerMenu powerMenu = new PowerMenu.Builder(context)
-                        .addItem(new PowerMenuItem(context.getResources().getString(R.string.see_attachments_title), R.drawable.magnifier))
-                        .setSize(600, 200)
-                        .build();
+        holder.binding.ivMore.setOnClickListener(view -> {
+            PowerMenu powerMenu = new PowerMenu.Builder(context)
+                    .addItem(new PowerMenuItem(context.getResources().getString(R.string.see_attachments_title), R.drawable.magnifier))
+                    .setSize(600, 200)
+                    .build();
 
-                powerMenu.setOnMenuItemClickListener(new OnMenuItemClickListener<PowerMenuItem>() {
-                    @Override
-                    public void onItemClick(int position, PowerMenuItem item) {
-                        switch (position) {
-                            case 0:
-                                viewModel.getNavigateToGallery().setValue(patientInfo.getSickID());
-                                powerMenu.dismiss();
-                                break;
-                        }
-                    }
-                });
-                powerMenu.showAsDropDown(view);
-            }
+            powerMenu.setOnMenuItemClickListener((position1, item) -> {
+                if (position1 == 0) {
+                    viewModel.getNavigateToGallery().setValue(patientInfo.getSickID());
+                    powerMenu.dismiss();
+                }
+            });
+            powerMenu.showAsDropDown(view);
         });
     }
 

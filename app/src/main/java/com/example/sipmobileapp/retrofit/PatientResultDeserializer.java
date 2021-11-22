@@ -16,8 +16,7 @@ public class PatientResultDeserializer implements JsonDeserializer<PatientResult
 
         JsonObject bodyObject = json.getAsJsonObject();
         Gson gson = new Gson();
-        PatientResult patientResult = gson.fromJson(bodyObject.toString(), PatientResult.class);
 
-        return patientResult;
+        return gson.fromJson(bodyObject.toString(), PatientResult.class);
     }
 }

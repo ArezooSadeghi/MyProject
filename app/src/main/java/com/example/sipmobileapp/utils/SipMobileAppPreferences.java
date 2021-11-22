@@ -15,7 +15,7 @@ public class SipMobileAppPreferences {
 
     public static void setUserLoginKey(Context context, String userLoginKey) {
         SharedPreferences preferences = getSharedPreferences(context);
-        preferences.edit().putString(USER_LOGIN_KEY, userLoginKey).commit();
+        preferences.edit().putString(USER_LOGIN_KEY, userLoginKey).apply();
     }
 
     public static String getCenterName(Context context) {
@@ -25,12 +25,12 @@ public class SipMobileAppPreferences {
 
     public static void setCenterName(Context context, String centerName) {
         SharedPreferences preferences = getSharedPreferences(context);
-        preferences.edit().putString(CENTER_NAME, centerName).commit();
+        preferences.edit().putString(CENTER_NAME, centerName).apply();
     }
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(
                 context.getPackageName(),
-                context.MODE_PRIVATE);
+                Context.MODE_PRIVATE);
     }
 }

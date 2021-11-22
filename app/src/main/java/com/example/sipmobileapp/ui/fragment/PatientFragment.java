@@ -2,19 +2,16 @@ package com.example.sipmobileapp.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,7 +26,6 @@ import com.example.sipmobileapp.ui.activity.PhotoGalleryContainerActivity;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
 import com.example.sipmobileapp.viewmodel.PatientViewModel;
-import com.skydoves.powermenu.OnMenuItemClickListener;
 import com.skydoves.powermenu.PowerMenu;
 import com.skydoves.powermenu.PowerMenuItem;
 
@@ -40,7 +36,7 @@ public class PatientFragment extends Fragment {
     private FragmentPatientBinding binding;
     private PatientViewModel viewModel;
     private ServerData serverData;
-    private String centerName, userLoginKey;
+    private String userLoginKey;
 
     public static PatientFragment newInstance() {
         PatientFragment fragment = new PatientFragment();
@@ -83,7 +79,7 @@ public class PatientFragment extends Fragment {
     }
 
     private void initVariables() {
-        centerName = SipMobileAppPreferences.getCenterName(getContext());
+        String centerName = SipMobileAppPreferences.getCenterName(getContext());
         serverData = viewModel.getServerData(centerName);
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
     }
@@ -96,107 +92,78 @@ public class PatientFragment extends Fragment {
     }
 
     private void handleEvents() {
-        binding.ivMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PowerMenu powerMenu = new PowerMenu.Builder(getContext())
-                        .addItem(new PowerMenuItem(getString(R.string.logout_title)))
-                        .build();
+        binding.ivMore.setOnClickListener(view -> {
+            PowerMenu powerMenu = new PowerMenu.Builder(getContext())
+                    .addItem(new PowerMenuItem(getString(R.string.logout_title)))
+                    .build();
 
-                powerMenu.setOnMenuItemClickListener(new OnMenuItemClickListener<PowerMenuItem>() {
-                    @Override
-                    public void onItemClick(int position, PowerMenuItem item) {
-                        switch (position) {
-                            case 0:
-                                SipMobileAppPreferences.setUserLoginKey(getContext(), null);
-                                Intent starter = LoginContainerActivity.start(getContext());
-                                startActivity(starter);
-                                getActivity().finish();
-                                break;
-                        }
-                    }
-                });
-                powerMenu.showAsDropDown(view);
+            powerMenu.setOnMenuItemClickListener((position, item) -> {
+                if (position == 0) {
+                    SipMobileAppPreferences.setUserLoginKey(getContext(), null);
+                    Intent starter = LoginContainerActivity.start(getContext());
+                    startActivity(starter);
+                    getActivity().finish();
+                }
+            });
+            powerMenu.showAsDropDown(view);
+        });
+
+        binding.btnSearch.setOnClickListener(view -> {
+            if (binding.edTextSearch.getText().toString().isEmpty()) {
+                handleError("لطفا نام بیمار را در قسمت جستجو وارد نمایید");
+            } else {
+                binding.progressBarLoading.setVisibility(View.VISIBLE);
+                binding.txtNoPatient.setVisibility(View.GONE);
+                viewModel.getServicePatientResult(serverData.getIpAddress() + ":" + serverData.getPort());
+                String path = "/api/v1/patients/search/";
+                viewModel.fetchPatients(path, userLoginKey, binding.edTextSearch.getText().toString());
             }
         });
 
-        binding.btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (binding.edTextSearch.getText().toString().isEmpty()) {
-                    handleError("لطفا نام بیمار را در قسمت جستجو وارد نمایید");
-                } else {
-                    binding.progressBarLoading.setVisibility(View.VISIBLE);
-                    binding.txtNoPatient.setVisibility(View.GONE);
-                    viewModel.getServicePatientResult(serverData.getIpAddress() + ":" + serverData.getPort());
-                    String path = "/api/v1/patients/search/";
-                    viewModel.fetchPatients(path, userLoginKey, binding.edTextSearch.getText().toString());
-                }
+        binding.edTextSearch.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+                binding.progressBarLoading.setVisibility(View.VISIBLE);
+                binding.txtNoPatient.setVisibility(View.GONE);
+                viewModel.getServicePatientResult(serverData.getIpAddress() + ":" + serverData.getPort());
+                String path = "/api/v1/patients/search/";
+                viewModel.fetchPatients(path, userLoginKey, binding.edTextSearch.getText().toString());
+                return true;
             }
-        });
-
-        binding.edTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
-                    binding.progressBarLoading.setVisibility(View.VISIBLE);
-                    binding.txtNoPatient.setVisibility(View.GONE);
-                    viewModel.getServicePatientResult(serverData.getIpAddress() + ":" + serverData.getPort());
-                    String path = "/api/v1/patients/search/";
-                    viewModel.fetchPatients(path, userLoginKey, binding.edTextSearch.getText().toString());
-                    return true;
-                }
-                return false;
-            }
+            return false;
         });
     }
 
     private void setupObserver() {
-        viewModel.getPatientsResultSingleLiveEvent().observe(getViewLifecycleOwner(), new Observer<PatientResult>() {
-            @Override
-            public void onChanged(PatientResult patientResult) {
-                binding.progressBarLoading.setVisibility(View.GONE);
-                binding.txtNoPatient.setVisibility(View.GONE);
-                binding.recyclerViewPatient.setVisibility(View.VISIBLE);
-                if (patientResult != null) {
-                    if (patientResult.getErrorCode().equals("0")) {
-                        if (patientResult.getPatients() == null || patientResult.getPatients().length == 0) {
-                        } else {
-                            setupAdapter(patientResult.getPatients());
-                        }
-                    } else {
-                        handleError(patientResult.getError());
-                    }
+        viewModel.getPatientsResultSingleLiveEvent().observe(getViewLifecycleOwner(), patientResult -> {
+            binding.progressBarLoading.setVisibility(View.GONE);
+            binding.txtNoPatient.setVisibility(View.GONE);
+            binding.recyclerViewPatient.setVisibility(View.VISIBLE);
+            if (patientResult != null) {
+                if (patientResult.getErrorCode().equals("0")) {
+                    setupAdapter(patientResult.getPatients());
+                } else {
+                    handleError(patientResult.getError());
                 }
             }
         });
 
-        viewModel.getNavigateToGallery().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer sickID) {
-                Intent starter = PhotoGalleryContainerActivity.start(getContext(), sickID);
-                startActivity(starter);
-            }
+        viewModel.getNavigateToGallery().observe(getViewLifecycleOwner(), sickID -> {
+            Intent starter = PhotoGalleryContainerActivity.start(getContext(), sickID);
+            startActivity(starter);
         });
 
-        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String message) {
-                binding.progressBarLoading.setVisibility(View.GONE);
-                binding.recyclerViewPatient.setVisibility(View.GONE);
-                binding.txtNoPatient.setVisibility(View.VISIBLE);
-                handleError(message);
-            }
+        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+            binding.progressBarLoading.setVisibility(View.GONE);
+            binding.recyclerViewPatient.setVisibility(View.GONE);
+            binding.txtNoPatient.setVisibility(View.VISIBLE);
+            handleError(message);
         });
 
-        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String message) {
-                binding.progressBarLoading.setVisibility(View.GONE);
-                binding.recyclerViewPatient.setVisibility(View.GONE);
-                binding.txtNoPatient.setVisibility(View.VISIBLE);
-                handleError(message);
-            }
+        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+            binding.progressBarLoading.setVisibility(View.GONE);
+            binding.recyclerViewPatient.setVisibility(View.GONE);
+            binding.txtNoPatient.setVisibility(View.VISIBLE);
+            handleError(message);
         });
     }
 

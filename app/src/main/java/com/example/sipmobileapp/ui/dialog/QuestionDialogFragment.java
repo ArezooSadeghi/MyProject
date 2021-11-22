@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,24 +69,17 @@ public class QuestionDialogFragment extends DialogFragment {
     }
 
     private void initViews() {
+        assert getArguments() != null;
         String message = getArguments().getString(ARGS_MESSAGE);
         binding.txtQuestion.setText(message);
     }
 
     private void handleEvents() {
-        binding.btnNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        binding.btnNo.setOnClickListener(v -> dismiss());
 
-        binding.btnYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewModel.getYesDeleteClicked().setValue(true);
-                dismiss();
-            }
+        binding.btnYes.setOnClickListener(v -> {
+            viewModel.getYesDeleteClicked().setValue(true);
+            dismiss();
         });
     }
 }

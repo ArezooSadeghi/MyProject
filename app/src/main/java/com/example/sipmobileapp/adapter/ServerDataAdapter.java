@@ -2,7 +2,6 @@ package com.example.sipmobileapp.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -42,19 +41,9 @@ public class ServerDataAdapter extends RecyclerView.Adapter<ServerDataAdapter.Se
         ServerData serverData = mServerDataList.get(position);
         holder.bindServerData(serverData);
 
-        holder.mBinding.imgViewEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mViewModel.getEditClicked().setValue(serverData);
-            }
-        });
+        holder.mBinding.imgViewEdit.setOnClickListener(view -> mViewModel.getEditClicked().setValue(serverData));
 
-        holder.mBinding.imgViewDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mViewModel.getDeleteClicked().setValue(serverData);
-            }
-        });
+        holder.mBinding.imgViewDelete.setOnClickListener(view -> mViewModel.getDeleteClicked().setValue(serverData));
     }
 
     @Override
