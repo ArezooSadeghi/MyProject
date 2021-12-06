@@ -15,14 +15,15 @@
 
         <ImageView
             android:id="@+id/iv_no_photo"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/no_photo"
+            android:src="@drawable/ic_gallery"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
 
         <ImageView
             android:id="@+id/iv_photo"
@@ -32,13 +33,15 @@
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/layout_container"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_default="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_default="spread" />
 
         <ProgressBar
             android:id="@+id/progress_bar_loading"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,39 +51,39 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_container"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:background="@color/light_gray"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <ImageView
                 android:id="@+id/iv_camera"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/camera"
+                android:src="@drawable/ic_camera"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/iv_attach"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/attach"
+                android:src="@drawable/ic_attachment"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_camera"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/iv_rotate"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/rotate"
+                android:src="@drawable/ic_rotate"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -101,8 +104,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="16dp"
                 android:background="@null"
                 android:ellipsize="end"
                 android:fontFamily="@font/regular"
@@ -114,7 +118,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_send"
                 app:layout_constraintStart_toEndOf="@id/iv_rotate"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_default="spread" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

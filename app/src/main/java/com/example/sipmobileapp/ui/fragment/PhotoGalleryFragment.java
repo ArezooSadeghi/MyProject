@@ -45,7 +45,7 @@ public class PhotoGalleryFragment extends Fragment {
     private FragmentPhotoGalleryBinding binding;
     private AttachmentViewModel viewModel;
     private ServerData serverData;
-    private String centerName, userLoginKey;
+    private String userLoginKey;
     private PhotoGalleryAdapter adapter;
     private List<String> oldFilePathList, newFilePathList;
     private List<Integer> attachIDList;
@@ -113,9 +113,10 @@ public class PhotoGalleryFragment extends Fragment {
     @Subscribe(sticky = true)
     public void getDeleteEvent(DeleteEvent event) {
         String filePath = "";
-        File dir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
+        File dir = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
         if (dir.exists()) {
             File[] files = dir.listFiles();
+            assert files != null;
             for (File file : files) {
                 if (file.getName().equals(event.getAttachID() + ".jpg")) {
                     filePath = file.getPath();
@@ -135,7 +136,7 @@ public class PhotoGalleryFragment extends Fragment {
         }
 
         binding.progressBarLoading.setVisibility(View.GONE);
-        binding.recyclerViewAttachmentFile.setVisibility(View.VISIBLE);
+        binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
         setupAdapter();
         EventBus.getDefault().removeStickyEvent(event);
     }
@@ -168,9 +169,10 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private void initVariables() {
-        centerName = SipMobileAppPreferences.getCenterName(getContext());
+        String centerName = SipMobileAppPreferences.getCenterName(getContext());
         serverData = viewModel.getServerData(centerName);
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
+        assert getArguments() != null;
         sickID = getArguments().getInt(ARGS_SICK_ID);
         oldFilePathList = new ArrayList<>();
         newFilePathList = new ArrayList<>();
@@ -178,11 +180,11 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private void initViews() {
-        binding.recyclerViewAttachmentFile.setLayoutManager(new GridLayoutManager(getContext(), SPAN_COUNT));
+        binding.recyclerViewAttachment.setLayoutManager(new GridLayoutManager(getContext(), SPAN_COUNT));
     }
 
     private boolean hasWriteExternalStoragePermission() {
-        return (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+        return (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
     }
 
     private void requestWriteExternalStoragePermission() {
@@ -202,9 +204,10 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private String readFromStorage(int attachID) {
-        File dir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
+        File dir = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
         if (dir.exists()) {
             File[] files = dir.listFiles();
+            assert files != null;
             if (files.length != 0) {
                 for (File file : files) {
                     if (file.getName().equals(attachID + ".jpg")) {
@@ -222,8 +225,8 @@ public class PhotoGalleryFragment extends Fragment {
         return "";
     }
 
-    private String writeToExternalStorage(AttachResult.AttachInfo attachInfo) throws IOException {
-        File dir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
+    private String writeToStorage(AttachResult.AttachInfo attachInfo) throws IOException {
+        File dir = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -253,11 +256,11 @@ public class PhotoGalleryFragment extends Fragment {
         } else {
             adapter.updateFilePathList(newFilePathList);
         }
-        binding.recyclerViewAttachmentFile.setAdapter(adapter);
+        binding.recyclerViewAttachment.setAdapter(adapter);
     }
 
-    private void handleError(String message) {
-        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(message);
+    private void handleError(String msg) {
+        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(msg);
         fragment.show(getParentFragmentManager(), ErrorDialogFragment.TAG);
     }
 
@@ -269,7 +272,7 @@ public class PhotoGalleryFragment extends Fragment {
                 String filePath = readFromStorage(attachInfo.getAttachID());
                 if (!filePath.isEmpty()) {
                     binding.progressBarLoading.setVisibility(View.GONE);
-                    binding.recyclerViewAttachmentFile.setVisibility(View.VISIBLE);
+                    binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
                     setupAdapter();
                 } else {
                     attachIDList.add(attachInfo.getAttachID());
@@ -283,7 +286,7 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private void handleEvents() {
-        binding.fabAddNewFile.setOnClickListener(view -> {
+        binding.fabAdd.setOnClickListener(view -> {
             Intent starter = AttachmentContainerActivity.start(getContext(), sickID);
             startActivity(starter);
         });
@@ -308,7 +311,7 @@ public class PhotoGalleryFragment extends Fragment {
                         AttachResult.AttachInfo attachInfo = attachResult.getAttachs()[0];
                         new Thread(() -> {
                             try {
-                                String filePath = writeToExternalStorage(attachInfo);
+                                String filePath = writeToStorage(attachInfo);
                                 viewModel.getFinishWriteToStorage().postValue(filePath);
                             } catch (IOException e) {
                                 Log.e(TAG, e.getMessage());
@@ -322,20 +325,20 @@ public class PhotoGalleryFragment extends Fragment {
             }
         });
 
-        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), msg -> {
             binding.progressBarLoading.setVisibility(View.GONE);
-            handleError(message);
+            handleError(msg);
         });
 
-        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), msg -> {
             binding.progressBarLoading.setVisibility(View.GONE);
-            handleError(message);
+            handleError(msg);
         });
 
         viewModel.getFinishWriteToStorage().observe(getViewLifecycleOwner(), filePath -> {
             if (!filePath.isEmpty()) {
                 binding.progressBarLoading.setVisibility(View.GONE);
-                binding.recyclerViewAttachmentFile.setVisibility(View.VISIBLE);
+                binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
                 setupAdapter();
             }
             index++;
@@ -346,7 +349,7 @@ public class PhotoGalleryFragment extends Fragment {
             }
         });
 
-        viewModel.getPhotoClicked().observe(getViewLifecycleOwner(), filePath -> {
+        viewModel.getItemClicked().observe(getViewLifecycleOwner(), filePath -> {
             File file = new File(filePath);
             String fileName = file.getName().replace(".jpg", "");
             int attachID = Integer.parseInt(fileName);

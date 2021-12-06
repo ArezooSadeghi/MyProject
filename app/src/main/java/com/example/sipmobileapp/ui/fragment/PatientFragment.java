@@ -31,6 +31,7 @@ import com.skydoves.powermenu.PowerMenuItem;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class PatientFragment extends Fragment {
     private FragmentPatientBinding binding;
@@ -53,7 +54,7 @@ public class PatientFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(
@@ -86,14 +87,14 @@ public class PatientFragment extends Fragment {
 
     private void initViews() {
         binding.recyclerViewPatient.setLayoutManager(new LinearLayoutManager(getContext()));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.custom_divider_recycler_view));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(requireContext(), R.drawable.custom_divider_recycler_view)));
         binding.recyclerViewPatient.addItemDecoration(dividerItemDecoration);
     }
 
     private void handleEvents() {
         binding.ivMore.setOnClickListener(view -> {
-            PowerMenu powerMenu = new PowerMenu.Builder(getContext())
+            PowerMenu powerMenu = new PowerMenu.Builder(requireContext())
                     .addItem(new PowerMenuItem(getString(R.string.logout_item_title)))
                     .build();
 
@@ -102,41 +103,43 @@ public class PatientFragment extends Fragment {
                     SipMobileAppPreferences.setUserLoginKey(getContext(), null);
                     Intent starter = LoginContainerActivity.start(getContext());
                     startActivity(starter);
-                    getActivity().finish();
+                    requireActivity().finish();
                 }
             });
             powerMenu.showAsDropDown(view);
         });
 
         binding.btnSearch.setOnClickListener(view -> {
-            if (binding.edTextSearch.getText().toString().isEmpty()) {
+            if (binding.edTxtSearch.getText().toString().isEmpty()) {
                 handleError(getString(R.string.search_patient_name));
             } else {
                 binding.progressBarLoading.setVisibility(View.VISIBLE);
-                binding.txtNoPatient.setVisibility(View.GONE);
-                viewModel.getServicePatientResult(serverData.getIpAddress() + ":" + serverData.getPort());
-                String path = "/api/v1/patients/search/";
-                viewModel.fetchPatients(path, userLoginKey, binding.edTextSearch.getText().toString());
+                binding.txtNoSearchResult.setVisibility(View.GONE);
+                fetchPatients(binding.edTxtSearch.getText().toString());
             }
         });
 
-        binding.edTextSearch.setOnEditorActionListener((v, actionId, event) -> {
+        binding.edTxtSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
                 binding.progressBarLoading.setVisibility(View.VISIBLE);
-                binding.txtNoPatient.setVisibility(View.GONE);
-                viewModel.getServicePatientResult(serverData.getIpAddress() + ":" + serverData.getPort());
-                String path = "/api/v1/patients/search/";
-                viewModel.fetchPatients(path, userLoginKey, binding.edTextSearch.getText().toString());
+                binding.txtNoSearchResult.setVisibility(View.GONE);
+                fetchPatients(binding.edTxtSearch.getText().toString());
                 return true;
             }
             return false;
         });
     }
 
+    private void fetchPatients(String query) {
+        viewModel.getServicePatientResult(serverData.getIpAddress() + ":" + serverData.getPort());
+        String path = "/api/v1/patients/search/";
+        viewModel.fetchPatients(path, userLoginKey, query);
+    }
+
     private void setupObserver() {
         viewModel.getPatientsResultSingleLiveEvent().observe(getViewLifecycleOwner(), patientResult -> {
             binding.progressBarLoading.setVisibility(View.GONE);
-            binding.txtNoPatient.setVisibility(View.GONE);
+            binding.txtNoSearchResult.setVisibility(View.GONE);
             binding.recyclerViewPatient.setVisibility(View.VISIBLE);
             if (patientResult != null) {
                 if (patientResult.getErrorCode().equals("0")) {
@@ -147,23 +150,23 @@ public class PatientFragment extends Fragment {
             }
         });
 
-        viewModel.getNavigateToGallery().observe(getViewLifecycleOwner(), sickID -> {
+        viewModel.getAttachmentsItemClicked().observe(getViewLifecycleOwner(), sickID -> {
             Intent starter = PhotoGalleryContainerActivity.start(getContext(), sickID);
             startActivity(starter);
         });
 
-        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), msg -> {
             binding.progressBarLoading.setVisibility(View.GONE);
             binding.recyclerViewPatient.setVisibility(View.GONE);
-            binding.txtNoPatient.setVisibility(View.VISIBLE);
-            handleError(message);
+            binding.txtNoSearchResult.setVisibility(View.VISIBLE);
+            handleError(msg);
         });
 
-        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), msg -> {
             binding.progressBarLoading.setVisibility(View.GONE);
             binding.recyclerViewPatient.setVisibility(View.GONE);
-            binding.txtNoPatient.setVisibility(View.VISIBLE);
-            handleError(message);
+            binding.txtNoSearchResult.setVisibility(View.VISIBLE);
+            handleError(msg);
         });
     }
 
@@ -174,8 +177,8 @@ public class PatientFragment extends Fragment {
         binding.recyclerViewPatient.setAdapter(adapter);
     }
 
-    private void handleError(String message) {
-        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(message);
+    private void handleError(String msg) {
+        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(msg);
         fragment.show(getParentFragmentManager(), ErrorDialogFragment.TAG);
     }
 }

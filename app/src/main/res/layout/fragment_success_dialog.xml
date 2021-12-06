@@ -69,7 +69,7 @@
             android:id="@+id/btn_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/success_btn_bg"
+            android:background="@drawable/btn_bg"
             android:fontFamily="@font/regular"
             android:text="@string/close_btn_txt"
             android:textColor="@color/white"

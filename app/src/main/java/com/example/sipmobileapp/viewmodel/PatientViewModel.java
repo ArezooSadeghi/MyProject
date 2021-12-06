@@ -37,7 +37,7 @@ public class PatientViewModel extends AndroidViewModel {
         return timeoutExceptionHappenSingleLiveEvent;
     }
 
-    public SingleLiveEvent<Integer> getNavigateToGallery() {
+    public SingleLiveEvent<Integer> getAttachmentsItemClicked() {
         return navigateToGallery;
     }
 

@@ -16,21 +16,21 @@ import com.example.sipmobileapp.viewmodel.LoginViewModel;
 import java.util.List;
 
 public class ServerDataAdapter extends RecyclerView.Adapter<ServerDataAdapter.ServerDataHolder> {
-    private Context mContext;
-    private List<ServerData> mServerDataList;
-    private LoginViewModel mViewModel;
+    private Context context;
+    private List<ServerData> serverDataList;
+    private LoginViewModel viewModel;
 
     public ServerDataAdapter(Context context, List<ServerData> serverDataList, LoginViewModel viewModel) {
-        mContext = context;
-        mServerDataList = serverDataList;
-        mViewModel = viewModel;
+        this.context = context;
+        this.serverDataList = serverDataList;
+        this.viewModel = viewModel;
     }
 
     @NonNull
     @Override
     public ServerDataHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ServerDataHolder(DataBindingUtil.inflate(
-                LayoutInflater.from(mContext),
+                LayoutInflater.from(context),
                 R.layout.server_data_adapter_item,
                 parent,
                 false));
@@ -38,31 +38,29 @@ public class ServerDataAdapter extends RecyclerView.Adapter<ServerDataAdapter.Se
 
     @Override
     public void onBindViewHolder(@NonNull ServerDataHolder holder, int position) {
-        ServerData serverData = mServerDataList.get(position);
+        ServerData serverData = serverDataList.get(position);
         holder.bindServerData(serverData);
 
-        holder.mBinding.imgViewEdit.setOnClickListener(view -> mViewModel.getEditClicked().setValue(serverData));
-
-        holder.mBinding.imgViewDelete.setOnClickListener(view -> mViewModel.getDeleteClicked().setValue(serverData));
+        holder.binding.imgViewEdit.setOnClickListener(view -> viewModel.getEditClicked().setValue(serverData));
+        holder.binding.imgViewDelete.setOnClickListener(view -> viewModel.getDeleteClicked().setValue(serverData));
     }
 
     @Override
     public int getItemCount() {
-        return mServerDataList == null ? 0 : mServerDataList.size();
+        return serverDataList == null ? 0 : serverDataList.size();
     }
 
     public class ServerDataHolder extends RecyclerView.ViewHolder {
-        private ServerDataAdapterItemBinding mBinding;
+        private ServerDataAdapterItemBinding binding;
 
         public ServerDataHolder(ServerDataAdapterItemBinding binding) {
             super(binding.getRoot());
-
-            mBinding = binding;
+            this.binding = binding;
         }
 
         public void bindServerData(ServerData serverData) {
-            mBinding.txtCenterName.setText(serverData.getCenterName());
-            mBinding.txtIpAddress.setText(serverData.getIpAddress());
+            binding.txtCenterName.setText(serverData.getCenterName());
+            binding.txtIpAddress.setText(serverData.getIpAddress());
         }
     }
 }

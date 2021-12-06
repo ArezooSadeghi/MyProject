@@ -65,7 +65,7 @@ public class AttachmentViewModel extends AndroidViewModel {
         return finishWriteToStorage;
     }
 
-    public SingleLiveEvent<String> getPhotoClicked() {
+    public SingleLiveEvent<String> getItemClicked() {
         return photoClicked;
     }
 

@@ -9,20 +9,19 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#484848"
-        android:orientation="vertical">
+        android:background="@color/light_gray">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/search_bar_container"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="#3A3B3B"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
             app:layout_constraintTop_toTopOf="parent">
 
             <EditText
-                android:id="@+id/ed_text_search"
+                android:id="@+id/ed_txt_search"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
@@ -38,44 +37,51 @@
                 android:textCursorDrawable="@drawable/custom_cursor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_more"
+                app:layout_constraintHeight_default="spread"
                 app:layout_constraintStart_toEndOf="@id/btn_search"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_default="spread" />
 
             <Button
                 android:id="@+id/btn_search"
-                android:layout_width="60dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:background="@drawable/rounded_button"
                 android:drawableLeft="@drawable/ic_search"
                 android:drawableTint="@color/black"
-                android:paddingLeft="20dp"
-                app:backgroundTint="#5F6D7A"
-                app:layout_constraintBottom_toBottomOf="@id/ed_text_search"
+                android:gravity="center"
+                android:paddingLeft="32dp"
+                app:backgroundTint="@color/light_blue"
+                app:layout_constraintBottom_toBottomOf="@id/ed_txt_search"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/ed_text_search" />
+                app:layout_constraintTop_toTopOf="@id/ed_txt_search" />
 
             <ImageView
                 android:id="@+id/iv_more"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_more"
-                app:layout_constraintBottom_toBottomOf="@id/ed_text_search"
+                android:src="@drawable/ic_more_vertical"
+                app:layout_constraintBottom_toBottomOf="@id/ed_txt_search"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/ed_text_search"
+                app:layout_constraintTop_toTopOf="@id/ed_txt_search"
                 app:tint="@color/white" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_patient"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_default="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/search_bar_container" />
+            app:layout_constraintTop_toBottomOf="@id/search_bar_container"
+            app:layout_constraintWidth_default="spread" />
 
         <ProgressBar
             android:id="@+id/progress_bar_loading"
@@ -88,7 +94,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/txt_no_patient"
+            android:id="@+id/txt_no_search_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/regular"

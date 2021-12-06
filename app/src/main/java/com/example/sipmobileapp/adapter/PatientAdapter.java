@@ -19,9 +19,9 @@ import com.skydoves.powermenu.PowerMenuItem;
 import java.util.List;
 
 public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientHolder> {
-    private Context context;
-    private List<PatientResult.PatientInfo> patientInfoList;
-    private PatientViewModel viewModel;
+    private final Context context;
+    private final List<PatientResult.PatientInfo> patientInfoList;
+    private final PatientViewModel viewModel;
 
     public PatientAdapter(Context context, List<PatientResult.PatientInfo> patientInfoList, PatientViewModel viewModel) {
         this.context = context;
@@ -46,13 +46,13 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
 
         holder.binding.ivMore.setOnClickListener(view -> {
             PowerMenu powerMenu = new PowerMenu.Builder(context)
-                    .addItem(new PowerMenuItem(context.getResources().getString(R.string.attachments_item_title), R.drawable.magnifier))
-                    .setSize(600, 200)
+                    .addItem(new PowerMenuItem(context.getResources().getString(R.string.attachments_item_title)))
+                    .setSize(400, 200)
                     .build();
 
-            powerMenu.setOnMenuItemClickListener((position1, item) -> {
-                if (position1 == 0) {
-                    viewModel.getNavigateToGallery().setValue(patientInfo.getSickID());
+            powerMenu.setOnMenuItemClickListener((i, item) -> {
+                if (i == 0) {
+                    viewModel.getAttachmentsItemClicked().setValue(patientInfo.getSickID());
                     powerMenu.dismiss();
                 }
             });
@@ -65,12 +65,11 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
         return patientInfoList == null ? 0 : patientInfoList.size();
     }
 
-    public class PatientHolder extends RecyclerView.ViewHolder {
-        private PatientAdapterItemBinding binding;
+    public static class PatientHolder extends RecyclerView.ViewHolder {
+        private final PatientAdapterItemBinding binding;
 
         public PatientHolder(PatientAdapterItemBinding binding) {
             super(binding.getRoot());
-
             this.binding = binding;
         }
 

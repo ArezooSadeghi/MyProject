@@ -19,9 +19,9 @@ import com.example.sipmobileapp.viewmodel.AttachmentViewModel;
 import java.util.List;
 
 public class PhotoGalleryAdapter extends RecyclerView.Adapter<PhotoGalleryAdapter.PhotoGalleryHolder> {
-    private Context context;
-    private AttachmentViewModel viewModel;
-    private List<String> filePathList;
+    private final Context context;
+    private final AttachmentViewModel viewModel;
+    private final List<String> filePathList;
 
     public PhotoGalleryAdapter(Context context, AttachmentViewModel viewModel, List<String> filePathList) {
         this.context = context;
@@ -43,7 +43,7 @@ public class PhotoGalleryAdapter extends RecyclerView.Adapter<PhotoGalleryAdapte
     public void onBindViewHolder(@NonNull PhotoGalleryHolder holder, int position) {
         String filePath = filePathList.get(position);
         holder.bindFilePath(filePath);
-        holder.binding.getRoot().setOnClickListener(v -> viewModel.getPhotoClicked().setValue(filePath));
+        holder.binding.getRoot().setOnClickListener(v -> viewModel.getItemClicked().setValue(filePath));
     }
 
     @Override
@@ -53,12 +53,13 @@ public class PhotoGalleryAdapter extends RecyclerView.Adapter<PhotoGalleryAdapte
 
     public void updateFilePathList(List<String> newFilePathList) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PhotoGalleryDiffUtil(filePathList, newFilePathList));
+        diffResult.dispatchUpdatesTo(this);
         filePathList.clear();
         filePathList.addAll(newFilePathList);
     }
 
     public class PhotoGalleryHolder extends RecyclerView.ViewHolder {
-        private PhotoGalleryAdapterItemBinding binding;
+        private final PhotoGalleryAdapterItemBinding binding;
 
         public PhotoGalleryHolder(PhotoGalleryAdapterItemBinding binding) {
             super(binding.getRoot());
@@ -68,7 +69,7 @@ public class PhotoGalleryAdapter extends RecyclerView.Adapter<PhotoGalleryAdapte
         public void bindFilePath(String filePath) {
             Bitmap bitmap = BitmapFactory.decodeFile(filePath);
             if (bitmap != null) {
-                Glide.with(context).load(bitmap).into(binding.ivPhoto);
+                Glide.with(context).load(bitmap).into(binding.ivAttach);
             }
         }
     }

@@ -82,24 +82,26 @@ public class FullScreenPhotoFragment extends Fragment {
         String centerName = SipMobileAppPreferences.getCenterName(getContext());
         serverData = viewModel.getServerData(centerName);
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
+        assert getArguments() != null;
         attachID = getArguments().getInt(ARGS_ATTACH_ID);
     }
 
     private void initViews() {
+        assert getArguments() != null;
         String filePath = getArguments().getString(ARGS_FILE_PATH);
         Bitmap bitmap = BitmapFactory.decodeFile(filePath);
         if (bitmap != null) {
-            binding.imgViewFullScreen.setImage(ImageSource.bitmap(bitmap));
+            binding.ivFullScreen.setImage(ImageSource.bitmap(bitmap));
         }
     }
 
-    private void handleError(String message) {
-        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(message);
+    private void handleError(String msg) {
+        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(msg);
         fragment.show(getParentFragmentManager(), ErrorDialogFragment.TAG);
     }
 
-    private void showSuccessDialog(String message) {
-        SuccessDialogFragment fragment = SuccessDialogFragment.newInstance(message);
+    private void showSuccessDialog(String msg) {
+        SuccessDialogFragment fragment = SuccessDialogFragment.newInstance(msg);
         fragment.show(getParentFragmentManager(), SuccessDialogFragment.TAG);
     }
 
@@ -110,7 +112,7 @@ public class FullScreenPhotoFragment extends Fragment {
     }
 
     private void handleEvents() {
-        binding.imgViewDelete.setOnClickListener(v -> {
+        binding.ivDelete.setOnClickListener(v -> {
             QuestionDialogFragment fragment = QuestionDialogFragment.newInstance(getString(R.string.delete_attach_question));
             fragment.show(getParentFragmentManager(), QuestionDialogFragment.TAG);
         });

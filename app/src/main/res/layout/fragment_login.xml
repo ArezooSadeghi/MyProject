@@ -92,7 +92,7 @@
             android:layout_height="50dp"
             android:background="@color/white"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_more"
+            android:src="@drawable/ic_more_horizontal"
             app:layout_constraintBottom_toBottomOf="@id/spinner_server_data"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/spinner_server_data"

@@ -107,8 +107,8 @@ public class AttachmentFragment extends Fragment {
                 case REQUEST_CODE_TAKE_PHOTO:
                     if (photoFile.length() != 0) {
                         try {
-                            photoUri = FileProvider.getUriForFile(getContext(), AUTHORITY, photoFile);
-                            bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), photoUri);
+                            photoUri = FileProvider.getUriForFile(requireContext(), AUTHORITY, photoFile);
+                            bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), photoUri);
 
                             if (bitmap.getWidth() > bitmap.getHeight()) {
                                 matrix.postRotate(90);
@@ -117,21 +117,22 @@ public class AttachmentFragment extends Fragment {
 
                             binding.ivNoPhoto.setVisibility(View.GONE);
                             binding.ivPhoto.setVisibility(View.VISIBLE);
-                            Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
+                            Glide.with(requireContext()).load(bitmap).into(binding.ivPhoto);
                         } catch (IOException e) {
                             Log.e(TAG, e.getMessage());
                         }
                     }
-                    getActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    requireActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                     break;
                 case REQUEST_CODE_PICK_PHOTO:
+                    assert data != null;
                     photoUri = data.getData();
                     if (photoUri != null) {
                         try {
-                            bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), photoUri);
+                            bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), photoUri);
                             binding.ivNoPhoto.setVisibility(View.GONE);
                             binding.ivPhoto.setVisibility(View.VISIBLE);
-                            Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
+                            Glide.with(requireContext()).load(bitmap).into(binding.ivPhoto);
                         } catch (IOException e) {
                             Log.e(TAG, e.getMessage());
                         }
@@ -162,6 +163,7 @@ public class AttachmentFragment extends Fragment {
         String centerName = SipMobileAppPreferences.getCenterName(getContext());
         serverData = viewModel.getServerData(centerName);
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
+        assert getArguments() != null;
         sickID = getArguments().getInt(ARGS_SICK_ID);
         matrix = new Matrix();
     }
@@ -172,30 +174,30 @@ public class AttachmentFragment extends Fragment {
 
     private void openCamera() {
         Intent starter = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (starter.resolveActivity(getActivity().getPackageManager()) != null) {
-            File dir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
+        if (starter.resolveActivity(requireActivity().getPackageManager()) != null) {
+            File dir = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
             if (!dir.exists()) {
                 dir.mkdirs();
             }
             String name = "img_" + new Date().getTime() + ".jpg";
             photoFile = new File(dir, name);
-            Uri uri = FileProvider.getUriForFile(getContext(), AUTHORITY, photoFile);
-            List<ResolveInfo> activities = getActivity().getPackageManager().queryIntentActivities(starter, PackageManager.MATCH_DEFAULT_ONLY);
+            Uri uri = FileProvider.getUriForFile(requireContext(), AUTHORITY, photoFile);
+            List<ResolveInfo> activities = requireActivity().getPackageManager().queryIntentActivities(starter, PackageManager.MATCH_DEFAULT_ONLY);
             for (ResolveInfo activity : activities) {
-                getActivity().grantUriPermission(activity.activityInfo.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                requireActivity().grantUriPermission(activity.activityInfo.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             }
             starter.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             startActivityForResult(starter, REQUEST_CODE_TAKE_PHOTO);
         }
     }
 
-    private void handleError(String message) {
-        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(message);
+    private void handleError(String msg) {
+        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(msg);
         fragment.show(getParentFragmentManager(), ErrorDialogFragment.TAG);
     }
 
-    private void showSuccessDialog(String message) {
-        SuccessAttachDialogFragment fragment = SuccessAttachDialogFragment.newInstance(message);
+    private void showSuccessDialog(String msg) {
+        SuccessAttachDialogFragment fragment = SuccessAttachDialogFragment.newInstance(msg);
         fragment.show(getParentFragmentManager(), SuccessAttachDialogFragment.TAG);
     }
 
@@ -206,7 +208,7 @@ public class AttachmentFragment extends Fragment {
     }
 
     private boolean hasCameraPermission() {
-        return (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED);
+        return (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED);
     }
 
     private String convertBitmapToBase64(Bitmap bitmap) {
@@ -263,7 +265,7 @@ public class AttachmentFragment extends Fragment {
             fragment.show(getParentFragmentManager(), AttachAgainDialogFragment.TAG);
         });
 
-        viewModel.getNoAttachAgain().observe(getViewLifecycleOwner(), noAttachAgain -> getActivity().finish());
+        viewModel.getNoAttachAgain().observe(getViewLifecycleOwner(), noAttachAgain -> requireActivity().finish());
 
         viewModel.getYesAttachAgain().observe(getViewLifecycleOwner(), yesAttachAgain -> {
             photoUri = null;
@@ -288,19 +290,19 @@ public class AttachmentFragment extends Fragment {
                     case 0:
                         matrix.postRotate(90);
                         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                        Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
+                        Glide.with(requireContext()).load(bitmap).into(binding.ivPhoto);
                         numberOfRotate++;
                         break;
                     case 1:
                         matrix.postRotate(180);
                         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                        Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
+                        Glide.with(requireContext()).load(bitmap).into(binding.ivPhoto);
                         numberOfRotate++;
                         break;
                     case 2:
                         matrix.postRotate(270);
                         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                        Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
+                        Glide.with(requireContext()).load(bitmap).into(binding.ivPhoto);
                         numberOfRotate = 0;
                         break;
                 }

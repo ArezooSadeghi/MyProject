@@ -10,22 +10,24 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#1b1b1b"
+        android:background="@color/dark_black"
         tools:context=".view.fragment.FullScreenImageFragment">
 
         <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-            android:id="@+id/img_view_full_screen"
-            android:layout_width="match_parent"
+            android:id="@+id/iv_full_screen"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/frame_layout"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_default="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_default="spread" />
 
         <ProgressBar
             android:id="@+id/progress_bar_loading"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,20 +36,21 @@
 
         <FrameLayout
             android:id="@+id/frame_layout"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:alpha="0.8"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_default="spread">
 
-            <ImageButton
-                android:id="@+id/img_view_delete"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="32dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+            <ImageView
+                android:id="@+id/iv_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_delete"
                 app:tint="@color/white" />

@@ -9,25 +9,27 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#1b1b1b">
+        android:background="@color/dark_gray">
 
         <ProgressBar
             android:id="@+id/progress_bar_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:visibility="visible" />
 
         <ImageView
-            android:id="@+id/iv_no_photo"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:id="@+id/iv_no_attach"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/no_photo"
-            android:visibility="gone" />
+            android:src="@drawable/ic_gallery"
+            android:visibility="gone"
+            app:tint="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_attachment_file"
+            android:id="@+id/recycler_view_attachment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="48dp"
@@ -39,10 +41,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:backgroundTint="#484848" />
+            android:backgroundTint="@color/light_gray" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_add_new_file"
+            android:id="@+id/fab_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"

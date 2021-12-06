@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentAddEditServerDataDialogBinding;
 import com.example.sipmobileapp.model.ServerData;
+import com.example.sipmobileapp.utils.Converter;
+import com.example.sipmobileapp.utils.Others;
 import com.example.sipmobileapp.viewmodel.LoginViewModel;
 
 import java.util.List;
@@ -23,21 +25,20 @@ import java.util.Objects;
 public class AddEditServerDataDialogFragment extends DialogFragment {
     private FragmentAddEditServerDataDialogBinding binding;
     private LoginViewModel viewModel;
-
     private String centerName;
 
     private static final String ARGS_CENTER_NAME = "centerName";
-    private static final String ARGS_IP_ADDRESS = "ipAddress";
+    private static final String ARGS_IP = "ip";
     private static final String ARGS_PORT = "port";
     private static final String ARGS_IS_ADD = "isAdd";
 
     public static final String TAG = AddEditServerDataDialogFragment.class.getSimpleName();
 
-    public static AddEditServerDataDialogFragment newInstance(String centerName, String ipAddress, String port, boolean isAdd) {
+    public static AddEditServerDataDialogFragment newInstance(String centerName, String ip, String port, boolean isAdd) {
         AddEditServerDataDialogFragment fragment = new AddEditServerDataDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARGS_CENTER_NAME, centerName);
-        args.putString(ARGS_IP_ADDRESS, ipAddress);
+        args.putString(ARGS_IP, ip);
         args.putString(ARGS_PORT, port);
         args.putBoolean(ARGS_IS_ADD, isAdd);
         fragment.setArguments(args);
@@ -53,8 +54,8 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(LayoutInflater.from(
-                getContext()),
+        binding = DataBindingUtil.inflate(
+                LayoutInflater.from(getContext()),
                 R.layout.fragment_add_edit_server_data_dialog,
                 null,
                 false);
@@ -62,7 +63,8 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
         initViews();
         handleEvents();
 
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
+        AlertDialog dialog = new AlertDialog
+                .Builder(getContext())
                 .setView(binding.getRoot())
                 .create();
 
@@ -79,35 +81,32 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
     private void initViews() {
         assert getArguments() != null;
         centerName = getArguments().getString(ARGS_CENTER_NAME);
-        String ipAddress = getArguments().getString(ARGS_IP_ADDRESS);
+        String ip = getArguments().getString(ARGS_IP);
         String port = getArguments().getString(ARGS_PORT);
 
         binding.edTxtCenterName.setText(centerName);
-        binding.edTxtIpAddress.setText(ipAddress);
+        binding.edTxtIp.setText(ip);
         binding.edTxtPort.setText(port);
 
         binding.edTxtCenterName.setSelection(Objects.requireNonNull(binding.edTxtCenterName.getText()).length());
-        binding.edTxtIpAddress.setSelection(Objects.requireNonNull(binding.edTxtIpAddress.getText()).length());
+        binding.edTxtIp.setSelection(Objects.requireNonNull(binding.edTxtIp.getText()).length());
         binding.edTxtPort.setSelection(Objects.requireNonNull(binding.edTxtPort.getText()).length());
     }
 
     private void handleEvents() {
-        binding.fabOk.setOnClickListener(view -> {
+        binding.btnSave.setOnClickListener(view -> {
             String centerName = Objects.requireNonNull(binding.edTxtCenterName.getText()).toString();
-            String ipAddress = Objects.requireNonNull(binding.edTxtIpAddress.getText()).toString();
+            String ipAddress = Objects.requireNonNull(binding.edTxtIp.getText()).toString();
             String port = Objects.requireNonNull(binding.edTxtPort.getText()).toString();
             if (centerName.isEmpty() || ipAddress.isEmpty() || port.isEmpty()) {
-                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(getString(R.string.fill_required_fields));
-                fragment.show(getChildFragmentManager(), ErrorDialogFragment.TAG);
-            } else if (ipAddress.length() < 7 || !hasThreeDots(ipAddress) || hasEnglishLetter(ipAddress) || hasEnglishLetter(port)) {
-                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(getString(R.string.wrong_ip_format));
-                fragment.show(getChildFragmentManager(), ErrorDialogFragment.TAG);
+                handleError(getString(R.string.fill_required_fields));
+            } else if (ipAddress.length() < 7 || !Others.hasThreeDots(ipAddress) || Others.hasEnglishLetter(ipAddress) || Others.hasEnglishLetter(port)) {
+                handleError(getString(R.string.wrong_ip_format));
             } else {
-                if (isRepeatedCenterName(centerName) & !centerName.equals(AddEditServerDataDialogFragment.this.centerName)) {
-                    ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(getString(R.string.duplicate_name));
-                    fragment.show(getChildFragmentManager(), ErrorDialogFragment.TAG);
+                if (duplicateCenterName(centerName) & !centerName.equals(AddEditServerDataDialogFragment.this.centerName)) {
+                    handleError(getString(R.string.duplicate_name));
                 } else {
-                    ServerData serverData = new ServerData(centerName, convertPerDigitToEn(ipAddress), convertPerDigitToEn(port));
+                    ServerData serverData = new ServerData(centerName, Converter.perToEnDigitConverter(ipAddress), Converter.perToEnDigitConverter(port));
                     assert getArguments() != null;
                     boolean isAdd = getArguments().getBoolean(ARGS_IS_ADD);
                     if (!isAdd) {
@@ -124,12 +123,12 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
 
         binding.edTxtCenterName.setOnEditorActionListener((textView, actionID, keyEvent) -> {
             if (actionID == 0 || actionID == EditorInfo.IME_ACTION_DONE) {
-                binding.edTxtIpAddress.requestFocus();
+                binding.edTxtIp.requestFocus();
             }
             return false;
         });
 
-        binding.edTxtIpAddress.setOnEditorActionListener((textView, actionID, keyEvent) -> {
+        binding.edTxtIp.setOnEditorActionListener((textView, actionID, keyEvent) -> {
             if (actionID == 0 || actionID == EditorInfo.IME_ACTION_DONE) {
                 binding.edTxtPort.requestFocus();
             }
@@ -137,35 +136,12 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
         });
     }
 
-    private boolean hasEnglishLetter(String ipAddressOrPort) {
-        StringBuilder result = new StringBuilder();
-        char[] chars = ipAddressOrPort.toCharArray();
-        for (Character character : chars) {
-            if (!String.valueOf(character).equals(".")) {
-                result.append(character);
-            }
-        }
-
-        return result.toString().matches(".*[a-zA-Z]+.*");
-    }
-
-    private boolean hasThreeDots(String ipAddress) {
-        int numberOfDots = 0;
-        char[] chars = ipAddress.toCharArray();
-        for (Character character : chars) {
-            if (String.valueOf(character).equals(".")) {
-                numberOfDots++;
-            }
-        }
-        return numberOfDots == 3;
-    }
-
-    private boolean isRepeatedCenterName(String centerName) {
+    private boolean duplicateCenterName(String input) {
         List<ServerData> serverDataList = viewModel.getServerDataList();
         assert serverDataList != null;
         if (serverDataList.size() > 0) {
             for (ServerData serverData : serverDataList) {
-                if (serverData.getCenterName().equals(centerName)) {
+                if (serverData.getCenterName().equals(input)) {
                     return true;
                 }
             }
@@ -173,17 +149,8 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
         return false;
     }
 
-    private String convertPerDigitToEn(String ipAddressOrPort) {
-        return ipAddressOrPort.replaceAll("۰", "0").
-                replaceAll("۱", "1").
-                replaceAll("۲", "2").
-                replaceAll("۳", "3").
-                replaceAll("۴", "4").
-                replaceAll("۵", "5").
-                replaceAll("۶", "6").
-                replaceAll("۷", "7").
-                replaceAll("۸", "8").
-                replaceAll("۹", "9").
-                replaceAll(" ", "");
+    private void handleError(String msg) {
+        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(msg);
+        fragment.show(getParentFragmentManager(), ErrorDialogFragment.TAG);
     }
 }
