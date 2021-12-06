@@ -31,4 +31,5 @@
     <string name="yes_btn_txt">بله</string>
     <string name="no_btn_txt">خیر</string>
     <string name="error_txt">خطا</string>
+    <string name="note_txt">توجه</string>
 </resources>

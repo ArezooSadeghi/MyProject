@@ -21,13 +21,13 @@ public class SuccessAttachDialogFragment extends DialogFragment {
     private FragmentSuccessDialogBinding binding;
     private AttachmentViewModel viewModel;
 
-    private static final String ARGS_MESSAGE = "message";
+    private static final String ARGS_MSG = "msg";
     public static final String TAG = SuccessAttachDialogFragment.class.getSimpleName();
 
-    public static SuccessAttachDialogFragment newInstance(String message) {
+    public static SuccessAttachDialogFragment newInstance(String msg) {
         SuccessAttachDialogFragment fragment = new SuccessAttachDialogFragment();
         Bundle args = new Bundle();
-        args.putString(ARGS_MESSAGE, message);
+        args.putString(ARGS_MSG, msg);
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,8 +41,8 @@ public class SuccessAttachDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(LayoutInflater.from(
-                getContext()),
+        binding = DataBindingUtil.inflate(
+                LayoutInflater.from(getContext()),
                 R.layout.fragment_success_dialog,
                 null,
                 false);
@@ -50,7 +50,8 @@ public class SuccessAttachDialogFragment extends DialogFragment {
         initViews();
         handleEvents();
 
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
+        AlertDialog dialog = new AlertDialog
+                .Builder(getContext())
                 .setView(binding.getRoot())
                 .create();
 
@@ -70,8 +71,8 @@ public class SuccessAttachDialogFragment extends DialogFragment {
 
     private void initViews() {
         assert getArguments() != null;
-        String message = Converter.letterConverter(getArguments().getString(ARGS_MESSAGE));
-        binding.txtSuccessMessage.setText(message);
+        String msg = Converter.letterConverter(getArguments().getString(ARGS_MSG));
+        binding.txtMsg.setText(msg);
     }
 
     private void handleEvents() {

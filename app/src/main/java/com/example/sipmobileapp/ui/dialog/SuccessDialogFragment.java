@@ -17,13 +17,13 @@ import com.example.sipmobileapp.databinding.FragmentSuccessDialogBinding;
 public class SuccessDialogFragment extends DialogFragment {
     private FragmentSuccessDialogBinding binding;
 
-    private static final String ARGS_MESSAGE = "message";
+    private static final String ARGS_MSG = "msg";
     public static final String TAG = SuccessDialogFragment.class.getSimpleName();
 
-    public static SuccessDialogFragment newInstance(String message) {
+    public static SuccessDialogFragment newInstance(String msg) {
         SuccessDialogFragment fragment = new SuccessDialogFragment();
         Bundle args = new Bundle();
-        args.putString(ARGS_MESSAGE, message);
+        args.putString(ARGS_MSG, msg);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,8 +62,8 @@ public class SuccessDialogFragment extends DialogFragment {
 
     private void initViews() {
         assert getArguments() != null;
-        String message = getArguments().getString(ARGS_MESSAGE);
-        binding.txtSuccessMessage.setText(message);
+        String msg = getArguments().getString(ARGS_MSG);
+        binding.txtMsg.setText(msg);
     }
 
     private void handleEvents() {

@@ -1,7 +1,9 @@
 package com.example.sipmobileapp.ui.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
@@ -20,13 +22,13 @@ public class QuestionDialogFragment extends DialogFragment {
     private FragmentQuestionDialogBinding binding;
     private AttachmentViewModel viewModel;
 
-    private static final String ARGS_MESSAGE = "message";
+    private static final String ARGS_MSG = "msg";
     public static final String TAG = QuestionDialogFragment.class.getSimpleName();
 
-    public static QuestionDialogFragment newInstance(String message) {
+    public static QuestionDialogFragment newInstance(String msg) {
         QuestionDialogFragment fragment = new QuestionDialogFragment();
         Bundle args = new Bundle();
-        args.putString(ARGS_MESSAGE, message);
+        args.putString(ARGS_MSG, msg);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,7 +52,7 @@ public class QuestionDialogFragment extends DialogFragment {
         handleEvents();
 
         AlertDialog dialog = new AlertDialog
-                .Builder(getContext())
+                .Builder(requireContext())
                 .setView(binding.getRoot())
                 .create();
 
@@ -70,8 +72,13 @@ public class QuestionDialogFragment extends DialogFragment {
 
     private void initViews() {
         assert getArguments() != null;
-        String message = getArguments().getString(ARGS_MESSAGE);
-        binding.txtQuestion.setText(message);
+        String msg = getArguments().getString(ARGS_MSG);
+        binding.txtMsg.setText(msg);
+
+        String uri = "@drawable/ic_delete";
+        int imageResource = getResources().getIdentifier(uri, null, requireContext().getPackageName());
+        @SuppressLint("UseCompatLoadingForDrawables") Drawable src = getResources().getDrawable(imageResource);
+        binding.ivSrc.setImageDrawable(src);
     }
 
     private void handleEvents() {

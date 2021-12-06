@@ -19,8 +19,8 @@ import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.model.UserResult;
 import com.example.sipmobileapp.ui.activity.PatientContainerActivity;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
-import com.example.sipmobileapp.ui.dialog.RequiredServerDataDialogFragment;
 import com.example.sipmobileapp.ui.dialog.ServerDataListDialogFragment;
+import com.example.sipmobileapp.ui.dialog.WarningDialogFragment;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
 import com.example.sipmobileapp.viewmodel.LoginViewModel;
 
@@ -57,8 +57,8 @@ public class LoginFragment extends Fragment {
                 false);
 
         if (viewModel.getServerDataList().size() == 0 || viewModel.getServerDataList() == null) {
-            RequiredServerDataDialogFragment fragment = RequiredServerDataDialogFragment.newInstance();
-            fragment.show(getParentFragmentManager(), RequiredServerDataDialogFragment.TAG);
+            WarningDialogFragment fragment = WarningDialogFragment.newInstance(getString(R.string.required_ip));
+            fragment.show(getParentFragmentManager(), WarningDialogFragment.TAG);
         } else {
             setupSpinner();
         }
@@ -110,8 +110,8 @@ public class LoginFragment extends Fragment {
 
         binding.btnLogin.setOnClickListener(view -> {
             if (viewModel.getServerDataList() == null || viewModel.getServerDataList().size() == 0) {
-                RequiredServerDataDialogFragment fragment = RequiredServerDataDialogFragment.newInstance();
-                fragment.show(getParentFragmentManager(), RequiredServerDataDialogFragment.TAG);
+                WarningDialogFragment fragment = WarningDialogFragment.newInstance("");
+                fragment.show(getParentFragmentManager(), WarningDialogFragment.TAG);
             } else if (Objects.requireNonNull(binding.edTxtUserName.getText()).toString().isEmpty() || Objects.requireNonNull(binding.edTxtPassword.getText()).toString().isEmpty()) {
                 handleError(getString(R.string.fill_required_fields));
             } else {

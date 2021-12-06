@@ -16,15 +16,15 @@ import com.example.sipmobileapp.databinding.FragmentErrorDialogBinding;
 import com.example.sipmobileapp.utils.Converter;
 
 public class ErrorDialogFragment extends DialogFragment {
-    private FragmentErrorDialogBinding mBinding;
+    private FragmentErrorDialogBinding binding;
 
-    private static final String ARGS_MESSAGE = "message";
+    private static final String MSG = "msg";
     public static final String TAG = ErrorDialogFragment.class.getSimpleName();
 
-    public static ErrorDialogFragment newInstance(String message) {
+    public static ErrorDialogFragment newInstance(String msg) {
         ErrorDialogFragment fragment = new ErrorDialogFragment();
         Bundle args = new Bundle();
-        args.putString(ARGS_MESSAGE, message);
+        args.putString(MSG, msg);
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,8 +37,8 @@ public class ErrorDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(
-                getContext()),
+        binding = DataBindingUtil.inflate(
+                LayoutInflater.from(getContext()),
                 R.layout.fragment_error_dialog,
                 null,
                 false);
@@ -46,8 +46,9 @@ public class ErrorDialogFragment extends DialogFragment {
         initViews();
         handleEvents();
 
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setView(mBinding.getRoot())
+        AlertDialog dialog = new AlertDialog
+                .Builder(getContext())
+                .setView(binding.getRoot())
                 .create();
 
         if (dialog.getWindow() != null) {
@@ -62,11 +63,11 @@ public class ErrorDialogFragment extends DialogFragment {
 
     private void initViews() {
         assert getArguments() != null;
-        String message = Converter.letterConverter(getArguments().getString(ARGS_MESSAGE));
-        mBinding.txtErrorMessage.setText(message);
+        String msg = Converter.letterConverter(getArguments().getString(MSG));
+        binding.txtMsg.setText(msg);
     }
 
     private void handleEvents() {
-        mBinding.btnClose.setOnClickListener(view -> dismiss());
+        binding.btnClose.setOnClickListener(view -> dismiss());
     }
 }

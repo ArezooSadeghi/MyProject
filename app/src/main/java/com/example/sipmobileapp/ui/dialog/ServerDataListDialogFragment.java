@@ -97,8 +97,8 @@ public class ServerDataListDialogFragment extends DialogFragment {
             setupAdapter();
             List<ServerData> serverDataList = viewModel.getServerDataList();
             if (serverDataList.size() == 0) {
-                RequiredServerDataDialogFragment fragment = RequiredServerDataDialogFragment.newInstance();
-                fragment.show(getParentFragmentManager(), RequiredServerDataDialogFragment.TAG);
+                WarningDialogFragment fragment = WarningDialogFragment.newInstance(getString(R.string.required_ip));
+                fragment.show(getParentFragmentManager(), WarningDialogFragment.TAG);
                 dismiss();
             }
         });
