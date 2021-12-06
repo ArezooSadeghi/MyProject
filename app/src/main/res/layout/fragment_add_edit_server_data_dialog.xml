@@ -43,7 +43,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="16dp"
-            android:hint="@string/ip_address_hint"
+            android:hint="@string/ip_hint"
             app:boxStrokeColor="@color/dim_gray"
             app:hintTextColor="@color/dim_gray">
 

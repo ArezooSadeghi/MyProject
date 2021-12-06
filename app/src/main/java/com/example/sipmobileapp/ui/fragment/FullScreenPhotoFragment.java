@@ -111,7 +111,7 @@ public class FullScreenPhotoFragment extends Fragment {
 
     private void handleEvents() {
         binding.imgViewDelete.setOnClickListener(v -> {
-            QuestionDialogFragment fragment = QuestionDialogFragment.newInstance(getString(R.string.question_delete_file_message));
+            QuestionDialogFragment fragment = QuestionDialogFragment.newInstance(getString(R.string.delete_attach_question));
             fragment.show(getParentFragmentManager(), QuestionDialogFragment.TAG);
         });
     }
@@ -123,7 +123,7 @@ public class FullScreenPhotoFragment extends Fragment {
                 if (attachResult.getErrorCode().equals("0")) {
                     int attachID = attachResult.getAttachs()[0].getAttachID();
                     EventBus.getDefault().postSticky(new DeleteEvent(attachID));
-                    showSuccessDialog(getString(R.string.success_delete_attachment_message));
+                    showSuccessDialog(getString(R.string.success_delete_attach));
                 } else {
                     handleError(attachResult.getError());
                 }

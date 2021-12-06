@@ -97,14 +97,14 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
             String ipAddress = Objects.requireNonNull(binding.edTxtIpAddress.getText()).toString();
             String port = Objects.requireNonNull(binding.edTxtPort.getText()).toString();
             if (centerName.isEmpty() || ipAddress.isEmpty() || port.isEmpty()) {
-                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("لطفا موارد خواسته شده را تکمیل کنید");
+                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(getString(R.string.fill_required_fields));
                 fragment.show(getChildFragmentManager(), ErrorDialogFragment.TAG);
             } else if (ipAddress.length() < 7 || !hasThreeDots(ipAddress) || hasEnglishLetter(ipAddress) || hasEnglishLetter(port)) {
-                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("فرمت آدرس ip نادرست می باشد");
+                ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(getString(R.string.wrong_ip_format));
                 fragment.show(getChildFragmentManager(), ErrorDialogFragment.TAG);
             } else {
                 if (isRepeatedCenterName(centerName) & !centerName.equals(AddEditServerDataDialogFragment.this.centerName)) {
-                    ErrorDialogFragment fragment = ErrorDialogFragment.newInstance("نام مرکز تکراری می باشد");
+                    ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(getString(R.string.duplicate_name));
                     fragment.show(getChildFragmentManager(), ErrorDialogFragment.TAG);
                 } else {
                     ServerData serverData = new ServerData(centerName, convertPerDigitToEn(ipAddress), convertPerDigitToEn(port));

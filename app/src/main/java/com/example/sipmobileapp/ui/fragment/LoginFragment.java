@@ -113,7 +113,7 @@ public class LoginFragment extends Fragment {
                 RequiredServerDataDialogFragment fragment = RequiredServerDataDialogFragment.newInstance();
                 fragment.show(getParentFragmentManager(), RequiredServerDataDialogFragment.TAG);
             } else if (Objects.requireNonNull(binding.edTxtUserName.getText()).toString().isEmpty() || Objects.requireNonNull(binding.edTxtPassword.getText()).toString().isEmpty()) {
-                handleError("نام کاربری و رمز عبور را وارد نمایید");
+                handleError(getString(R.string.fill_required_fields));
             } else {
                 binding.loadingLayout.setVisibility(View.VISIBLE);
                 binding.edTxtUserName.setEnabled(false);

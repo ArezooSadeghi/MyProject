@@ -66,7 +66,7 @@
             android:layout_marginLeft="80dp"
             android:layout_marginRight="80dp"
             android:background="@drawable/success_button_bg"
-            android:text="بستن"
+            android:text="@string/close_btn_txt"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:backgroundTint="#4BB543"

@@ -65,7 +65,7 @@
             android:layout_marginLeft="64dp"
             android:layout_marginRight="80dp"
             android:background="@drawable/question_button_bg"
-            android:text="بله"
+            android:text="@string/yes_btn_txt"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:backgroundTint="@color/orange"
@@ -80,13 +80,13 @@
             android:layout_height="40dp"
             android:layout_marginLeft="80dp"
             android:background="@drawable/question_button_bg"
-            android:text="خیر"
+            android:text="@string/no_btn_txt"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:backgroundTint="@color/orange"
             app:layout_constraintBottom_toBottomOf="@id/layoutDialog"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_yes"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutDialog" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

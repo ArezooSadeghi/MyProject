@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.sipmobileapp.R;
+
 public class RequiredServerDataDialogFragment extends DialogFragment {
 
     public static final String TAG = RequiredServerDataDialogFragment.class.getSimpleName();
@@ -28,8 +30,8 @@ public class RequiredServerDataDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setMessage("لطفا آدرس ip خود را وارد کنید")
-                .setPositiveButton("تایید", (dialogInterface, i) -> {
+                .setMessage(getString(R.string.required_ip))
+                .setPositiveButton(getString(R.string.confirmation_btn_txt), (dialogInterface, i) -> {
                     AddEditServerDataDialogFragment fragment = AddEditServerDataDialogFragment.newInstance("", "", "", true);
                     fragment.show(getParentFragmentManager(), AddEditServerDataDialogFragment.TAG);
                     dismiss();

@@ -158,7 +158,7 @@ public class PhotoGalleryFragment extends Fragment {
                     fetchPatientAttachments(sickID);
                 }
             } else {
-                handleError(getString(R.string.storage_access_denied_message));
+                handleError(getString(R.string.storage_permission_denied));
             }
         }
     }

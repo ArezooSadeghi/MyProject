@@ -22,6 +22,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_gravity="center"
+            android:contentDescription="@string/app_name"
             android:src="@drawable/no_photo"
             android:visibility="gone" />
 

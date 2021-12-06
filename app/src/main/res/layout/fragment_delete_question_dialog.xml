@@ -20,7 +20,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:fontFamily="@font/regular"
-            android:text="آیا می خواهید فایل مربوطه را حذف کنید؟"
+            android:text="@string/delete_attach_question"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
-                android:text="خیر"
+                android:text="@string/no_btn_txt"
                 android:textColor="@color/black"
                 app:backgroundTint="@color/light_green" />
 
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:text="بله"
+                android:text="@string/yes_btn_txt"
                 android:textColor="@color/black"
                 app:backgroundTint="@color/light_green" />
 

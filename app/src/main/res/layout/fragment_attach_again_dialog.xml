@@ -17,8 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="آیا می خواهید فایل دیگری را اضافه کنید؟"
+            android:layout_marginRight="16dp"
+            android:text="@string/attach_again_question"
             android:textColor="@color/black"
             android:textSize="14sp" />
 
@@ -33,18 +33,18 @@
                 android:id="@+id/btn_no"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:backgroundTint="@color/teal_200"
-                android:text="خیر"
+                android:text="@string/no_btn_txt"
                 android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/btn_yes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:backgroundTint="@color/teal_200"
-                android:text="بله"
+                android:text="@string/yes_btn_txt"
                 android:textColor="@color/black" />
 
         </LinearLayout>

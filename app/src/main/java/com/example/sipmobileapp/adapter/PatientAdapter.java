@@ -46,7 +46,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
 
         holder.binding.ivMore.setOnClickListener(view -> {
             PowerMenu powerMenu = new PowerMenu.Builder(context)
-                    .addItem(new PowerMenuItem(context.getResources().getString(R.string.see_attachments_title), R.drawable.magnifier))
+                    .addItem(new PowerMenuItem(context.getResources().getString(R.string.attachments_item_title), R.drawable.magnifier))
                     .setSize(600, 200)
                     .build();
 

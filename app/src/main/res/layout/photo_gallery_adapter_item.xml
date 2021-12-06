@@ -16,6 +16,7 @@
             android:layout_height="0dp"
             android:layout_margin="4dp"
             android:background="@drawable/image_view_bg"
+            android:contentDescription="@string/app_name"
             android:padding="8dp"
             android:scaleType="fitCenter"
             app:layout_constraintDimensionRatio="1:1"

@@ -150,7 +150,7 @@ public class AttachmentFragment extends Fragment {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             openCamera();
         } else {
-            handleError(getString(R.string.camera_access_denied_message));
+            handleError(getString(R.string.camera_permission_denied));
         }
     }
 
@@ -231,7 +231,7 @@ public class AttachmentFragment extends Fragment {
                         int attachID = attachResult.getAttachs()[0].getAttachID();
                         EventBus.getDefault().postSticky(new RefreshEvent(attachID));
                     }
-                    showSuccessDialog(getString(R.string.success_attach_message));
+                    showSuccessDialog(getString(R.string.success_attach));
                 } else {
                     handleError(attachResult.getError());
                 }
@@ -259,7 +259,7 @@ public class AttachmentFragment extends Fragment {
         });
 
         viewModel.getShowAttachAgainDialog().observe(getViewLifecycleOwner(), showAttachAgainDialog -> {
-            AttachAgainDialogFragment fragment = AttachAgainDialogFragment.newInstance("آیا می خواهید فایل دیگری را اضافه نمایید؟");
+            AttachAgainDialogFragment fragment = AttachAgainDialogFragment.newInstance(getString(R.string.attach_again_question));
             fragment.show(getParentFragmentManager(), AttachAgainDialogFragment.TAG);
         });
 
@@ -279,7 +279,7 @@ public class AttachmentFragment extends Fragment {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "انتخاب تصویر"), REQUEST_CODE_PICK_PHOTO);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.chooser_title)), REQUEST_CODE_PICK_PHOTO);
         });
 
         binding.ivRotate.setOnClickListener(view -> {
@@ -305,7 +305,7 @@ public class AttachmentFragment extends Fragment {
                         break;
                 }
             } else {
-                handleError(getString(R.string.not_selected_file_message));
+                handleError(getString(R.string.select_file));
             }
         });
 
@@ -336,7 +336,7 @@ public class AttachmentFragment extends Fragment {
 
                 new Thread(() -> attach(attachParameter)).start();
             } else {
-                handleError(getString(R.string.not_selected_file_message));
+                handleError(getString(R.string.select_file));
             }
         });
     }

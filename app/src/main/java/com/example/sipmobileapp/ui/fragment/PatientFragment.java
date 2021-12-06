@@ -94,7 +94,7 @@ public class PatientFragment extends Fragment {
     private void handleEvents() {
         binding.ivMore.setOnClickListener(view -> {
             PowerMenu powerMenu = new PowerMenu.Builder(getContext())
-                    .addItem(new PowerMenuItem(getString(R.string.logout_title)))
+                    .addItem(new PowerMenuItem(getString(R.string.logout_item_title)))
                     .build();
 
             powerMenu.setOnMenuItemClickListener((position, item) -> {
@@ -110,7 +110,7 @@ public class PatientFragment extends Fragment {
 
         binding.btnSearch.setOnClickListener(view -> {
             if (binding.edTextSearch.getText().toString().isEmpty()) {
-                handleError("لطفا نام بیمار را در قسمت جستجو وارد نمایید");
+                handleError(getString(R.string.search_patient_name));
             } else {
                 binding.progressBarLoading.setVisibility(View.VISIBLE);
                 binding.txtNoPatient.setVisibility(View.GONE);
