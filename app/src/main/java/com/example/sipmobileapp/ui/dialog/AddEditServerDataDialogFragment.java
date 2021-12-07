@@ -2,6 +2,7 @@ package com.example.sipmobileapp.ui.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.inputmethod.EditorInfo;
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentAddEditServerDataDialogBinding;
 import com.example.sipmobileapp.model.ServerData;
+import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.utils.Converter;
 import com.example.sipmobileapp.utils.Others;
 import com.example.sipmobileapp.viewmodel.LoginViewModel;
@@ -68,6 +70,10 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
                 .setView(binding.getRoot())
                 .create();
 
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
@@ -106,15 +112,14 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
                 if (duplicateCenterName(centerName) & !centerName.equals(AddEditServerDataDialogFragment.this.centerName)) {
                     handleError(getString(R.string.duplicate_name));
                 } else {
-                    ServerData serverData = new ServerData(centerName, Converter.perToEnDigitConverter(ipAddress), Converter.perToEnDigitConverter(port));
+                    ServerDataTwo serverDataTwo = new ServerDataTwo(centerName, Converter.perToEnDigitConverter(ipAddress), Converter.perToEnDigitConverter(port));
                     assert getArguments() != null;
                     boolean isAdd = getArguments().getBoolean(ARGS_IS_ADD);
                     if (!isAdd) {
-                        ServerData preServerData = viewModel.getServerData(AddEditServerDataDialogFragment.this.centerName);
-                        viewModel.deleteServerData(preServerData);
+                        ServerDataTwo preServerData = viewModel.getServerData(AddEditServerDataDialogFragment.this.centerName);
+                        viewModel.delete(preServerData.getCenterName());
                     }
-                    viewModel.insertServerData(serverData);
-                    viewModel.getInsertNotifySpinner().setValue(true);
+                    viewModel.insert(serverDataTwo);
                     viewModel.getInsertNotifyServerDataList().setValue(true);
                     dismiss();
                 }
@@ -134,13 +139,24 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
             }
             return false;
         });
+
+        binding.btnClose.setOnClickListener(view -> {
+            List<ServerDataTwo> serverDataList = viewModel.getServerDataListMutableLiveData().getValue();
+            if (serverDataList == null || serverDataList.size() == 0) {
+                dismiss();
+                WarningDialogFragment fragment = WarningDialogFragment.newInstance(getString(R.string.required_ip));
+                fragment.show(getParentFragmentManager(), WarningDialogFragment.TAG);
+            } else {
+                dismiss();
+            }
+        });
     }
 
     private boolean duplicateCenterName(String input) {
-        List<ServerData> serverDataList = viewModel.getServerDataList();
+        List<ServerDataTwo> serverDataList = viewModel.getServerDataListMutableLiveData().getValue();
         assert serverDataList != null;
         if (serverDataList.size() > 0) {
-            for (ServerData serverData : serverDataList) {
+            for (ServerDataTwo serverData : serverDataList) {
                 if (serverData.getCenterName().equals(input)) {
                     return true;
                 }

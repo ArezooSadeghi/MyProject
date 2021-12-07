@@ -30,7 +30,7 @@ import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentAttachmentBinding;
 import com.example.sipmobileapp.event.RefreshEvent;
 import com.example.sipmobileapp.model.AttachResult;
-import com.example.sipmobileapp.model.ServerData;
+import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.ui.dialog.AttachAgainDialogFragment;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.ui.dialog.SuccessAttachDialogFragment;
@@ -48,7 +48,7 @@ import java.util.List;
 public class AttachmentFragment extends Fragment {
     private FragmentAttachmentBinding binding;
     private AttachmentViewModel viewModel;
-    private ServerData serverData;
+    private ServerDataTwo serverData;
     private String userLoginKey;
     private Uri photoUri;
     private File photoFile;
@@ -202,7 +202,7 @@ public class AttachmentFragment extends Fragment {
     }
 
     private void attach(AttachResult.AttachParameter attachParameter) {
-        viewModel.getServiceAttachResult(serverData.getIpAddress() + ":" + serverData.getPort());
+        viewModel.getServiceAttachResult(serverData.getIp() + ":" + serverData.getPort());
         String path = "/api/v1/attachs/Add/";
         viewModel.attach(path, userLoginKey, attachParameter);
     }

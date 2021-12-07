@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.sipmobileapp.model.AttachResult;
-import com.example.sipmobileapp.model.ServerData;
+import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.repository.SipMobileAppRepository;
 
 public class AttachmentViewModel extends AndroidViewModel {
@@ -89,7 +89,7 @@ public class AttachmentViewModel extends AndroidViewModel {
         return yesDelete;
     }
 
-    public ServerData getServerData(String centerName) {
+    public ServerDataTwo getServerData(String centerName) {
         return repository.getServerData(centerName);
     }
 

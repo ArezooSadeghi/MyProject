@@ -20,7 +20,7 @@ import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.adapter.PatientAdapter;
 import com.example.sipmobileapp.databinding.FragmentPatientBinding;
 import com.example.sipmobileapp.model.PatientResult;
-import com.example.sipmobileapp.model.ServerData;
+import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.ui.activity.LoginContainerActivity;
 import com.example.sipmobileapp.ui.activity.PhotoGalleryContainerActivity;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
@@ -36,7 +36,7 @@ import java.util.Objects;
 public class PatientFragment extends Fragment {
     private FragmentPatientBinding binding;
     private PatientViewModel viewModel;
-    private ServerData serverData;
+    private ServerDataTwo serverData;
     private String userLoginKey;
 
     public static PatientFragment newInstance() {
@@ -131,7 +131,7 @@ public class PatientFragment extends Fragment {
     }
 
     private void fetchPatients(String query) {
-        viewModel.getServicePatientResult(serverData.getIpAddress() + ":" + serverData.getPort());
+        viewModel.getServicePatientResult(serverData.getIp() + ":" + serverData.getPort());
         String path = "/api/v1/patients/search/";
         viewModel.fetchPatients(path, userLoginKey, query);
     }

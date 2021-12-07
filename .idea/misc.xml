@@ -8,6 +8,9 @@
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/btn_bg.xml" value="0.3435185185185185" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/dialog_bg.xml" value="0.3435185185185185" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/error_button_bg.xml" value="0.2833333333333333" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/login_bg.xml" value="0.3398148148148148" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/login_button_bg.xml" value="0.3398148148148148" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/login_title_bg.xml" value="0.3398148148148148" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/question_button_bg.xml" value="0.2833333333333333" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/success_btn_bg.xml" value="0.3435185185185185" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/success_button_bg.xml" value="0.2833333333333333" />
@@ -17,6 +20,7 @@
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/title_server_data_bg.xml" value="0.3435185185185185" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/title_success_bg.xml" value="0.3435185185185185" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/activity_fragment_container.xml" value="0.2957427536231884" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/activity_server_data_container.xml" value="0.35778985507246375" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_add_edit_server_data_dialog.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_answer.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_attach_again_dialog.xml" value="0.2957427536231884" />

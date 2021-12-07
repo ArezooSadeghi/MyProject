@@ -4,22 +4,23 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
-import com.example.sipmobileapp.model.ServerData;
+import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.model.UserResult;
 import com.example.sipmobileapp.repository.SipMobileAppRepository;
 
 import java.util.List;
 
 public class LoginViewModel extends AndroidViewModel {
-    private SipMobileAppRepository mRepository;
+    private SipMobileAppRepository repository;
 
     private SingleLiveEvent<Boolean> insertNotifySpinner = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> insertNotifyServerDataList = new SingleLiveEvent<>();
 
-    private SingleLiveEvent<ServerData> editClicked = new SingleLiveEvent<>();
+    private SingleLiveEvent<ServerDataTwo> editClicked = new SingleLiveEvent<>();
 
-    private SingleLiveEvent<ServerData> deleteClicked = new SingleLiveEvent<>();
+    private SingleLiveEvent<ServerDataTwo> deleteClicked = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> deleteNotifySpinner = new SingleLiveEvent<>();
 
     private SingleLiveEvent<String> noConnectionExceptionHappenSingleLiveEvent;
@@ -28,16 +29,16 @@ public class LoginViewModel extends AndroidViewModel {
 
     private SingleLiveEvent<UserResult> loginResultSingleLiveEvent;
 
+    private LiveData<List<ServerDataTwo>> serverDataListMutableLiveData;
+
     public LoginViewModel(@NonNull Application application) {
         super(application);
-
-        mRepository = SipMobileAppRepository.getInstance(getApplication());
-
-        noConnectionExceptionHappenSingleLiveEvent = mRepository.getNoConnectionExceptionHappenSingleLiveEvent();
-        timeoutExceptionHappenSingleLiveEvent = mRepository.getTimeoutExceptionHappenSingleLiveEvent();
-        wrongIpAddressSingleLiveEvent = mRepository.getWrongIpAddressSingleLiveEvent();
-
-        loginResultSingleLiveEvent = mRepository.getLoginResultSingleLiveEvent();
+        repository = SipMobileAppRepository.getInstance(getApplication());
+        noConnectionExceptionHappenSingleLiveEvent = repository.getNoConnectionExceptionHappenSingleLiveEvent();
+        timeoutExceptionHappenSingleLiveEvent = repository.getTimeoutExceptionHappenSingleLiveEvent();
+        wrongIpAddressSingleLiveEvent = repository.getWrongIpAddressSingleLiveEvent();
+        loginResultSingleLiveEvent = repository.getLoginResultSingleLiveEvent();
+        serverDataListMutableLiveData = repository.getServerDataListMutableLiveData();
     }
 
     public SingleLiveEvent<Boolean> getInsertNotifySpinner() {
@@ -48,12 +49,28 @@ public class LoginViewModel extends AndroidViewModel {
         return insertNotifyServerDataList;
     }
 
-    public SingleLiveEvent<ServerData> getEditClicked() {
+    public SingleLiveEvent<ServerDataTwo> getEditClicked() {
         return editClicked;
     }
 
-    public SingleLiveEvent<ServerData> getDeleteClicked() {
+    public SingleLiveEvent<ServerDataTwo> getDeleteClicked() {
         return deleteClicked;
+    }
+
+    public LiveData<List<ServerDataTwo>> getServerDataListMutableLiveData() {
+        return serverDataListMutableLiveData;
+    }
+
+    public void insert(ServerDataTwo serverDataTwo) {
+        repository.insert(serverDataTwo);
+    }
+
+    public void delete(String centerName) {
+        repository.delete(centerName);
+    }
+
+    public ServerDataTwo getServerData(String centerName) {
+        return repository.getServerData(centerName);
     }
 
     public SingleLiveEvent<Boolean> getDeleteNotifySpinner() {
@@ -76,27 +93,11 @@ public class LoginViewModel extends AndroidViewModel {
         return loginResultSingleLiveEvent;
     }
 
-    public List<ServerData> getServerDataList() {
-        return mRepository.getServerDataList();
-    }
-
-    public ServerData getServerData(String centerName) {
-        return mRepository.getServerData(centerName);
-    }
-
-    public void insertServerData(ServerData serverData) {
-        mRepository.insertServerData(serverData);
-    }
-
-    public void deleteServerData(ServerData serverData) {
-        mRepository.deleteServerData(serverData);
-    }
-
     public void login(String path, UserResult.UserParameter userParameter) {
-        mRepository.login(path, userParameter);
+        repository.login(path, userParameter);
     }
 
     public void getUserLoginService(String newBaseUrl) {
-        mRepository.getServiceUserResult(newBaseUrl);
+        repository.getServiceUserResult(newBaseUrl);
     }
 }

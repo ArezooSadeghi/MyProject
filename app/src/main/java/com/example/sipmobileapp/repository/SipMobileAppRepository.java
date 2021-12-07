@@ -1,20 +1,17 @@
 package com.example.sipmobileapp.repository;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import com.example.sipmobileapp.R;
-import com.example.sipmobileapp.database.SipMobileAppDBHelper;
-import com.example.sipmobileapp.database.SipMobileAppSchema;
 import com.example.sipmobileapp.model.AttachResult;
 import com.example.sipmobileapp.model.PatientResult;
-import com.example.sipmobileapp.model.ServerData;
+import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.model.UserResult;
 import com.example.sipmobileapp.retrofit.AttachResultDeserializer;
 import com.example.sipmobileapp.retrofit.NoConnectivityException;
@@ -22,14 +19,16 @@ import com.example.sipmobileapp.retrofit.PatientResultDeserializer;
 import com.example.sipmobileapp.retrofit.RetrofitInstance;
 import com.example.sipmobileapp.retrofit.SipMobileAppService;
 import com.example.sipmobileapp.retrofit.UserResultDeserializer;
+import com.example.sipmobileapp.room.ServerDataTwoDao;
+import com.example.sipmobileapp.room.ServerDataTwoRoomDatabase;
 import com.example.sipmobileapp.viewmodel.SingleLiveEvent;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,8 +38,11 @@ public class SipMobileAppRepository {
     @SuppressLint("StaticFieldLeak")
     public static SipMobileAppRepository sInstance;
     private Context context;
-    private SQLiteDatabase mDatabase;
     private SipMobileAppService sipMobileAppService;
+
+
+    private ServerDataTwoDao serverDataTwoDao;
+    private LiveData<List<ServerDataTwo>> serverDataListMutableLiveData;
 
     public static final String TAG = SipMobileAppRepository.class.getSimpleName();
 
@@ -56,8 +58,9 @@ public class SipMobileAppRepository {
 
     private SipMobileAppRepository(Context context) {
         this.context = context;
-        SipMobileAppDBHelper helper = new SipMobileAppDBHelper(context);
-        mDatabase = helper.getWritableDatabase();
+        ServerDataTwoRoomDatabase db = ServerDataTwoRoomDatabase.getDatabase(context);
+        serverDataTwoDao = db.serverDataTwoDao();
+        serverDataListMutableLiveData = serverDataTwoDao.getServerDataList();
     }
 
     public static SipMobileAppRepository getInstance(Context context) {
@@ -121,97 +124,8 @@ public class SipMobileAppRepository {
         return wrongIpAddressSingleLiveEvent;
     }
 
-    public void insertServerData(ServerData serverData) {
-        ContentValues values = new ContentValues();
-
-        values.put(SipMobileAppSchema.ServerDataTable.Cols.CENTER_NAME, serverData.getCenterName());
-        values.put(SipMobileAppSchema.ServerDataTable.Cols.IP_ADDRESS, serverData.getIpAddress());
-        values.put(SipMobileAppSchema.ServerDataTable.Cols.PORT, serverData.getPort());
-
-        mDatabase.insert(SipMobileAppSchema.ServerDataTable.NAME, null, values);
-    }
-
-    public List<ServerData> getServerDataList() {
-        List<ServerData> serverDataList = new ArrayList<>();
-        Cursor cursor = mDatabase.query(
-                SipMobileAppSchema.ServerDataTable.NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-
-        if (cursor == null || cursor.getCount() == 0) {
-            return serverDataList;
-        }
-
-        try {
-
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-
-                String centerName = cursor.getString(cursor.getColumnIndex(SipMobileAppSchema.ServerDataTable.Cols.CENTER_NAME));
-                String ipAddress = cursor.getString(cursor.getColumnIndex(SipMobileAppSchema.ServerDataTable.Cols.IP_ADDRESS));
-                String port = cursor.getString(cursor.getColumnIndex(SipMobileAppSchema.ServerDataTable.Cols.PORT));
-
-                ServerData serverData = new ServerData(centerName, ipAddress, port);
-
-                serverDataList.add(serverData);
-
-                cursor.moveToNext();
-            }
-
-        } finally {
-            cursor.close();
-        }
-        return serverDataList;
-    }
-
-    public ServerData getServerData(String centerName) {
-        ServerData serverData = new ServerData();
-        String selection = "centerName=?";
-        String[] selectionArgs = {centerName};
-        Cursor cursor = mDatabase.query(
-                SipMobileAppSchema.ServerDataTable.NAME,
-                null,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null);
-
-        if (cursor == null || cursor.getCount() == 0) {
-            return serverData;
-        }
-
-        try {
-
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-
-                String ipAddress = cursor.getString(cursor.getColumnIndex(SipMobileAppSchema.ServerDataTable.Cols.IP_ADDRESS));
-                String port = cursor.getString(cursor.getColumnIndex(SipMobileAppSchema.ServerDataTable.Cols.PORT));
-
-                serverData.setCenterName(centerName);
-                serverData.setIpAddress(ipAddress);
-                serverData.setPort(port);
-
-                cursor.moveToNext();
-            }
-
-        } finally {
-            cursor.close();
-        }
-        return serverData;
-    }
-
-    public void deleteServerData(ServerData serverData) {
-        String whereClause = "centerName=?";
-        String[] whereArgs = {serverData.getCenterName()};
-        mDatabase.delete(SipMobileAppSchema.ServerDataTable.NAME, whereClause, whereArgs);
+    public LiveData<List<ServerDataTwo>> getServerDataListMutableLiveData() {
+        return serverDataListMutableLiveData;
     }
 
     public void login(String path, UserResult.UserParameter userParameter) {
@@ -398,5 +312,74 @@ public class SipMobileAppRepository {
                 }
             }
         });
+    }
+
+    public void insert(ServerDataTwo serverDataTwo) {
+        new insertAsyncTask(serverDataTwoDao).execute(serverDataTwo);
+    }
+
+    private static class insertAsyncTask extends AsyncTask<ServerDataTwo, Void, Void> {
+
+        private ServerDataTwoDao mAsyncTaskDao;
+
+        insertAsyncTask(ServerDataTwoDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final ServerDataTwo... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    public void delete(String centerName) {
+        new deleteAsyncTask(serverDataTwoDao).execute(centerName);
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<String, Void, Void> {
+
+        private ServerDataTwoDao mAsyncTaskDao;
+
+        deleteAsyncTask(ServerDataTwoDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final String... params) {
+            mAsyncTaskDao.delete(params[0]);
+            return null;
+        }
+    }
+
+    public ServerDataTwo getServerData(String centerName) {
+
+        try {
+            return new getAsyncTask(serverDataTwoDao).execute(centerName).get();
+        } catch (ExecutionException e) {
+            Log.e(TAG, e.getMessage());
+        } catch (InterruptedException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return null;
+    }
+
+    private static class getAsyncTask extends AsyncTask<String, Void, ServerDataTwo> {
+
+        private ServerDataTwoDao mAsyncTaskDao;
+
+        getAsyncTask(ServerDataTwoDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected ServerDataTwo doInBackground(final String... params) {
+            return mAsyncTaskDao.getServerData(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(ServerDataTwo serverDataTwo) {
+            super.onPostExecute(serverDataTwo);
+        }
     }
 }

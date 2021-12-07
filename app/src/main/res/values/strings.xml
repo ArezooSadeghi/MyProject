@@ -33,4 +33,6 @@
     <string name="error_txt">خطا</string>
     <string name="note_txt">توجه</string>
     <string name="save_btn_txt">ذخیره</string>
+    <string name="center_info">اطلاعات مرکز</string>
+    <string name="login_title">برنامه پوست و مو</string>
 </resources>

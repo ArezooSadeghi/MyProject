@@ -25,7 +25,7 @@ import com.example.sipmobileapp.databinding.FragmentPhotoGalleryBinding;
 import com.example.sipmobileapp.event.DeleteEvent;
 import com.example.sipmobileapp.event.RefreshEvent;
 import com.example.sipmobileapp.model.AttachResult;
-import com.example.sipmobileapp.model.ServerData;
+import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.ui.activity.AttachmentContainerActivity;
 import com.example.sipmobileapp.ui.activity.FullScreenPhotoContainerActivity;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
@@ -44,7 +44,7 @@ import java.util.List;
 public class PhotoGalleryFragment extends Fragment {
     private FragmentPhotoGalleryBinding binding;
     private AttachmentViewModel viewModel;
-    private ServerData serverData;
+    private ServerDataTwo serverData;
     private String userLoginKey;
     private PhotoGalleryAdapter adapter;
     private List<String> oldFilePathList, newFilePathList;
@@ -192,13 +192,13 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private void fetchPatientAttachments(int sickID) {
-        viewModel.getServicePatientResult(serverData.getIpAddress() + ":" + serverData.getPort());
+        viewModel.getServicePatientResult(serverData.getIp() + ":" + serverData.getPort());
         String path = "/api/v1/attachs/ListBySickID/";
         viewModel.fetchPatientAttachments(path, userLoginKey, sickID);
     }
 
     private void fetchAttachInfo(int attachID) {
-        viewModel.getServiceAttachResult(serverData.getIpAddress() + ":" + serverData.getPort());
+        viewModel.getServiceAttachResult(serverData.getIp() + ":" + serverData.getPort());
         String path = "/api/v1/attachs/Info/";
         viewModel.fetchAttachInfo(path, userLoginKey, attachID);
     }

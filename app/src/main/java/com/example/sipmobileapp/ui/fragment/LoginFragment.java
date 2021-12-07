@@ -11,15 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentLoginBinding;
-import com.example.sipmobileapp.model.ServerData;
+import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.model.UserResult;
 import com.example.sipmobileapp.ui.activity.PatientContainerActivity;
+import com.example.sipmobileapp.ui.activity.ServerDataContainerActivity;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
-import com.example.sipmobileapp.ui.dialog.ServerDataListDialogFragment;
 import com.example.sipmobileapp.ui.dialog.WarningDialogFragment;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
 import com.example.sipmobileapp.viewmodel.LoginViewModel;
@@ -56,13 +57,6 @@ public class LoginFragment extends Fragment {
                 container,
                 false);
 
-        if (viewModel.getServerDataList().size() == 0 || viewModel.getServerDataList() == null) {
-            WarningDialogFragment fragment = WarningDialogFragment.newInstance(getString(R.string.required_ip));
-            fragment.show(getParentFragmentManager(), WarningDialogFragment.TAG);
-        } else {
-            setupSpinner();
-        }
-
         handleEvents();
 
         return binding.getRoot();
@@ -78,11 +72,10 @@ public class LoginFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
     }
 
-    private void setupSpinner() {
-        List<ServerData> serverDataList = viewModel.getServerDataList();
+    private void setupSpinner(List<ServerDataTwo> serverDataList) {
         List<String> centerNameList = new ArrayList<>();
-        for (ServerData serverData : serverDataList) {
-            centerNameList.add(serverData.getCenterName());
+        for (ServerDataTwo serverDataTwo : serverDataList) {
+            centerNameList.add(serverDataTwo.getCenterName());
         }
         binding.spinnerServerData.setItems(centerNameList);
         if (centerNameList.size() > 0) {
@@ -97,8 +90,8 @@ public class LoginFragment extends Fragment {
 
     private void handleEvents() {
         binding.ivMore.setOnClickListener(view -> {
-            ServerDataListDialogFragment fragment = ServerDataListDialogFragment.newInstance();
-            fragment.show(getParentFragmentManager(), ServerDataListDialogFragment.TAG);
+            Intent starter = ServerDataContainerActivity.start(getContext());
+            startActivity(starter);
         });
 
         binding.edTxtUserName.setOnEditorActionListener((textView, actionID, keyEvent) -> {
@@ -109,10 +102,7 @@ public class LoginFragment extends Fragment {
         });
 
         binding.btnLogin.setOnClickListener(view -> {
-            if (viewModel.getServerDataList() == null || viewModel.getServerDataList().size() == 0) {
-                WarningDialogFragment fragment = WarningDialogFragment.newInstance("");
-                fragment.show(getParentFragmentManager(), WarningDialogFragment.TAG);
-            } else if (Objects.requireNonNull(binding.edTxtUserName.getText()).toString().isEmpty() || Objects.requireNonNull(binding.edTxtPassword.getText()).toString().isEmpty()) {
+            if (Objects.requireNonNull(binding.edTxtUserName.getText()).toString().isEmpty() || Objects.requireNonNull(binding.edTxtPassword.getText()).toString().isEmpty()) {
                 handleError(getString(R.string.fill_required_fields));
             } else {
                 binding.loadingLayout.setVisibility(View.VISIBLE);
@@ -124,9 +114,9 @@ public class LoginFragment extends Fragment {
                 String password = binding.edTxtPassword.getText().toString();
 
                 UserResult.UserParameter userParameter = new UserResult().new UserParameter(userName, password);
-                ServerData serverData = viewModel.getServerData(lastValueSpinner);
+                ServerDataTwo serverDataTwo = viewModel.getServerData(lastValueSpinner);
 
-                viewModel.getUserLoginService(serverData.getIpAddress() + ":" + serverData.getPort());
+                viewModel.getUserLoginService(serverDataTwo.getIp() + ":" + serverDataTwo.getPort());
                 String path = "/api/v1/users/login/";
                 viewModel.login(path, userParameter);
             }
@@ -136,10 +126,6 @@ public class LoginFragment extends Fragment {
     }
 
     private void setupObserver() {
-        viewModel.getInsertNotifySpinner().observe(getViewLifecycleOwner(), isInsertServerData -> setupSpinner());
-
-        viewModel.getDeleteNotifySpinner().observe(getViewLifecycleOwner(), isDeleteServerData -> setupSpinner());
-
         viewModel.getLoginResultSingleLiveEvent().observe(getViewLifecycleOwner(), userResult -> {
             if (userResult != null) {
                 if (userResult.getErrorCode().equals("0")) {
@@ -156,7 +142,6 @@ public class LoginFragment extends Fragment {
                     handleError(userResult.getError());
                 }
             }
-
         });
 
         viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
@@ -181,6 +166,17 @@ public class LoginFragment extends Fragment {
             binding.edTxtPassword.setEnabled(true);
             binding.btnLogin.setEnabled(true);
             handleError(message);
+        });
+
+        viewModel.getServerDataListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<ServerDataTwo>>() {
+            @Override
+            public void onChanged(List<ServerDataTwo> serverDataList) {
+                setupSpinner(serverDataList);
+                if (serverDataList == null || serverDataList.size() == 0) {
+                    WarningDialogFragment fragment = WarningDialogFragment.newInstance(getString(R.string.required_ip));
+                    fragment.show(getParentFragmentManager(), WarningDialogFragment.TAG);
+                }
+            }
         });
     }
 }
