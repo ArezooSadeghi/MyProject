@@ -159,6 +159,7 @@ public class PhotoGalleryFragment extends Fragment {
                     fetchPatientAttachments(sickID);
                 }
             } else {
+                binding.progressBarLoading.setVisibility(View.GONE);
                 handleError(getString(R.string.storage_permission_denied));
             }
         }
@@ -287,8 +288,12 @@ public class PhotoGalleryFragment extends Fragment {
 
     private void handleEvents() {
         binding.fabAdd.setOnClickListener(view -> {
-            Intent starter = AttachmentContainerActivity.start(getContext(), sickID);
-            startActivity(starter);
+            if (hasWriteExternalStoragePermission()) {
+                Intent starter = AttachmentContainerActivity.start(getContext(), sickID);
+                startActivity(starter);
+            } else {
+                requestWriteExternalStoragePermission();
+            }
         });
     }
 
