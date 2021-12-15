@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.sipmobileapp.model.AttachResult;
 import com.example.sipmobileapp.model.ServerDataTwo;
@@ -12,7 +13,7 @@ import com.example.sipmobileapp.repository.SipMobileAppRepository;
 public class AttachmentViewModel extends AndroidViewModel {
 
     private SipMobileAppRepository repository;
-    private SingleLiveEvent<AttachResult> patientAttachmentsResultSingleLiveEvent;
+    private MutableLiveData<AttachResult> patientAttachmentsResultSingleLiveEvent;
     private SingleLiveEvent<AttachResult> attachInfoResultSingleLiveEvent;
     private SingleLiveEvent<AttachResult> attachResultSingleLiveEvent;
     private SingleLiveEvent<AttachResult> deleteAttachResultSingleLiveEvent;
@@ -39,7 +40,7 @@ public class AttachmentViewModel extends AndroidViewModel {
         timeoutExceptionHappenSingleLiveEvent = repository.getTimeoutExceptionHappenSingleLiveEvent();
     }
 
-    public SingleLiveEvent<AttachResult> getPatientAttachmentsResultSingleLiveEvent() {
+    public MutableLiveData<AttachResult> getPatientAttachmentsResultSingleLiveEvent() {
         return patientAttachmentsResultSingleLiveEvent;
     }
 
