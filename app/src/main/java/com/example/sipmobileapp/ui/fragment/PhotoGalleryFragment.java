@@ -1,7 +1,6 @@
 package com.example.sipmobileapp.ui.fragment;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,23 +16,17 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.adapter.PhotoGalleryAdapter;
 import com.example.sipmobileapp.databinding.FragmentPhotoGalleryBinding;
-import com.example.sipmobileapp.event.DeleteEvent;
-import com.example.sipmobileapp.event.RefreshEvent;
 import com.example.sipmobileapp.model.AttachResult;
 import com.example.sipmobileapp.model.ServerDataTwo;
-import com.example.sipmobileapp.ui.activity.AttachmentContainerActivity;
-import com.example.sipmobileapp.ui.activity.FullScreenPhotoContainerActivity;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
 import com.example.sipmobileapp.viewmodel.AttachmentViewModel;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,7 +45,7 @@ public class PhotoGalleryFragment extends Fragment {
     private int sickID, index;
 
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 0;
-    private static final int SPAN_COUNT = 4;
+    private static final int SPAN_COUNT = 3;
 
     private static final String ARGS_SICK_ID = "sickID";
     private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
@@ -89,6 +82,12 @@ public class PhotoGalleryFragment extends Fragment {
         initViews();
         handleEvents();
 
+        if (oldFilePathList.size() != 0 || newFilePathList.size() != 0) {
+            binding.progressBarLoading.setVisibility(View.GONE);
+            binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
+            setupAdapter();
+        }
+
         return binding.getRoot();
     }
 
@@ -96,56 +95,6 @@ public class PhotoGalleryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupObserver();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(sticky = true)
-    public void getDeleteEvent(DeleteEvent event) {
-        String filePath = "";
-        File dir = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
-        if (dir.exists()) {
-            File[] files = dir.listFiles();
-            assert files != null;
-            for (File file : files) {
-                if (file.getName().equals(event.getAttachID() + ".jpg")) {
-                    filePath = file.getPath();
-                    file.delete();
-                    break;
-                }
-            }
-        }
-
-        for (String fPath : newFilePathList) {
-            if (!filePath.isEmpty()) {
-                if (fPath.equals(filePath)) {
-                    newFilePathList.remove(fPath);
-                    break;
-                }
-            }
-        }
-
-        binding.progressBarLoading.setVisibility(View.GONE);
-        binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
-        setupAdapter();
-        EventBus.getDefault().removeStickyEvent(event);
-    }
-
-    @Subscribe(sticky = true)
-    public void getRefreshEvent(RefreshEvent event) {
-        int attachID = event.getAttachID();
-        fetchAttachInfo(attachID);
-        EventBus.getDefault().removeStickyEvent(event);
     }
 
     @Override
@@ -173,8 +122,15 @@ public class PhotoGalleryFragment extends Fragment {
         String centerName = SipMobileAppPreferences.getCenterName(getContext());
         serverData = viewModel.getServerData(centerName);
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
-        assert getArguments() != null;
-        sickID = getArguments().getInt(ARGS_SICK_ID);
+
+        PhotoGalleryFragmentArgs args = PhotoGalleryFragmentArgs.fromBundle(getArguments());
+        sickID = args.getSickID();
+        if (sickID != 0) {
+            SipMobileAppPreferences.setSickID(getContext(), sickID);
+        } else {
+            sickID = SipMobileAppPreferences.getSickID(getContext());
+        }
+
         oldFilePathList = new ArrayList<>();
         newFilePathList = new ArrayList<>();
         attachIDList = new ArrayList<>();
@@ -289,8 +245,9 @@ public class PhotoGalleryFragment extends Fragment {
     private void handleEvents() {
         binding.fabAdd.setOnClickListener(view -> {
             if (hasWriteExternalStoragePermission()) {
-                Intent starter = AttachmentContainerActivity.start(getContext(), sickID);
-                startActivity(starter);
+                PhotoGalleryFragmentDirections.ActionPhotoGalleryFragmentToAttachmentFragment action = PhotoGalleryFragmentDirections.actionPhotoGalleryFragmentToAttachmentFragment();
+                action.setSickID(sickID);
+                NavHostFragment.findNavController(this).navigate(action);
             } else {
                 requestWriteExternalStoragePermission();
             }
@@ -358,8 +315,38 @@ public class PhotoGalleryFragment extends Fragment {
             File file = new File(filePath);
             String fileName = file.getName().replace(".jpg", "");
             int attachID = Integer.parseInt(fileName);
-            Intent starter = FullScreenPhotoContainerActivity.start(getContext(), filePath, attachID);
-            startActivity(starter);
+            PhotoGalleryFragmentDirections.ActionPhotoGalleryFragmentToFullScreenPhotoFragment action = PhotoGalleryFragmentDirections.actionPhotoGalleryFragmentToFullScreenPhotoFragment(filePath);
+            action.setAttachID(attachID);
+            NavHostFragment.findNavController(this).navigate(action);
+        });
+
+        viewModel.getDeleteOccur().observe(getViewLifecycleOwner(), attachID -> {
+            String filePath = "";
+            File dir = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
+            if (dir.exists()) {
+                File[] files = dir.listFiles();
+                assert files != null;
+                for (File file : files) {
+                    if (file.getName().equals(attachID + ".jpg")) {
+                        filePath = file.getPath();
+                        file.delete();
+                        break;
+                    }
+                }
+            }
+
+            for (String fPath : newFilePathList) {
+                if (!filePath.isEmpty()) {
+                    if (fPath.equals(filePath)) {
+                        newFilePathList.remove(fPath);
+                        break;
+                    }
+                }
+            }
+
+            binding.progressBarLoading.setVisibility(View.GONE);
+            binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
+            setupAdapter();
         });
     }
 }

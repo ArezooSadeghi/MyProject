@@ -1,6 +1,5 @@
 package com.example.sipmobileapp.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,8 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -21,14 +22,13 @@ import com.example.sipmobileapp.adapter.PatientAdapter;
 import com.example.sipmobileapp.databinding.FragmentPatientBinding;
 import com.example.sipmobileapp.model.PatientResult;
 import com.example.sipmobileapp.model.ServerDataTwo;
-import com.example.sipmobileapp.ui.activity.LoginContainerActivity;
-import com.example.sipmobileapp.ui.activity.PhotoGalleryContainerActivity;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
 import com.example.sipmobileapp.viewmodel.PatientViewModel;
 import com.skydoves.powermenu.PowerMenu;
 import com.skydoves.powermenu.PowerMenuItem;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +38,7 @@ public class PatientFragment extends Fragment {
     private PatientViewModel viewModel;
     private ServerDataTwo serverData;
     private String userLoginKey;
+    private List<PatientResult.PatientInfo> patientInfoList;
 
     public static PatientFragment newInstance() {
         PatientFragment fragment = new PatientFragment();
@@ -66,6 +67,13 @@ public class PatientFragment extends Fragment {
         initViews();
         handleEvents();
 
+        if (patientInfoList.size() != 0) {
+            setupAdapter(patientInfoList.toArray(new PatientResult.PatientInfo[patientInfoList.size()]));
+            binding.recyclerViewPatient.setVisibility(View.VISIBLE);
+            binding.txtNoSearchResult.setVisibility(View.GONE);
+            binding.progressBarLoading.setVisibility(View.GONE);
+        }
+
         return binding.getRoot();
     }
 
@@ -83,6 +91,7 @@ public class PatientFragment extends Fragment {
         String centerName = SipMobileAppPreferences.getCenterName(getContext());
         serverData = viewModel.getServerData(centerName);
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
+        patientInfoList = new ArrayList<>();
     }
 
     private void initViews() {
@@ -101,9 +110,9 @@ public class PatientFragment extends Fragment {
             powerMenu.setOnMenuItemClickListener((position, item) -> {
                 if (position == 0) {
                     SipMobileAppPreferences.setUserLoginKey(getContext(), null);
-                    Intent starter = LoginContainerActivity.start(getContext());
-                    startActivity(starter);
-                    requireActivity().finish();
+                    NavDirections action = PatientFragmentDirections.actionPatientFragmentToLoginFragment();
+                    NavHostFragment.findNavController(this).navigate(action);
+                    powerMenu.dismiss();
                 }
             });
             powerMenu.showAsDropDown(view);
@@ -144,6 +153,7 @@ public class PatientFragment extends Fragment {
             if (patientResult != null) {
                 if (patientResult.getErrorCode().equals("0")) {
                     setupAdapter(patientResult.getPatients());
+                    patientInfoList = Arrays.asList(patientResult.getPatients());
                 } else {
                     handleError(patientResult.getError());
                 }
@@ -151,8 +161,9 @@ public class PatientFragment extends Fragment {
         });
 
         viewModel.getAttachmentsItemClicked().observe(getViewLifecycleOwner(), sickID -> {
-            Intent starter = PhotoGalleryContainerActivity.start(getContext(), sickID);
-            startActivity(starter);
+            PatientFragmentDirections.ActionPatientFragmentToPhotoGalleryFragment action = PatientFragmentDirections.actionPatientFragmentToPhotoGalleryFragment();
+            action.setSickID(sickID);
+            NavHostFragment.findNavController(this).navigate(action);
         });
 
         viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), msg -> {

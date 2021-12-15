@@ -24,11 +24,12 @@ import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentAttachmentBinding;
-import com.example.sipmobileapp.event.RefreshEvent;
 import com.example.sipmobileapp.model.AttachResult;
 import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.ui.dialog.AttachAgainDialogFragment;
@@ -36,8 +37,6 @@ import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.ui.dialog.SuccessAttachDialogFragment;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
 import com.example.sipmobileapp.viewmodel.AttachmentViewModel;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -163,8 +162,8 @@ public class AttachmentFragment extends Fragment {
         String centerName = SipMobileAppPreferences.getCenterName(getContext());
         serverData = viewModel.getServerData(centerName);
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
-        assert getArguments() != null;
-        sickID = getArguments().getInt(ARGS_SICK_ID);
+        AttachmentFragmentArgs args = AttachmentFragmentArgs.fromBundle(getArguments());
+        sickID = args.getSickID();
         matrix = new Matrix();
     }
 
@@ -229,10 +228,6 @@ public class AttachmentFragment extends Fragment {
 
             if (attachResult != null) {
                 if (attachResult.getErrorCode().equals("0")) {
-                    if (attachResult.getAttachs().length != 0) {
-                        int attachID = attachResult.getAttachs()[0].getAttachID();
-                        EventBus.getDefault().postSticky(new RefreshEvent(attachID));
-                    }
                     showSuccessDialog(getString(R.string.success_attach));
                 } else {
                     handleError(attachResult.getError());
@@ -265,7 +260,11 @@ public class AttachmentFragment extends Fragment {
             fragment.show(getParentFragmentManager(), AttachAgainDialogFragment.TAG);
         });
 
-        viewModel.getNoAttachAgain().observe(getViewLifecycleOwner(), noAttachAgain -> requireActivity().finish());
+        viewModel.getNoAttachAgain().observe(getViewLifecycleOwner(), noAttachAgain ->
+        {
+            NavDirections action = AttachmentFragmentDirections.actionAttachmentFragmentToPhotoGalleryFragment();
+            NavHostFragment.findNavController(this).navigate(action);
+        });
 
         viewModel.getYesAttachAgain().observe(getViewLifecycleOwner(), yesAttachAgain -> {
             photoUri = null;

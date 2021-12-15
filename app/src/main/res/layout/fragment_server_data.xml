@@ -10,7 +10,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.dialog.ServerDataFragment">
+        tools:context=".ui.fragment.ServerDataFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_server_data"
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:backgroundTint="@color/light_gray" />
+            android:backgroundTint="#B0E0E6" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_add"

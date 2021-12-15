@@ -25,6 +25,8 @@ public class AttachmentViewModel extends AndroidViewModel {
     private SingleLiveEvent<Boolean> noAttachAgain = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> yesAttachAgain = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> yesDelete = new SingleLiveEvent<>();
+    private SingleLiveEvent<Boolean> closeClicked = new SingleLiveEvent<>();
+    private SingleLiveEvent<Integer> deleteOccur = new SingleLiveEvent<>();
 
     public AttachmentViewModel(@NonNull Application application) {
         super(application);
@@ -87,6 +89,14 @@ public class AttachmentViewModel extends AndroidViewModel {
 
     public SingleLiveEvent<Boolean> getYesDelete() {
         return yesDelete;
+    }
+
+    public SingleLiveEvent<Boolean> getCloseClicked() {
+        return closeClicked;
+    }
+
+    public SingleLiveEvent<Integer> getDeleteOccur() {
+        return deleteOccur;
     }
 
     public ServerDataTwo getServerData(String centerName) {

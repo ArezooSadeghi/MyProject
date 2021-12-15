@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.sipmobileapp.ui.fragment.LoginFragment"
+        android:label="LoginFragment">
+
+        <action
+            android:id="@+id/action_loginFragment_to_patientFragment"
+            app:destination="@id/patientFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_loginFragment_to_serverDataFragment"
+            app:destination="@id/serverDataFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/patientFragment"
+        android:name="com.example.sipmobileapp.ui.fragment.PatientFragment"
+        android:label="PatientFragment">
+
+        <action
+            android:id="@+id/action_patientFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/patientFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_patientFragment_to_photoGalleryFragment"
+            app:destination="@id/photoGalleryFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/photoGalleryFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/serverDataFragment"
+        android:name="com.example.sipmobileapp.ui.fragment.ServerDataFragment"
+        android:label="ServerDataFragment" />
+
+    <fragment
+        android:id="@+id/photoGalleryFragment"
+        android:name="com.example.sipmobileapp.ui.fragment.PhotoGalleryFragment"
+        android:label="PhotoGalleryFragment">
+
+        <argument
+            android:name="sickID"
+            android:defaultValue="0"
+            app:argType="integer" />
+
+        <action
+            android:id="@+id/action_photoGalleryFragment_to_fullScreenPhotoFragment"
+            app:destination="@id/fullScreenPhotoFragment"
+            app:popUpTo="@id/fullScreenPhotoFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_photoGalleryFragment_to_attachmentFragment"
+            app:destination="@id/attachmentFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fullScreenPhotoFragment"
+        android:name="com.example.sipmobileapp.ui.fragment.FullScreenPhotoFragment"
+        android:label="FullScreenPhotoFragment">
+
+        <argument
+            android:name="attachID"
+            android:defaultValue="0"
+            app:argType="integer" />
+
+        <argument
+            android:name="filePath"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_fullScreenPhotoFragment_to_photoGalleryFragment"
+            app:destination="@id/photoGalleryFragment"
+            app:popUpTo="@id/photoGalleryFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/attachmentFragment"
+        android:name="com.example.sipmobileapp.ui.fragment.AttachmentFragment"
+        android:label="AttachmentFragment">
+
+        <argument
+            android:name="sickID"
+            android:defaultValue="0"
+            app:argType="integer" />
+
+        <action
+            android:id="@+id/action_attachmentFragment_to_photoGalleryFragment"
+            app:destination="@id/photoGalleryFragment"
+            app:popUpTo="@id/photoGalleryFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+</navigation>

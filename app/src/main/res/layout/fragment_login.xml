@@ -31,7 +31,7 @@
                 android:fontFamily="@font/regular"
                 android:padding="16dp"
                 android:text="@string/login_title"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +113,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/password_container"
                 app:ms_arrow_tint="@color/black"
-                app:ms_background_color="@color/dim_gray"
+                app:ms_background_color="#F5F5F5"
                 app:ms_padding_right="16dp" />
 
             <ImageView
@@ -157,26 +157,15 @@
             app:layout_constraintTop_toBottomOf="@id/layoutDialog"
             app:layout_constraintWidth_default="spread" />
 
-        <RelativeLayout
-            android:id="@+id/loading_layout"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0.4"
-            android:background="@color/dim_gray"
+        <ProgressBar
+            android:id="@+id/progress_bar_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_default="spread">
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:indeterminate="true" />
-
-        </RelativeLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

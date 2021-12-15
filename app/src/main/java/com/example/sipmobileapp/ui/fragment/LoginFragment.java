@@ -1,6 +1,5 @@
 package com.example.sipmobileapp.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +12,13 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentLoginBinding;
 import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.model.UserResult;
-import com.example.sipmobileapp.ui.activity.PatientContainerActivity;
-import com.example.sipmobileapp.ui.activity.ServerDataContainerActivity;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.ui.dialog.WarningDialogFragment;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
@@ -90,8 +89,8 @@ public class LoginFragment extends Fragment {
 
     private void handleEvents() {
         binding.ivMore.setOnClickListener(view -> {
-            Intent starter = ServerDataContainerActivity.start(getContext());
-            startActivity(starter);
+            NavDirections action = LoginFragmentDirections.actionLoginFragmentToServerDataFragment();
+            NavHostFragment.findNavController(this).navigate(action);
         });
 
         binding.edTxtUserName.setOnEditorActionListener((textView, actionID, keyEvent) -> {
@@ -105,10 +104,11 @@ public class LoginFragment extends Fragment {
             if (Objects.requireNonNull(binding.edTxtUserName.getText()).toString().isEmpty() || Objects.requireNonNull(binding.edTxtPassword.getText()).toString().isEmpty()) {
                 handleError(getString(R.string.fill_required_fields));
             } else {
-                binding.loadingLayout.setVisibility(View.VISIBLE);
+                binding.progressBarLoading.setVisibility(View.VISIBLE);
                 binding.edTxtUserName.setEnabled(false);
                 binding.edTxtPassword.setEnabled(false);
                 binding.btnLogin.setEnabled(false);
+                binding.ivMore.setEnabled(false);
 
                 String userName = binding.edTxtUserName.getText().toString();
                 String password = binding.edTxtPassword.getText().toString();
@@ -131,40 +131,43 @@ public class LoginFragment extends Fragment {
                 if (userResult.getErrorCode().equals("0")) {
                     SipMobileAppPreferences.setUserLoginKey(getContext(), userResult.getUsers()[0].getUserLoginKey());
                     SipMobileAppPreferences.setCenterName(getContext(), lastValueSpinner);
-                    Intent intent = PatientContainerActivity.start(getContext());
-                    startActivity(intent);
-                    getActivity().finish();
+                    NavDirections action = LoginFragmentDirections.actionLoginFragmentToPatientFragment();
+                    NavHostFragment.findNavController(this).navigate(action);
                 } else {
-                    binding.loadingLayout.setVisibility(View.GONE);
+                    binding.progressBarLoading.setVisibility(View.GONE);
                     binding.edTxtUserName.setEnabled(true);
                     binding.edTxtPassword.setEnabled(true);
                     binding.btnLogin.setEnabled(true);
+                    binding.ivMore.setEnabled(true);
                     handleError(userResult.getError());
                 }
             }
         });
 
         viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
-            binding.loadingLayout.setVisibility(View.GONE);
+            binding.progressBarLoading.setVisibility(View.GONE);
             binding.edTxtUserName.setEnabled(true);
             binding.edTxtPassword.setEnabled(true);
             binding.btnLogin.setEnabled(true);
+            binding.ivMore.setEnabled(true);
             handleError(message);
         });
 
         viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
-            binding.loadingLayout.setVisibility(View.GONE);
+            binding.progressBarLoading.setVisibility(View.GONE);
             binding.edTxtUserName.setEnabled(true);
             binding.edTxtPassword.setEnabled(true);
             binding.btnLogin.setEnabled(true);
+            binding.ivMore.setEnabled(true);
             handleError(message);
         });
 
         viewModel.getWrongIpAddressSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
-            binding.loadingLayout.setVisibility(View.GONE);
+            binding.progressBarLoading.setVisibility(View.GONE);
             binding.edTxtUserName.setEnabled(true);
             binding.edTxtPassword.setEnabled(true);
             binding.btnLogin.setEnabled(true);
+            binding.ivMore.setEnabled(true);
             handleError(message);
         });
 

@@ -10,12 +10,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentSuccessDialogBinding;
+import com.example.sipmobileapp.viewmodel.AttachmentViewModel;
 
 public class SuccessDialogFragment extends DialogFragment {
     private FragmentSuccessDialogBinding binding;
+    private AttachmentViewModel viewModel;
 
     private static final String ARGS_MSG = "msg";
     public static final String TAG = SuccessDialogFragment.class.getSimpleName();
@@ -31,6 +34,7 @@ public class SuccessDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createViewModel();
     }
 
     @NonNull
@@ -60,6 +64,10 @@ public class SuccessDialogFragment extends DialogFragment {
         return dialog;
     }
 
+    private void createViewModel() {
+        viewModel = new ViewModelProvider(requireActivity()).get(AttachmentViewModel.class);
+    }
+
     private void initViews() {
         assert getArguments() != null;
         String msg = getArguments().getString(ARGS_MSG);
@@ -68,7 +76,7 @@ public class SuccessDialogFragment extends DialogFragment {
 
     private void handleEvents() {
         binding.btnClose.setOnClickListener(v -> {
-            getActivity().finish();
+            viewModel.getCloseClicked().setValue(true);
             dismiss();
         });
     }

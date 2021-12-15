@@ -52,7 +52,7 @@
             android:id="@+id/layout_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/light_gray"
+            android:background="#262626"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <ImageView
@@ -64,7 +64,8 @@
                 android:src="@drawable/ic_camera"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
 
             <ImageView
                 android:id="@+id/iv_attach"
@@ -75,7 +76,8 @@
                 android:src="@drawable/ic_attachment"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_camera"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
 
             <ImageView
                 android:id="@+id/iv_rotate"
@@ -86,7 +88,8 @@
                 android:src="@drawable/ic_rotate"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
 
             <ImageView
                 android:id="@+id/iv_send"
@@ -112,9 +115,10 @@
                 android:fontFamily="@font/regular"
                 android:gravity="right"
                 android:hint="@string/description_hint"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
                 android:textCursorDrawable="@drawable/custom_cursor"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_send"
                 app:layout_constraintStart_toEndOf="@id/iv_rotate"

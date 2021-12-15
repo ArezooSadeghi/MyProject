@@ -7,6 +7,7 @@ public class SipMobileAppPreferences {
 
     private static final String USER_LOGIN_KEY = "userLoginKey";
     private static final String CENTER_NAME = "centerName";
+    private static final String SICK_ID = "sickID";
 
     public static String getUserLoginKey(Context context) {
         SharedPreferences preferences = getSharedPreferences(context);
@@ -26,6 +27,16 @@ public class SipMobileAppPreferences {
     public static void setCenterName(Context context, String centerName) {
         SharedPreferences preferences = getSharedPreferences(context);
         preferences.edit().putString(CENTER_NAME, centerName).apply();
+    }
+
+    public static int getSickID(Context context) {
+        SharedPreferences preferences = getSharedPreferences(context);
+        return preferences.getInt(SICK_ID, 0);
+    }
+
+    public static void setSickID(Context context, int sickID) {
+        SharedPreferences preferences = getSharedPreferences(context);
+        preferences.edit().putInt(SICK_ID, sickID).apply();
     }
 
     private static SharedPreferences getSharedPreferences(Context context) {
