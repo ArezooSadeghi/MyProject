@@ -82,11 +82,11 @@ public class PhotoGalleryFragment extends Fragment {
         initViews();
         handleEvents();
 
-        if (oldFilePathList.size() != 0 || newFilePathList.size() != 0) {
+       /* if (oldFilePathList.size() != 0 || newFilePathList.size() != 0) {
             binding.progressBarLoading.setVisibility(View.GONE);
             binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
             setupAdapter();
-        }
+        }*/
 
         return binding.getRoot();
     }

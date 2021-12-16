@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -113,6 +114,11 @@ public class FullScreenPhotoFragment extends Fragment {
         binding.ivDelete.setOnClickListener(v -> {
             QuestionDialogFragment fragment = QuestionDialogFragment.newInstance(getString(R.string.delete_attach_question));
             fragment.show(getParentFragmentManager(), QuestionDialogFragment.TAG);
+        });
+
+        binding.ivClose.setOnClickListener(view -> {
+            NavDirections action = FullScreenPhotoFragmentDirections.actionFullScreenPhotoFragmentToPhotoGalleryFragment();
+            NavHostFragment.findNavController(this).navigate(action);
         });
     }
 

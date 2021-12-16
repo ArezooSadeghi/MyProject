@@ -17,11 +17,11 @@
             android:id="@+id/iv_full_screen"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/frame_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_default="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/frame_layout"
             app:layout_constraintWidth_default="spread" />
 
         <ProgressBar
@@ -39,20 +39,33 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:alpha="0.8"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_default="spread">
 
             <ImageView
                 android:id="@+id/iv_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="start"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_delete"
+                app:tint="@color/white" />
+
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_close"
                 app:tint="@color/white" />
 
         </FrameLayout>
