@@ -7,7 +7,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.model.AttachResult;
@@ -49,7 +48,7 @@ public class SipMobileAppRepository {
 
     private SingleLiveEvent<UserResult> loginResultSingleLiveEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<PatientResult> patientsResultSingleLiveEvent = new SingleLiveEvent<>();
-    private MutableLiveData<AttachResult> patientAttachmentsResultSingleLiveEvent = new SingleLiveEvent<>();
+    private SingleLiveEvent<AttachResult> patientAttachmentsResultSingleLiveEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<AttachResult> attachInfoResultSingleLiveEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<AttachResult> attachResultSingleLiveEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<AttachResult> deleteAttachResultSingleLiveEvent = new SingleLiveEvent<>();
@@ -97,7 +96,7 @@ public class SipMobileAppRepository {
         return patientsResultSingleLiveEvent;
     }
 
-    public MutableLiveData<AttachResult> getPatientAttachmentsResultSingleLiveEvent() {
+    public SingleLiveEvent<AttachResult> getPatientAttachmentsResultSingleLiveEvent() {
         return patientAttachmentsResultSingleLiveEvent;
     }
 
