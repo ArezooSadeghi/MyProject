@@ -2,6 +2,7 @@ package com.example.sipmobileapp.ui.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
@@ -64,10 +65,14 @@ public class PhotoGalleryFragment extends Fragment {
         createViewModel();
         initVariables();
 
-        if (hasWriteExternalStoragePermission()) {
-            fetchPatientAttachments(sickID);
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            if (hasWriteExternalStoragePermission()) {
+                fetchPatientAttachments(sickID);
+            } else {
+                requestWriteExternalStoragePermission();
+            }
         } else {
-            requestWriteExternalStoragePermission();
+            fetchPatientAttachments(sickID);
         }
     }
 
@@ -161,9 +166,9 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private String readFromStorage(int attachID) {
-        File dir = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
-        if (dir.exists()) {
-            File[] files = dir.listFiles();
+        File appSpecificExternalDir = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
+        if (appSpecificExternalDir.exists()) {
+            File[] files = appSpecificExternalDir.listFiles();
             assert files != null;
             if (files.length != 0) {
                 for (File file : files) {
@@ -195,12 +200,6 @@ public class PhotoGalleryFragment extends Fragment {
             fileOutputStream.write(bytes);
             fileOutputStream.flush();
             fileOutputStream.close();
-            if (adapter == null) {
-                oldFilePathList.add(file.getPath());
-                newFilePathList.addAll(oldFilePathList);
-            } else {
-                newFilePathList.add(file.getPath());
-            }
             return file.getPath();
         } else {
             return "";
@@ -226,7 +225,11 @@ public class PhotoGalleryFragment extends Fragment {
             binding.progressBarLoading.setVisibility(View.GONE);
         } else {
             for (AttachResult.AttachInfo attachInfo : attachResult.getAttachs()) {
-                String filePath = readFromStorage(attachInfo.getAttachID());
+                boolean isExternalStorageWritable = externalMemoryAvailable();
+                String filePath = "";
+                if (isExternalStorageWritable) {
+                    filePath = readFromStorage(attachInfo.getAttachID());
+                }
                 if (!filePath.isEmpty()) {
                     binding.progressBarLoading.setVisibility(View.GONE);
                     binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
@@ -244,12 +247,18 @@ public class PhotoGalleryFragment extends Fragment {
 
     private void handleEvents() {
         binding.fabAdd.setOnClickListener(view -> {
-            if (hasWriteExternalStoragePermission()) {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+                if (hasWriteExternalStoragePermission()) {
+                    PhotoGalleryFragmentDirections.ActionPhotoGalleryFragmentToAttachmentFragment action = PhotoGalleryFragmentDirections.actionPhotoGalleryFragmentToAttachmentFragment();
+                    action.setSickID(sickID);
+                    NavHostFragment.findNavController(this).navigate(action);
+                } else {
+                    requestWriteExternalStoragePermission();
+                }
+            } else {
                 PhotoGalleryFragmentDirections.ActionPhotoGalleryFragmentToAttachmentFragment action = PhotoGalleryFragmentDirections.actionPhotoGalleryFragmentToAttachmentFragment();
                 action.setSickID(sickID);
                 NavHostFragment.findNavController(this).navigate(action);
-            } else {
-                requestWriteExternalStoragePermission();
             }
         });
     }
@@ -273,8 +282,13 @@ public class PhotoGalleryFragment extends Fragment {
                         AttachResult.AttachInfo attachInfo = attachResult.getAttachs()[0];
                         new Thread(() -> {
                             try {
-                                String filePath = writeToStorage(attachInfo);
-                                viewModel.getFinishWriteToStorage().postValue(filePath);
+                                boolean externalMemoryAvailable = externalMemoryAvailable();
+                                if (externalMemoryAvailable) {
+                                    String filePath = writeToStorage(attachInfo);
+                                    viewModel.getFinishWriteToStorage().postValue(filePath);
+                                } else {
+                                    viewModel.getStorageError().postValue("حافظه در دسترس نمی باشد");
+                                }
                             } catch (IOException e) {
                                 Log.e(TAG, e.getMessage());
                             }
@@ -299,6 +313,14 @@ public class PhotoGalleryFragment extends Fragment {
 
         viewModel.getFinishWriteToStorage().observe(getViewLifecycleOwner(), filePath -> {
             if (!filePath.isEmpty()) {
+
+                if (adapter == null) {
+                    oldFilePathList.add(filePath);
+                    newFilePathList.addAll(oldFilePathList);
+                } else {
+                    newFilePathList.add(filePath);
+                }
+
                 binding.progressBarLoading.setVisibility(View.GONE);
                 binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
                 setupAdapter();
@@ -348,5 +370,14 @@ public class PhotoGalleryFragment extends Fragment {
             binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
             setupAdapter();
         });
+
+        viewModel.getStorageError().observe(getViewLifecycleOwner(), msg -> {
+            binding.progressBarLoading.setVisibility(View.GONE);
+            handleError(msg);
+        });
+    }
+
+    private boolean externalMemoryAvailable() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 }

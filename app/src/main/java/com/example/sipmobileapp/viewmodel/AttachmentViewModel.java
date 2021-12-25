@@ -27,6 +27,7 @@ public class AttachmentViewModel extends AndroidViewModel {
     private SingleLiveEvent<Boolean> yesDelete = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> closeClicked = new SingleLiveEvent<>();
     private SingleLiveEvent<Integer> deleteOccur = new SingleLiveEvent<>();
+    private SingleLiveEvent<String> storageError = new SingleLiveEvent<>();
 
     public AttachmentViewModel(@NonNull Application application) {
         super(application);
@@ -97,6 +98,10 @@ public class AttachmentViewModel extends AndroidViewModel {
 
     public SingleLiveEvent<Integer> getDeleteOccur() {
         return deleteOccur;
+    }
+
+    public SingleLiveEvent<String> getStorageError() {
+        return storageError;
     }
 
     public ServerDataTwo getServerData(String centerName) {
