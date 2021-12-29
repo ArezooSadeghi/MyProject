@@ -56,6 +56,11 @@
             android:defaultValue="0"
             app:argType="integer" />
 
+        <argument
+            android:name="attachID"
+            android:defaultValue="0"
+            app:argType="integer" />
+
         <action
             android:id="@+id/action_photoGalleryFragment_to_fullScreenPhotoFragment"
             app:destination="@id/fullScreenPhotoFragment"
@@ -70,7 +75,7 @@
 
     <fragment
         android:id="@+id/fullScreenPhotoFragment"
-        android:name="com.example.sipmobileapp.ui.fragment.FullScreenPhotoFragment"
+        android:name="com.example.sipmobileapp.ui.fragment.PhotoFragment"
         android:label="FullScreenPhotoFragment">
 
         <argument

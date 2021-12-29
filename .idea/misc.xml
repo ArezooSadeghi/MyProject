@@ -3,6 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/Arezoo/app/src/main/res/layout/fragment_attachment.xml" value="0.276268115942029" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/Arezoo/app/src/main/res/layout/fragment_full_screen_photo.xml" value="0.276268115942029" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/Arezoo/app/src/main/res/layout/fragment_login.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/Arezoo/app/src/main/res/layout/fragment_photo.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/Arezoo/app/src/main/res/layout/fragment_photo_gallery.xml" value="0.276268115942029" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/Arezoo/app/src/main/res/layout/fragment_question_dialog.xml" value="0.28940217391304346" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/Arezoo/app/src/main/res/layout/fragment_warning_dialog.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/New/app/src/main/res/layout/fragment_question_dialog.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/New/app/src/main/res/layout/fragment_success_dialog.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SipSkinAndHair/app/src/main/res/drawable/dialog_bg.xml" value="0.30277777777777776" />

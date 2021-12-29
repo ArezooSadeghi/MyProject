@@ -14,14 +14,14 @@
         tools:context=".view.fragment.FullScreenImageFragment">
 
         <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-            android:id="@+id/iv_full_screen"
+            android:id="@+id/iv_photo"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_default="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/frame_layout"
+            app:layout_constraintTop_toBottomOf="@id/tool_container"
             app:layout_constraintWidth_default="spread" />
 
         <ProgressBar
@@ -35,7 +35,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <FrameLayout
-            android:id="@+id/frame_layout"
+            android:id="@+id/tool_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:alpha="0.8"

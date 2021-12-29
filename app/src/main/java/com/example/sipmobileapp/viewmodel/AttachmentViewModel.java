@@ -10,7 +10,6 @@ import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.repository.SipMobileAppRepository;
 
 public class AttachmentViewModel extends AndroidViewModel {
-
     private SipMobileAppRepository repository;
     private SingleLiveEvent<AttachResult> patientAttachmentsResultSingleLiveEvent;
     private SingleLiveEvent<AttachResult> attachInfoResultSingleLiveEvent;
@@ -18,16 +17,13 @@ public class AttachmentViewModel extends AndroidViewModel {
     private SingleLiveEvent<AttachResult> deleteAttachResultSingleLiveEvent;
     private SingleLiveEvent<String> noConnectionExceptionHappenSingleLiveEvent;
     private SingleLiveEvent<String> timeoutExceptionHappenSingleLiveEvent;
-    private SingleLiveEvent<String> finishWriteToStorage = new SingleLiveEvent<>();
+    private SingleLiveEvent<Boolean> doneWrite = new SingleLiveEvent<>();
     private SingleLiveEvent<String> photoClicked = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> yesDeleteClicked = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> showAttachAgainDialog = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> noAttachAgain = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> yesAttachAgain = new SingleLiveEvent<>();
-    private SingleLiveEvent<Boolean> yesDelete = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> closeClicked = new SingleLiveEvent<>();
-    private SingleLiveEvent<Integer> deleteOccur = new SingleLiveEvent<>();
-    private SingleLiveEvent<String> storageError = new SingleLiveEvent<>();
 
     public AttachmentViewModel(@NonNull Application application) {
         super(application);
@@ -64,11 +60,11 @@ public class AttachmentViewModel extends AndroidViewModel {
         return timeoutExceptionHappenSingleLiveEvent;
     }
 
-    public SingleLiveEvent<String> getFinishWriteToStorage() {
-        return finishWriteToStorage;
+    public SingleLiveEvent<Boolean> getDoneWrite() {
+        return doneWrite;
     }
 
-    public SingleLiveEvent<String> getItemClicked() {
+    public SingleLiveEvent<String> getPhotoClicked() {
         return photoClicked;
     }
 
@@ -88,28 +84,12 @@ public class AttachmentViewModel extends AndroidViewModel {
         return yesAttachAgain;
     }
 
-    public SingleLiveEvent<Boolean> getYesDelete() {
-        return yesDelete;
-    }
-
-    public SingleLiveEvent<Boolean> getCloseClicked() {
+    public SingleLiveEvent<Boolean> getSuccessDialogDismissed() {
         return closeClicked;
-    }
-
-    public SingleLiveEvent<Integer> getDeleteOccur() {
-        return deleteOccur;
-    }
-
-    public SingleLiveEvent<String> getStorageError() {
-        return storageError;
     }
 
     public ServerDataTwo getServerData(String centerName) {
         return repository.getServerData(centerName);
-    }
-
-    public void getServicePatientResult(String newBaseUrl) {
-        repository.getServicePatientResult(newBaseUrl);
     }
 
     public void getServiceAttachResult(String newBaseUrl) {

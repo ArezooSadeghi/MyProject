@@ -43,7 +43,7 @@ public class PhotoGalleryAdapter extends RecyclerView.Adapter<PhotoGalleryAdapte
     public void onBindViewHolder(@NonNull PhotoGalleryHolder holder, int position) {
         String filePath = filePathList.get(position);
         holder.bindFilePath(filePath);
-        holder.binding.getRoot().setOnClickListener(v -> viewModel.getItemClicked().setValue(filePath));
+        holder.binding.getRoot().setOnClickListener(v -> viewModel.getPhotoClicked().setValue(filePath));
     }
 
     @Override

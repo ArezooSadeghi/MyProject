@@ -38,23 +38,19 @@ import java.util.List;
 public class PhotoGalleryFragment extends Fragment {
     private FragmentPhotoGalleryBinding binding;
     private AttachmentViewModel viewModel;
-    private ServerDataTwo serverData;
     private String userLoginKey;
     private PhotoGalleryAdapter adapter;
-    private List<String> oldFilePathList, newFilePathList;
+    private List<String> filePathList;
     private List<Integer> attachIDList;
     private int sickID, index;
 
+    private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 0;
     private static final int SPAN_COUNT = 3;
 
-    private static final String ARGS_SICK_ID = "sickID";
-    private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
-
-    public static PhotoGalleryFragment newInstance(int sickID) {
+    public static PhotoGalleryFragment newInstance() {
         PhotoGalleryFragment fragment = new PhotoGalleryFragment();
         Bundle args = new Bundle();
-        args.putInt(ARGS_SICK_ID, sickID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,14 +62,12 @@ public class PhotoGalleryFragment extends Fragment {
         initVariables();
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            if (hasWriteExternalStoragePermission()) {
+            if (hasWriteExternalStoragePermission())
                 fetchPatientAttachments(sickID);
-            } else {
+            else
                 requestWriteExternalStoragePermission();
-            }
-        } else {
+        } else
             fetchPatientAttachments(sickID);
-        }
     }
 
     @Override
@@ -84,14 +78,13 @@ public class PhotoGalleryFragment extends Fragment {
                 container,
                 false);
 
+        adapter = new PhotoGalleryAdapter(getContext(), viewModel, new ArrayList<>());
+
         initViews();
         handleEvents();
 
-        if (oldFilePathList.size() != 0 || newFilePathList.size() != 0) {
-            binding.progressBarLoading.setVisibility(View.GONE);
-            binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
+        if (filePathList.size() != 0)
             setupAdapter();
-        }
 
         return binding.getRoot();
     }
@@ -105,17 +98,13 @@ public class PhotoGalleryFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION) {
-            if (grantResults.length == 0) {
+            if (grantResults.length == 0)
                 return;
-            }
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (sickID != 0) {
+                if (sickID > 0)
                     fetchPatientAttachments(sickID);
-                }
-            } else {
-                binding.progressBarLoading.setVisibility(View.GONE);
+            } else
                 handleError(getString(R.string.storage_permission_denied));
-            }
         }
     }
 
@@ -125,19 +114,34 @@ public class PhotoGalleryFragment extends Fragment {
 
     private void initVariables() {
         String centerName = SipMobileAppPreferences.getCenterName(getContext());
-        serverData = viewModel.getServerData(centerName);
+        ServerDataTwo serverData = viewModel.getServerData(centerName);
+        viewModel.getServiceAttachResult(serverData.getIp() + ":" + serverData.getPort());
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
 
         PhotoGalleryFragmentArgs args = PhotoGalleryFragmentArgs.fromBundle(getArguments());
         sickID = args.getSickID();
-        if (sickID != 0) {
+        if (sickID > 0)
             SipMobileAppPreferences.setSickID(getContext(), sickID);
-        } else {
+        else
             sickID = SipMobileAppPreferences.getSickID(getContext());
+
+        int attachID = args.getAttachID();
+        if (attachID > 0) {
+            if (externalMemoryAvailable()) {
+                File direction = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                if (direction.exists()) {
+                    File[] files = direction.listFiles();
+                    for (File file : files) {
+                        if (file.getName().equals(attachID + ".jpg")) {
+                            file.delete();
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
-        oldFilePathList = new ArrayList<>();
-        newFilePathList = new ArrayList<>();
+        filePathList = new ArrayList<>();
         attachIDList = new ArrayList<>();
     }
 
@@ -153,71 +157,63 @@ public class PhotoGalleryFragment extends Fragment {
         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
     }
 
+    private void handleError(String msg) {
+        binding.progressBarLoading.setVisibility(View.GONE);
+        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(msg);
+        fragment.show(getParentFragmentManager(), ErrorDialogFragment.TAG);
+    }
+
+    private boolean externalMemoryAvailable() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+    }
+
+    private void setupAdapter() {
+        binding.progressBarLoading.setVisibility(View.GONE);
+        binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
+        adapter.updateFilePathList(filePathList);
+        binding.recyclerViewAttachment.setAdapter(adapter);
+    }
+
     private void fetchPatientAttachments(int sickID) {
-        viewModel.getServicePatientResult(serverData.getIp() + ":" + serverData.getPort());
         String path = "/api/v1/attachs/ListBySickID/";
         viewModel.fetchPatientAttachments(path, userLoginKey, sickID);
     }
 
     private void fetchAttachInfo(int attachID) {
-        viewModel.getServiceAttachResult(serverData.getIp() + ":" + serverData.getPort());
         String path = "/api/v1/attachs/Info/";
         viewModel.fetchAttachInfo(path, userLoginKey, attachID);
     }
 
-    private String readFromStorage(int attachID) {
-        File appSpecificExternalDir = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
-        if (appSpecificExternalDir.exists()) {
-            File[] files = appSpecificExternalDir.listFiles();
-            assert files != null;
-            if (files.length != 0) {
+    private String read(int attachID) {
+        if (externalMemoryAvailable()) {
+            File direction = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            if (direction.exists()) {
+                File[] files = direction.listFiles();
                 for (File file : files) {
-                    if (file.getName().equals(attachID + ".jpg")) {
-                        if (adapter == null) {
-                            oldFilePathList.add(file.getPath());
-                            newFilePathList.addAll(oldFilePathList);
-                        } else {
-                            newFilePathList.add(file.getPath());
-                        }
+                    if (file.getName().equals(attachID + ".jpg"))
                         return file.getPath();
-                    }
                 }
             }
         }
         return "";
     }
 
-    private String writeToStorage(AttachResult.AttachInfo attachInfo) throws IOException {
-        File dir = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
-        if (!dir.exists()) {
-            dir.mkdirs();
+    private String write(AttachResult.AttachInfo attachInfo) throws IOException {
+        if (externalMemoryAvailable()) {
+            File direction = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            if (direction.exists()) {
+                File file = new File(direction, attachInfo.getAttachID() + ".jpg");
+                if (attachInfo.getFileBase64() != null && attachInfo.getDeleteUserID() == 0) {
+                    byte[] bytes = Base64.decode(attachInfo.getFileBase64(), 0);
+                    FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+                    fileOutputStream.write(bytes);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                    return file.getPath();
+                }
+            }
         }
-
-        File file = new File(dir, attachInfo.getAttachID() + ".jpg");
-        if (attachInfo.getFileBase64() != null && attachInfo.getDeleteUserID() == 0) {
-            byte[] bytes = Base64.decode(attachInfo.getFileBase64(), 0);
-            FileOutputStream fileOutputStream = new FileOutputStream(file, true);
-            fileOutputStream.write(bytes);
-            fileOutputStream.flush();
-            fileOutputStream.close();
-            return file.getPath();
-        } else {
-            return "";
-        }
-    }
-
-    private void setupAdapter() {
-        if (adapter == null) {
-            adapter = new PhotoGalleryAdapter(getContext(), viewModel, oldFilePathList);
-        } else {
-            adapter.updateFilePathList(newFilePathList);
-        }
-        binding.recyclerViewAttachment.setAdapter(adapter);
-    }
-
-    private void handleError(String msg) {
-        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(msg);
-        fragment.show(getParentFragmentManager(), ErrorDialogFragment.TAG);
+        return "";
     }
 
     private void showAttachments(AttachResult attachResult) {
@@ -225,53 +221,36 @@ public class PhotoGalleryFragment extends Fragment {
             binding.progressBarLoading.setVisibility(View.GONE);
         } else {
             for (AttachResult.AttachInfo attachInfo : attachResult.getAttachs()) {
-                boolean isExternalStorageWritable = externalMemoryAvailable();
-                String filePath = "";
-                if (isExternalStorageWritable) {
-                    filePath = readFromStorage(attachInfo.getAttachID());
-                }
-                if (!filePath.isEmpty()) {
-                    binding.progressBarLoading.setVisibility(View.GONE);
-                    binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
-                    setupAdapter();
-                } else {
+                String filePath = read(attachInfo.getAttachID());
+                if (!filePath.isEmpty())
+                    filePathList.add(filePath);
+                else
                     attachIDList.add(attachInfo.getAttachID());
-                }
             }
 
-            if (attachIDList.size() != 0) {
+            if (filePathList.size() != 0)
+                setupAdapter();
+
+            if (attachIDList.size() != 0)
                 fetchAttachInfo(attachIDList.get(index));
-            }
         }
     }
 
     private void handleEvents() {
         binding.fabAdd.setOnClickListener(view -> {
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-                if (hasWriteExternalStoragePermission()) {
-                    PhotoGalleryFragmentDirections.ActionPhotoGalleryFragmentToAttachmentFragment action = PhotoGalleryFragmentDirections.actionPhotoGalleryFragmentToAttachmentFragment();
-                    action.setSickID(sickID);
-                    NavHostFragment.findNavController(this).navigate(action);
-                } else {
-                    requestWriteExternalStoragePermission();
-                }
-            } else {
-                PhotoGalleryFragmentDirections.ActionPhotoGalleryFragmentToAttachmentFragment action = PhotoGalleryFragmentDirections.actionPhotoGalleryFragmentToAttachmentFragment();
-                action.setSickID(sickID);
-                NavHostFragment.findNavController(this).navigate(action);
-            }
+            PhotoGalleryFragmentDirections.ActionPhotoGalleryFragmentToAttachmentFragment action = PhotoGalleryFragmentDirections.actionPhotoGalleryFragmentToAttachmentFragment();
+            action.setSickID(sickID);
+            NavHostFragment.findNavController(this).navigate(action);
         });
     }
 
     private void setupObserver() {
         viewModel.getPatientAttachmentsResultSingleLiveEvent().observe(getViewLifecycleOwner(), attachResult -> {
             if (attachResult != null) {
-                if (attachResult.getErrorCode().equals("0")) {
+                if (attachResult.getErrorCode().equals("0"))
                     showAttachments(attachResult);
-                } else {
-                    binding.progressBarLoading.setVisibility(View.GONE);
+                else
                     handleError(attachResult.getError());
-                }
             }
         });
 
@@ -282,58 +261,33 @@ public class PhotoGalleryFragment extends Fragment {
                         AttachResult.AttachInfo attachInfo = attachResult.getAttachs()[0];
                         new Thread(() -> {
                             try {
-                                boolean externalMemoryAvailable = externalMemoryAvailable();
-                                if (externalMemoryAvailable) {
-                                    String filePath = writeToStorage(attachInfo);
-                                    viewModel.getFinishWriteToStorage().postValue(filePath);
-                                } else {
-                                    viewModel.getStorageError().postValue("حافظه در دسترس نمی باشد");
-                                }
+                                String filePath = write(attachInfo);
+                                if (!filePath.isEmpty())
+                                    filePathList.add(filePath);
+                                viewModel.getDoneWrite().postValue(true);
                             } catch (IOException e) {
                                 Log.e(TAG, e.getMessage());
                             }
                         }).start();
                     }
-                } else {
-                    binding.progressBarLoading.setVisibility(View.GONE);
+                } else
                     handleError(attachResult.getError());
-                }
             }
         });
 
-        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), msg -> {
-            binding.progressBarLoading.setVisibility(View.GONE);
-            handleError(msg);
-        });
-
-        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), msg -> {
-            binding.progressBarLoading.setVisibility(View.GONE);
-            handleError(msg);
-        });
-
-        viewModel.getFinishWriteToStorage().observe(getViewLifecycleOwner(), filePath -> {
-            if (!filePath.isEmpty()) {
-
-                if (adapter == null) {
-                    oldFilePathList.add(filePath);
-                    newFilePathList.addAll(oldFilePathList);
-                } else {
-                    newFilePathList.add(filePath);
-                }
-
-                binding.progressBarLoading.setVisibility(View.GONE);
-                binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
-                setupAdapter();
-            }
+        viewModel.getDoneWrite().observe(getViewLifecycleOwner(), doneWrite -> {
             index++;
-            if (index < attachIDList.size()) {
+            if (index < attachIDList.size())
                 fetchAttachInfo(attachIDList.get(index));
-            } else {
-                binding.progressBarLoading.setVisibility(View.GONE);
+            else {
+                if (filePathList.size() != 0)
+                    setupAdapter();
+                else
+                    binding.progressBarLoading.setVisibility(View.GONE);
             }
         });
 
-        viewModel.getItemClicked().observe(getViewLifecycleOwner(), filePath -> {
+        viewModel.getPhotoClicked().observe(getViewLifecycleOwner(), filePath -> {
             File file = new File(filePath);
             String fileName = file.getName().replace(".jpg", "");
             int attachID = Integer.parseInt(fileName);
@@ -342,42 +296,8 @@ public class PhotoGalleryFragment extends Fragment {
             NavHostFragment.findNavController(this).navigate(action);
         });
 
-        viewModel.getDeleteOccur().observe(getViewLifecycleOwner(), attachID -> {
-            String filePath = "";
-            File dir = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Attachments");
-            if (dir.exists()) {
-                File[] files = dir.listFiles();
-                assert files != null;
-                for (File file : files) {
-                    if (file.getName().equals(attachID + ".jpg")) {
-                        filePath = file.getPath();
-                        file.delete();
-                        break;
-                    }
-                }
-            }
+        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), this::handleError);
 
-            for (String fPath : newFilePathList) {
-                if (!filePath.isEmpty()) {
-                    if (fPath.equals(filePath)) {
-                        newFilePathList.remove(fPath);
-                        break;
-                    }
-                }
-            }
-
-            binding.progressBarLoading.setVisibility(View.GONE);
-            binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
-            setupAdapter();
-        });
-
-        viewModel.getStorageError().observe(getViewLifecycleOwner(), msg -> {
-            binding.progressBarLoading.setVisibility(View.GONE);
-            handleError(msg);
-        });
-    }
-
-    private boolean externalMemoryAvailable() {
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), this::handleError);
     }
 }

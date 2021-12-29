@@ -17,7 +17,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.example.sipmobileapp.R;
-import com.example.sipmobileapp.databinding.FragmentFullScreenPhotoBinding;
+import com.example.sipmobileapp.databinding.FragmentPhotoBinding;
 import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.ui.dialog.QuestionDialogFragment;
@@ -25,21 +25,15 @@ import com.example.sipmobileapp.ui.dialog.SuccessDialogFragment;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
 import com.example.sipmobileapp.viewmodel.AttachmentViewModel;
 
-public class FullScreenPhotoFragment extends Fragment {
-    private FragmentFullScreenPhotoBinding binding;
+public class PhotoFragment extends Fragment {
+    private FragmentPhotoBinding binding;
     private AttachmentViewModel viewModel;
-    private ServerDataTwo serverData;
-    private String userLoginKey;
+    private String userLoginKey, filePath;
     private int attachID;
 
-    private static final String ARGS_FILE_PATH = "filePath";
-    private static final String ARGS_ATTACH_ID = "attachID";
-
-    public static FullScreenPhotoFragment newInstance(String filePath, int attachID) {
-        FullScreenPhotoFragment fragment = new FullScreenPhotoFragment();
+    public static PhotoFragment newInstance() {
+        PhotoFragment fragment = new PhotoFragment();
         Bundle args = new Bundle();
-        args.putString(ARGS_FILE_PATH, filePath);
-        args.putInt(ARGS_ATTACH_ID, attachID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,7 +51,7 @@ public class FullScreenPhotoFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.fragment_full_screen_photo,
+                R.layout.fragment_photo,
                 container,
                 false);
 
@@ -79,19 +73,18 @@ public class FullScreenPhotoFragment extends Fragment {
 
     private void initVariables() {
         String centerName = SipMobileAppPreferences.getCenterName(getContext());
-        serverData = viewModel.getServerData(centerName);
+        ServerDataTwo serverData = viewModel.getServerData(centerName);
+        viewModel.getServiceAttachResult(serverData.getIp() + ":" + serverData.getPort());
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
-        FullScreenPhotoFragmentArgs args = FullScreenPhotoFragmentArgs.fromBundle(getArguments());
+        PhotoFragmentArgs args = PhotoFragmentArgs.fromBundle(getArguments());
         attachID = args.getAttachID();
+        filePath = args.getFilePath();
     }
 
     private void initViews() {
-        FullScreenPhotoFragmentArgs args = FullScreenPhotoFragmentArgs.fromBundle(getArguments());
-        String filePath = args.getFilePath();
         Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-        if (bitmap != null) {
-            binding.ivFullScreen.setImage(ImageSource.bitmap(bitmap));
-        }
+        if (bitmap != null)
+            binding.ivPhoto.setImage(ImageSource.bitmap(bitmap));
     }
 
     private void handleError(String msg) {
@@ -105,7 +98,6 @@ public class FullScreenPhotoFragment extends Fragment {
     }
 
     private void deleteAttach(int attachID) {
-        viewModel.getServiceAttachResult(serverData.getIp() + ":" + serverData.getPort());
         String path = "/api/v1/attachs/Delete/";
         viewModel.deleteAttach(path, userLoginKey, attachID);
     }
@@ -117,7 +109,7 @@ public class FullScreenPhotoFragment extends Fragment {
         });
 
         binding.ivClose.setOnClickListener(view -> {
-            NavDirections action = FullScreenPhotoFragmentDirections.actionFullScreenPhotoFragmentToPhotoGalleryFragment();
+            NavDirections action = PhotoFragmentDirections.actionFullScreenPhotoFragmentToPhotoGalleryFragment();
             NavHostFragment.findNavController(this).navigate(action);
         });
     }
@@ -127,12 +119,11 @@ public class FullScreenPhotoFragment extends Fragment {
             binding.progressBarLoading.setVisibility(View.GONE);
             if (attachResult != null) {
                 if (attachResult.getErrorCode().equals("0")) {
-                    int attachID = attachResult.getAttachs()[0].getAttachID();
-                    viewModel.getDeleteOccur().setValue(attachID);
+                    if (attachResult.getAttachs().length != 0)
+                        attachID = attachResult.getAttachs()[0].getAttachID();
                     showSuccessDialog(getString(R.string.success_delete_attach));
-                } else {
+                } else
                     handleError(attachResult.getError());
-                }
             }
         });
 
@@ -141,11 +132,10 @@ public class FullScreenPhotoFragment extends Fragment {
             deleteAttach(attachID);
         });
 
-        viewModel.getCloseClicked().observe(getViewLifecycleOwner(), closeClicked -> {
-            int sickID = SipMobileAppPreferences.getSickID(getContext());
-            FullScreenPhotoFragmentDirections.ActionFullScreenPhotoFragmentToPhotoGalleryFragment action = FullScreenPhotoFragmentDirections.actionFullScreenPhotoFragmentToPhotoGalleryFragment();
-            action.setSickID(sickID);
-            NavHostFragment.findNavController(FullScreenPhotoFragment.this).navigate(action);
+        viewModel.getSuccessDialogDismissed().observe(getViewLifecycleOwner(), closeClicked -> {
+            PhotoFragmentDirections.ActionFullScreenPhotoFragmentToPhotoGalleryFragment action = PhotoFragmentDirections.actionFullScreenPhotoFragmentToPhotoGalleryFragment();
+            action.setAttachID(attachID);
+            NavHostFragment.findNavController(PhotoFragment.this).navigate(action);
         });
     }
 }

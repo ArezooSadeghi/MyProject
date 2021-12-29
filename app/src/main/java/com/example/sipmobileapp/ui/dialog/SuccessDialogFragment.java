@@ -76,7 +76,7 @@ public class SuccessDialogFragment extends DialogFragment {
 
     private void handleEvents() {
         binding.btnClose.setOnClickListener(v -> {
-            viewModel.getCloseClicked().setValue(true);
+            viewModel.getSuccessDialogDismissed().setValue(true);
             dismiss();
         });
     }

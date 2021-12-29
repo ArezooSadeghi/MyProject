@@ -14,7 +14,7 @@
         tools:context=".ui.fragment.AttachmentFragment">
 
         <ImageView
-            android:id="@+id/iv_no_photo"
+            android:id="@+id/iv_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_name"
@@ -31,7 +31,7 @@
             android:layout_height="0dp"
             android:contentDescription="@string/app_name"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/layout_container"
+            app:layout_constraintBottom_toTopOf="@id/tool_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_default="spread"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,10 +49,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_container"
+            android:id="@+id/tool_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#262626"
+            android:background="@color/d"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <ImageView
