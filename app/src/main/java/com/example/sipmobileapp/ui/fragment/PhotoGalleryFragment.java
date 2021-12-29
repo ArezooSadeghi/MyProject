@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -266,7 +265,7 @@ public class PhotoGalleryFragment extends Fragment {
                                     filePathList.add(filePath);
                                 viewModel.getDoneWrite().postValue(true);
                             } catch (IOException e) {
-                                Log.e(TAG, e.getMessage());
+                                handleError(e.getMessage());
                             }
                         }).start();
                     }
