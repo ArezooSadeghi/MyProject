@@ -1,8 +1,5 @@
 package com.example.sipmobileapp.ui.fragment;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
@@ -12,7 +9,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -42,9 +38,6 @@ public class PhotoGalleryFragment extends Fragment {
     private List<String> filePathList;
     private List<Integer> attachIDList;
     private int sickID, index;
-
-    private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
-    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 0;
     private static final int SPAN_COUNT = 3;
 
     public static PhotoGalleryFragment newInstance() {
@@ -59,14 +52,7 @@ public class PhotoGalleryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         createViewModel();
         initVariables();
-
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            if (hasWriteExternalStoragePermission())
-                fetchPatientAttachments(sickID);
-            else
-                requestWriteExternalStoragePermission();
-        } else
-            fetchPatientAttachments(sickID);
+        fetchPatientAttachments(sickID);
     }
 
     @Override
@@ -92,19 +78,6 @@ public class PhotoGalleryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupObserver();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION) {
-            if (grantResults.length == 0)
-                return;
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (sickID > 0)
-                    fetchPatientAttachments(sickID);
-            } else
-                handleError(getString(R.string.storage_permission_denied));
-        }
     }
 
     private void createViewModel() {
@@ -146,14 +119,6 @@ public class PhotoGalleryFragment extends Fragment {
 
     private void initViews() {
         binding.recyclerViewAttachment.setLayoutManager(new GridLayoutManager(getContext(), SPAN_COUNT));
-    }
-
-    private boolean hasWriteExternalStoragePermission() {
-        return (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-    }
-
-    private void requestWriteExternalStoragePermission() {
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
     }
 
     private void handleError(String msg) {
