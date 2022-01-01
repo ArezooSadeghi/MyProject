@@ -51,8 +51,6 @@ public class PhotoGalleryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createViewModel();
-        initVariables();
-        fetchPatientAttachments(sickID);
     }
 
     @Override
@@ -65,11 +63,10 @@ public class PhotoGalleryFragment extends Fragment {
 
         adapter = new PhotoGalleryAdapter(getContext(), viewModel, new ArrayList<>());
 
+        initVariables();
         initViews();
+        fetchPatientAttachments(sickID);
         handleEvents();
-
-        if (filePathList.size() != 0)
-            setupAdapter();
 
         return binding.getRoot();
     }
@@ -115,6 +112,7 @@ public class PhotoGalleryFragment extends Fragment {
 
         filePathList = new ArrayList<>();
         attachIDList = new ArrayList<>();
+        index = 0;
     }
 
     private void initViews() {

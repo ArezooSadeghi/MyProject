@@ -20,7 +20,6 @@
     <string name="password_hint">رمز عبور</string>
     <string name="login_btn_txt">ورود</string>
     <string name="close_btn_txt">بستن</string>
-    <string name="description_hint">توضیحات</string>
     <string name="attachments_item_title">مستندات</string>
     <string name="ip_hint">لطفا ip خود را وارد کنید</string>
     <string name="port_hint">لطفا port خود را وارد کنید</string>
@@ -35,4 +34,6 @@
     <string name="save_btn_txt">ذخیره</string>
     <string name="center_info">اطلاعات مرکز</string>
     <string name="login_title">برنامه پوست و مو</string>
+    <string name="test_item_title">تست</string>
+    <string name="description_hint">توضیحات</string>
 </resources>
