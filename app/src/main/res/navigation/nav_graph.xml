@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
@@ -39,9 +38,6 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/photoGalleryFragment"
             app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_patientFragment_to_testFragment"
-            app:destination="@id/testFragment" />
 
     </fragment>
 
@@ -116,11 +112,5 @@
             app:popUpToInclusive="true" />
 
     </fragment>
-
-    <fragment
-        android:id="@+id/testFragment"
-        android:name="com.example.sipmobileapp.ui.fragment.TestFragment"
-        android:label="fragment_test"
-        tools:layout="@layout/fragment_test" />
 
 </navigation>

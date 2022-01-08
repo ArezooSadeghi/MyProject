@@ -105,17 +105,12 @@ public class PatientFragment extends Fragment {
         binding.ivMore.setOnClickListener(view -> {
             PowerMenu powerMenu = new PowerMenu.Builder(requireContext())
                     .addItem(new PowerMenuItem(getString(R.string.logout_item_title)))
-                    .addItem(new PowerMenuItem(getString(R.string.test_item_title)))
                     .build();
 
             powerMenu.setOnMenuItemClickListener((position, item) -> {
                 if (position == 0) {
                     SipMobileAppPreferences.setUserLoginKey(getContext(), null);
                     NavDirections action = PatientFragmentDirections.actionPatientFragmentToLoginFragment();
-                    NavHostFragment.findNavController(this).navigate(action);
-                    powerMenu.dismiss();
-                } else if (position == 1) {
-                    NavDirections action = PatientFragmentDirections.actionPatientFragmentToTestFragment();
                     NavHostFragment.findNavController(this).navigate(action);
                     powerMenu.dismiss();
                 }
