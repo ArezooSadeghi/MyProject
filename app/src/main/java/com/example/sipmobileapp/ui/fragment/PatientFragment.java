@@ -68,10 +68,9 @@ public class PatientFragment extends Fragment {
         handleEvents();
 
         if (patientInfoList.size() != 0) {
-            setupAdapter(patientInfoList.toArray(new PatientResult.PatientInfo[patientInfoList.size()]));
             binding.recyclerViewPatient.setVisibility(View.VISIBLE);
-            binding.txtNoSearchResult.setVisibility(View.GONE);
             binding.progressBarLoading.setVisibility(View.GONE);
+            setupAdapter(patientInfoList.toArray(new PatientResult.PatientInfo[patientInfoList.size()]));
         }
 
         return binding.getRoot();
@@ -148,12 +147,17 @@ public class PatientFragment extends Fragment {
     private void setupObserver() {
         viewModel.getPatientsResultSingleLiveEvent().observe(getViewLifecycleOwner(), patientResult -> {
             binding.progressBarLoading.setVisibility(View.GONE);
-            binding.txtNoSearchResult.setVisibility(View.GONE);
-            binding.recyclerViewPatient.setVisibility(View.VISIBLE);
             if (patientResult != null) {
                 if (patientResult.getErrorCode().equals("0")) {
-                    setupAdapter(patientResult.getPatients());
-                    patientInfoList = Arrays.asList(patientResult.getPatients());
+                    if (patientResult.getPatients().length == 0) {
+                        binding.txtNoSearchResult.setVisibility(View.VISIBLE);
+                        binding.recyclerViewPatient.setVisibility(View.GONE);
+                    } else {
+                        binding.txtNoSearchResult.setVisibility(View.GONE);
+                        binding.recyclerViewPatient.setVisibility(View.VISIBLE);
+                        setupAdapter(patientResult.getPatients());
+                        patientInfoList = Arrays.asList(patientResult.getPatients());
+                    }
                 } else {
                     handleError(patientResult.getError());
                 }
@@ -182,7 +186,6 @@ public class PatientFragment extends Fragment {
     }
 
     private void setupAdapter(PatientResult.PatientInfo[] patients) {
-        binding.recyclerViewPatient.setVisibility(View.VISIBLE);
         List<PatientResult.PatientInfo> patientInfoList = Arrays.asList(patients);
         PatientAdapter adapter = new PatientAdapter(getContext(), patientInfoList, viewModel);
         binding.recyclerViewPatient.setAdapter(adapter);

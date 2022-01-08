@@ -15,7 +15,7 @@
     <string name="logout_item_title">خروج از حساب کاربری</string>
     <string name="search_patient_name">لطفا نام بیمار را در قسمت مربوطه جستجو کنید</string>
     <string name="storage_permission_denied">اجازه دسترسی به حافظه داده نشد</string>
-    <string name="search_hint">جستجو...</string>
+    <string name="search_hint"><font size="12">لطفا نام بیمار را جستجو نمایید</font></string>
     <string name="username_hint">نام کاربری</string>
     <string name="password_hint">رمز عبور</string>
     <string name="login_btn_txt">ورود</string>

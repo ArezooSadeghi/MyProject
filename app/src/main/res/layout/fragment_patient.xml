@@ -8,14 +8,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/light_gray">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/search_bar_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/dark_gray"
+            android:background="#B0E0E6"
             app:layout_constraintTop_toTopOf="parent">
 
             <EditText
@@ -27,14 +26,17 @@
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_edit_text"
                 android:ellipsize="end"
-                android:gravity="right"
+                android:fontFamily="@font/regular"
+                android:gravity="right|center"
                 android:hint="@string/search_hint"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:maxLines="1"
-                android:padding="8dp"
+                android:paddingRight="8dp"
                 android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:textCursorDrawable="@drawable/custom_cursor"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_more"
                 app:layout_constraintHeight_default="spread"
@@ -67,7 +69,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/ed_txt_search"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/ed_txt_search"
-                app:tint="@color/white" />
+                app:tint="@color/black" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -100,6 +102,7 @@
             android:fontFamily="@font/regular"
             android:text="@string/no_search_result"
             android:textColor="@color/white"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
