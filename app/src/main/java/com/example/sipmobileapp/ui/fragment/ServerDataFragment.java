@@ -71,7 +71,7 @@ public class ServerDataFragment extends Fragment {
     }
 
     private void setupAdapter(List<ServerData> serverDataList) {
-        ServerDataAdapter adapter = new ServerDataAdapter(getContext(), serverDataList, viewModel);
+        ServerDataAdapter adapter = new ServerDataAdapter(viewModel, serverDataList);
         binding.recyclerViewServerData.setAdapter(adapter);
     }
 

@@ -1,6 +1,5 @@
 package com.example.sipmobileapp.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -9,7 +8,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sipmobileapp.R;
-import com.example.sipmobileapp.databinding.PatientAdapterItemBinding;
+import com.example.sipmobileapp.databinding.PatientItemBinding;
 import com.example.sipmobileapp.model.PatientResult;
 import com.example.sipmobileapp.utils.Converter;
 import com.example.sipmobileapp.viewmodel.PatientViewModel;
@@ -19,40 +18,38 @@ import com.skydoves.powermenu.PowerMenuItem;
 import java.util.List;
 
 public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientHolder> {
-    private final Context context;
-    private final List<PatientResult.PatientInfo> patientInfoList;
     private final PatientViewModel viewModel;
+    private List<PatientResult.PatientInfo> patientList;
 
-    public PatientAdapter(Context context, List<PatientResult.PatientInfo> patientInfoList, PatientViewModel viewModel) {
-        this.context = context;
-        this.patientInfoList = patientInfoList;
+    public PatientAdapter(PatientViewModel viewModel, List<PatientResult.PatientInfo> patientList) {
         this.viewModel = viewModel;
+        this.patientList = patientList;
     }
 
     @NonNull
     @Override
     public PatientHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new PatientHolder(DataBindingUtil.inflate(
-                LayoutInflater.from(context),
-                R.layout.patient_adapter_item,
+                LayoutInflater.from(parent.getContext()),
+                R.layout.patient_item,
                 parent,
                 false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull PatientHolder holder, int position) {
-        PatientResult.PatientInfo patientInfo = patientInfoList.get(position);
-        holder.bindPatientInfo(patientInfo);
+        PatientResult.PatientInfo patient = patientList.get(position);
+        holder.bindPatient(patient);
 
         holder.binding.ivMore.setOnClickListener(view -> {
-            PowerMenu powerMenu = new PowerMenu.Builder(context)
-                    .addItem(new PowerMenuItem(context.getResources().getString(R.string.attachments_item_title)))
+            PowerMenu powerMenu = new PowerMenu.Builder(holder.binding.getRoot().getContext())
+                    .addItem(new PowerMenuItem("مستندات"))
                     .setSize(400, 200)
                     .build();
 
             powerMenu.setOnMenuItemClickListener((i, item) -> {
                 if (i == 0) {
-                    viewModel.getAttachmentsItemClicked().setValue(patientInfo.getSickID());
+                    viewModel.getAttachmentsItemClicked().setValue(patient.getSickID());
                     powerMenu.dismiss();
                 }
             });
@@ -62,22 +59,22 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
 
     @Override
     public int getItemCount() {
-        return patientInfoList == null ? 0 : patientInfoList.size();
+        return patientList != null ? patientList.size() : 0;
     }
 
-    public static class PatientHolder extends RecyclerView.ViewHolder {
-        private final PatientAdapterItemBinding binding;
+    public class PatientHolder extends RecyclerView.ViewHolder {
+        private final PatientItemBinding binding;
 
-        public PatientHolder(PatientAdapterItemBinding binding) {
+        public PatientHolder(PatientItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        public void bindPatientInfo(PatientResult.PatientInfo patientInfo) {
-            binding.txtPatientID.setText(String.valueOf(patientInfo.getSickID()));
-            binding.txtDate.setText(patientInfo.getDate());
-            binding.txtPatientName.setText(Converter.letterConverter(patientInfo.getPatientName()));
-            binding.txtServices.setText(Converter.letterConverter(patientInfo.getServices()));
+        public void bindPatient(PatientResult.PatientInfo patient) {
+            binding.txtPatientID.setText(String.valueOf(patient.getSickID()));
+            binding.txtDate.setText(patient.getDate());
+            binding.txtPatientName.setText(Converter.letterConverter(patient.getPatientName()));
+            binding.txtServices.setText(Converter.letterConverter(patient.getServices()));
         }
     }
 }

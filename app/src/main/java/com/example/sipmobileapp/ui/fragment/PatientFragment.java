@@ -187,7 +187,7 @@ public class PatientFragment extends Fragment {
 
     private void setupAdapter(PatientResult.PatientInfo[] patients) {
         List<PatientResult.PatientInfo> patientInfoList = Arrays.asList(patients);
-        PatientAdapter adapter = new PatientAdapter(getContext(), patientInfoList, viewModel);
+        PatientAdapter adapter = new PatientAdapter(viewModel, patientInfoList);
         binding.recyclerViewPatient.setAdapter(adapter);
     }
 

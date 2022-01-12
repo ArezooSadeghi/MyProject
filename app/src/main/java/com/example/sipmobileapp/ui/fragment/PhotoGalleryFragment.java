@@ -17,7 +17,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.sipmobileapp.R;
-import com.example.sipmobileapp.adapter.PhotoGalleryAdapter;
+import com.example.sipmobileapp.adapter.GalleryAdapter;
 import com.example.sipmobileapp.databinding.FragmentPhotoGalleryBinding;
 import com.example.sipmobileapp.model.AttachResult;
 import com.example.sipmobileapp.model.ServerData;
@@ -35,7 +35,7 @@ public class PhotoGalleryFragment extends Fragment {
     private FragmentPhotoGalleryBinding binding;
     private AttachmentViewModel viewModel;
     private String userLoginKey;
-    private PhotoGalleryAdapter adapter;
+    private GalleryAdapter adapter;
     private List<String> filePathList;
     private List<Integer> attachIDList;
     private int sickID, index;
@@ -64,7 +64,7 @@ public class PhotoGalleryFragment extends Fragment {
                 container,
                 false);
 
-        adapter = new PhotoGalleryAdapter(getContext(), viewModel, new ArrayList<>());
+        adapter = new GalleryAdapter(viewModel, new ArrayList<>());
 
         initVariables();
         initViews();
@@ -135,7 +135,7 @@ public class PhotoGalleryFragment extends Fragment {
     private void setupAdapter() {
         binding.progressBarLoading.setVisibility(View.GONE);
         binding.recyclerViewAttachment.setVisibility(View.VISIBLE);
-        adapter.updateFilePathList(filePathList);
+        adapter.updateFileList(filePathList);
         binding.recyclerViewAttachment.setAdapter(adapter);
     }
 
