@@ -15,13 +15,11 @@ import java.util.List;
 public class LoginViewModel extends AndroidViewModel {
     private SipMobileAppRepository repository;
 
-    private SingleLiveEvent<Boolean> insertNotifySpinner = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> insertNotifyServerDataList = new SingleLiveEvent<>();
 
     private SingleLiveEvent<ServerDataTwo> editClicked = new SingleLiveEvent<>();
 
     private SingleLiveEvent<ServerDataTwo> deleteClicked = new SingleLiveEvent<>();
-    private SingleLiveEvent<Boolean> deleteNotifySpinner = new SingleLiveEvent<>();
 
     private SingleLiveEvent<String> noConnectionExceptionHappenSingleLiveEvent;
     private SingleLiveEvent<String> timeoutExceptionHappenSingleLiveEvent;
@@ -39,10 +37,6 @@ public class LoginViewModel extends AndroidViewModel {
         wrongIpAddressSingleLiveEvent = repository.getWrongIpAddressSingleLiveEvent();
         loginResultSingleLiveEvent = repository.getLoginResultSingleLiveEvent();
         serverDataListMutableLiveData = repository.getServerDataListMutableLiveData();
-    }
-
-    public SingleLiveEvent<Boolean> getInsertNotifySpinner() {
-        return insertNotifySpinner;
     }
 
     public SingleLiveEvent<Boolean> getInsertNotifyServerDataList() {
@@ -71,10 +65,6 @@ public class LoginViewModel extends AndroidViewModel {
 
     public ServerDataTwo getServerData(String centerName) {
         return repository.getServerData(centerName);
-    }
-
-    public SingleLiveEvent<Boolean> getDeleteNotifySpinner() {
-        return deleteNotifySpinner;
     }
 
     public SingleLiveEvent<String> getNoConnectionExceptionHappenSingleLiveEvent() {

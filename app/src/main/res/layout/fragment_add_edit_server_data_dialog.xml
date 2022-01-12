@@ -59,7 +59,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/regular"
-                    android:inputType="text"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textCursorDrawable="@drawable/custom_cursor"
@@ -89,7 +88,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/regular"
-                    android:inputType="text"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textCursorDrawable="@drawable/custom_cursor"
@@ -121,7 +119,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/regular"
-                    android:inputType="text"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textCursorDrawable="@drawable/custom_cursor"
@@ -134,7 +131,7 @@
         <Button
             android:id="@+id/btn_save"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/btn_bg"
             android:fontFamily="@font/regular"
             android:text="@string/save_btn_txt"
@@ -143,14 +140,14 @@
             app:backgroundTint="@color/light_gray"
             app:layout_constraintBottom_toBottomOf="@id/layoutDialog"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_default="wrap"
+            app:layout_constraintHeight="true"
             app:layout_constraintStart_toEndOf="@id/btn_close"
             app:layout_constraintTop_toBottomOf="@id/layoutDialog" />
 
         <Button
             android:id="@+id/btn_close"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/btn_bg"
             android:fontFamily="@font/regular"
             android:text="@string/close_btn_txt"
@@ -159,7 +156,7 @@
             app:backgroundTint="@color/light_gray"
             app:layout_constraintBottom_toBottomOf="@id/layoutDialog"
             app:layout_constraintEnd_toStartOf="@id/btn_save"
-            app:layout_constraintHeight_default="wrap"
+            app:layout_constraintHeight="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutDialog" />
 

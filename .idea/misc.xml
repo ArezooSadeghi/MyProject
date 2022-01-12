@@ -49,8 +49,9 @@
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/title_server_data_bg.xml" value="0.3435185185185185" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/drawable/title_success_bg.xml" value="0.3435185185185185" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/activity_fragment_container.xml" value="0.2957427536231884" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/activity_main.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/activity_server_data_container.xml" value="0.35778985507246375" />
-        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_add_edit_server_data_dialog.xml" value="0.2957427536231884" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_add_edit_server_data_dialog.xml" value="0.9" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_answer.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_attach_again_dialog.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_attachment.xml" value="0.20520833333333333" />
@@ -59,10 +60,13 @@
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_full_screen_photo.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_login.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_patient.xml" value="0.2957427536231884" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_photo.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_photo_gallery.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_question_dialog.xml" value="0.1" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_server_data.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_server_data_list_dialog.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_success_dialog.xml" value="0.2957427536231884" />
+        <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_test.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/fragment_warning_dialog.xml" value="0.25" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/patient_adapter_item.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Arezoo/AndroidStudioProjects/SkinAndHair/app/src/main/res/layout/photo_gallery_adapter_item.xml" value="0.2957427536231884" />
