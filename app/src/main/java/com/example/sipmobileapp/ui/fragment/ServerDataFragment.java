@@ -19,6 +19,7 @@ import com.example.sipmobileapp.adapter.ServerDataAdapter;
 import com.example.sipmobileapp.databinding.FragmentServerDataBinding;
 import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.ui.dialog.AddEditServerDataDialogFragment;
+import com.example.sipmobileapp.viewmodel.AttachmentViewModel;
 import com.example.sipmobileapp.viewmodel.LoginViewModel;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.List;
 public class ServerDataFragment extends Fragment {
     private FragmentServerDataBinding binding;
     private LoginViewModel viewModel;
+    private AttachmentViewModel attachmentViewModel;
 
     public static final String TAG = ServerDataFragment.class.getSimpleName();
 
@@ -60,6 +62,7 @@ public class ServerDataFragment extends Fragment {
 
     private void createViewModel() {
         viewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
+        attachmentViewModel = new ViewModelProvider(requireActivity()).get(AttachmentViewModel.class);
     }
 
     private void initViews() {

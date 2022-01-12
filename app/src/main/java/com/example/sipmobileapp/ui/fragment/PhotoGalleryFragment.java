@@ -3,6 +3,7 @@ package com.example.sipmobileapp.ui.fragment;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,8 @@ public class PhotoGalleryFragment extends Fragment {
     private List<Integer> attachIDList;
     private int sickID, index;
     private static final int SPAN_COUNT = 3;
+
+    private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
 
     public static PhotoGalleryFragment newInstance() {
         PhotoGalleryFragment fragment = new PhotoGalleryFragment();
@@ -228,7 +231,7 @@ public class PhotoGalleryFragment extends Fragment {
                                     filePathList.add(filePath);
                                 viewModel.getDoneWrite().postValue(true);
                             } catch (IOException e) {
-                                handleError(e.getMessage());
+                                Log.e(TAG, e.getMessage());
                             }
                         }).start();
                     }

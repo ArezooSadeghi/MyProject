@@ -35,11 +35,13 @@ import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.ui.dialog.AttachAgainDialogFragment;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.ui.dialog.SuccessAttachDialogFragment;
+import com.example.sipmobileapp.utils.ScaleBitmap;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
 import com.example.sipmobileapp.viewmodel.AttachmentViewModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -52,12 +54,14 @@ public class AttachmentFragment extends Fragment {
     private File photoFile;
     private Bitmap bitmap;
     private Matrix matrix;
+    private String image;
     private int numberOfRotate, sickID;
 
     private static final int REQUEST_CODE_TAKE_PHOTO = 0;
     private static final int REQUEST_CODE_PICK_PHOTO = 1;
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 2;
-    public static final String TAG = AttachmentFragment.class.getSimpleName();
+
+    private static final String TAG = AttachmentFragment.class.getSimpleName();
     private static final String AUTHORITY = "com.example.sipmobileapp.fileProvider";
 
     public static AttachmentFragment newInstance() {
@@ -199,8 +203,9 @@ public class AttachmentFragment extends Fragment {
     }
 
     private String convertBitmapToBase64(Bitmap bitmap) {
+        Bitmap scaledBitmap = ScaleBitmap.getScaledDownBitmap(bitmap, 2245);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         System.gc();
         return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
     }
@@ -259,7 +264,7 @@ public class AttachmentFragment extends Fragment {
                 binding.ivAttach.setEnabled(false);
                 binding.ivCamera.setEnabled(false);
                 AttachResult.AttachParameter attachParameter = new AttachResult().new AttachParameter();
-                String image = convertBitmapToBase64(bitmap);
+                image = convertBitmapToBase64(bitmap);
                 attachParameter.setImage(image);
                 attachParameter.setSickID(sickID);
                 String description = binding.edTxtDescription.getText().toString();
@@ -282,9 +287,16 @@ public class AttachmentFragment extends Fragment {
             binding.ivAttach.setEnabled(true);
 
             if (attachResult != null) {
-                if (attachResult.getErrorCode().equals("0"))
+                if (attachResult.getErrorCode().equals("0")) {
+                    new Thread(() -> {
+                        try {
+                            write(attachResult.getAttachs()[0].getAttachID());
+                        } catch (IOException e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                    }).start();
                     showSuccessDialog(getString(R.string.success_attach));
-                else
+                } else
                     handleError(attachResult.getError());
             }
         });
@@ -327,5 +339,23 @@ public class AttachmentFragment extends Fragment {
             binding.ivAttach.setEnabled(true);
             handleError(msg);
         });
+    }
+
+    private void write(int attachID) throws IOException {
+        if (externalMemoryAvailable()) {
+            File direction = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            if (direction.exists()) {
+                File file = new File(direction, attachID + ".jpg");
+                byte[] bytes = Base64.decode(image, 0);
+                FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+                fileOutputStream.write(bytes);
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            }
+        }
+    }
+
+    private boolean externalMemoryAvailable() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 }
