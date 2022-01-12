@@ -1,18 +1,34 @@
 package com.example.sipmobileapp.model;
 
-public class ServerData {
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+import org.jetbrains.annotations.NotNull;
+
+@Entity(tableName = "server_data_tb")
+public class ServerData {
+    @PrimaryKey(autoGenerate = true)
+    @NotNull
+    private int serverDataID;
     private String centerName;
-    private String ipAddress;
+    private String ip;
     private String port;
 
     public ServerData() {
     }
 
-    public ServerData(String centerName, String ipAddress, String port) {
+    public ServerData(String centerName, String ip, String port) {
         this.centerName = centerName;
-        this.ipAddress = ipAddress;
+        this.ip = ip;
         this.port = port;
+    }
+
+    public int getServerDataID() {
+        return serverDataID;
+    }
+
+    public void setServerDataID(int serverDataID) {
+        this.serverDataID = serverDataID;
     }
 
     public String getCenterName() {
@@ -23,12 +39,12 @@ public class ServerData {
         this.centerName = centerName;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
+    public String getIp() {
+        return ip;
     }
 
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public String getPort() {

@@ -1,26 +1,7 @@
 package com.example.sipmobileapp.model;
 
-public class AttachResult {
-
-    private String error;
-    private String errorCode;
+public class AttachResult extends ResultInfo {
     private AttachInfo[] attachs;
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
 
     public AttachInfo[] getAttachs() {
         return attachs;
@@ -31,7 +12,6 @@ public class AttachResult {
     }
 
     public class AttachInfo {
-
         private int attachID;
         private int imageTypeID;
         private int attachTypeID;
@@ -233,7 +213,6 @@ public class AttachResult {
     }
 
     public class AttachParameter {
-
         private int imageTypeID;
         private int AttachTypeID;
         private int sickID;

@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.sipmobileapp.model.ServerDataTwo;
+import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.model.UserResult;
 import com.example.sipmobileapp.repository.SipMobileAppRepository;
 
@@ -17,9 +17,9 @@ public class LoginViewModel extends AndroidViewModel {
 
     private SingleLiveEvent<Boolean> insertNotifyServerDataList = new SingleLiveEvent<>();
 
-    private SingleLiveEvent<ServerDataTwo> editClicked = new SingleLiveEvent<>();
+    private SingleLiveEvent<ServerData> editClicked = new SingleLiveEvent<>();
 
-    private SingleLiveEvent<ServerDataTwo> deleteClicked = new SingleLiveEvent<>();
+    private SingleLiveEvent<ServerData> deleteClicked = new SingleLiveEvent<>();
 
     private SingleLiveEvent<String> noConnectionExceptionHappenSingleLiveEvent;
     private SingleLiveEvent<String> timeoutExceptionHappenSingleLiveEvent;
@@ -27,7 +27,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     private SingleLiveEvent<UserResult> loginResultSingleLiveEvent;
 
-    private LiveData<List<ServerDataTwo>> serverDataListMutableLiveData;
+    private LiveData<List<ServerData>> serverDataListMutableLiveData;
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
@@ -43,27 +43,27 @@ public class LoginViewModel extends AndroidViewModel {
         return insertNotifyServerDataList;
     }
 
-    public SingleLiveEvent<ServerDataTwo> getEditClicked() {
+    public SingleLiveEvent<ServerData> getEditClicked() {
         return editClicked;
     }
 
-    public SingleLiveEvent<ServerDataTwo> getDeleteClicked() {
+    public SingleLiveEvent<ServerData> getDeleteClicked() {
         return deleteClicked;
     }
 
-    public LiveData<List<ServerDataTwo>> getServerDataListMutableLiveData() {
+    public LiveData<List<ServerData>> getServerDataListMutableLiveData() {
         return serverDataListMutableLiveData;
     }
 
-    public void insert(ServerDataTwo serverDataTwo) {
-        repository.insert(serverDataTwo);
+    public void insert(ServerData serverData) {
+        repository.insert(serverData);
     }
 
     public void delete(String centerName) {
         repository.delete(centerName);
     }
 
-    public ServerDataTwo getServerData(String centerName) {
+    public ServerData getServerData(String centerName) {
         return repository.getServerData(centerName);
     }
 

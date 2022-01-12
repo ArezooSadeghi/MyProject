@@ -21,7 +21,7 @@ import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.adapter.PatientAdapter;
 import com.example.sipmobileapp.databinding.FragmentPatientBinding;
 import com.example.sipmobileapp.model.PatientResult;
-import com.example.sipmobileapp.model.ServerDataTwo;
+import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
 import com.example.sipmobileapp.viewmodel.PatientViewModel;
@@ -36,7 +36,7 @@ import java.util.Objects;
 public class PatientFragment extends Fragment {
     private FragmentPatientBinding binding;
     private PatientViewModel viewModel;
-    private ServerDataTwo serverData;
+    private ServerData serverData;
     private String userLoginKey;
     private List<PatientResult.PatientInfo> patientInfoList;
 

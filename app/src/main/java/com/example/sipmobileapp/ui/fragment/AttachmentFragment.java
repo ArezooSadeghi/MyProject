@@ -31,7 +31,7 @@ import com.bumptech.glide.Glide;
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentAttachmentBinding;
 import com.example.sipmobileapp.model.AttachResult;
-import com.example.sipmobileapp.model.ServerDataTwo;
+import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.ui.dialog.AttachAgainDialogFragment;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.ui.dialog.SuccessAttachDialogFragment;
@@ -158,7 +158,7 @@ public class AttachmentFragment extends Fragment {
 
     private void initVariables() {
         String centerName = SipMobileAppPreferences.getCenterName(getContext());
-        ServerDataTwo serverData = viewModel.getServerData(centerName);
+        ServerData serverData = viewModel.getServerData(centerName);
         viewModel.getServiceAttachResult(serverData.getIp() + ":" + serverData.getPort());
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
         AttachmentFragmentArgs args = AttachmentFragmentArgs.fromBundle(getArguments());

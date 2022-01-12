@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentAddEditServerDataDialogBinding;
 import com.example.sipmobileapp.model.ServerData;
-import com.example.sipmobileapp.model.ServerDataTwo;
 import com.example.sipmobileapp.utils.Converter;
 import com.example.sipmobileapp.utils.Others;
 import com.example.sipmobileapp.viewmodel.LoginViewModel;
@@ -112,14 +111,14 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
                 if (duplicateCenterName(centerName) & !centerName.equals(AddEditServerDataDialogFragment.this.centerName)) {
                     handleError(getString(R.string.duplicate_name));
                 } else {
-                    ServerDataTwo serverDataTwo = new ServerDataTwo(centerName, Converter.perToEnDigitConverter(ipAddress), Converter.perToEnDigitConverter(port));
+                    ServerData serverData = new ServerData(centerName, Converter.perToEnDigitConverter(ipAddress), Converter.perToEnDigitConverter(port));
                     assert getArguments() != null;
                     boolean isAdd = getArguments().getBoolean(ARGS_IS_ADD);
                     if (!isAdd) {
-                        ServerDataTwo preServerData = viewModel.getServerData(AddEditServerDataDialogFragment.this.centerName);
+                        ServerData preServerData = viewModel.getServerData(AddEditServerDataDialogFragment.this.centerName);
                         viewModel.delete(preServerData.getCenterName());
                     }
-                    viewModel.insert(serverDataTwo);
+                    viewModel.insert(serverData);
                     viewModel.getInsertNotifyServerDataList().setValue(true);
                     dismiss();
                 }
@@ -141,7 +140,7 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
         });
 
         binding.btnClose.setOnClickListener(view -> {
-            List<ServerDataTwo> serverDataList = viewModel.getServerDataListMutableLiveData().getValue();
+            List<ServerData> serverDataList = viewModel.getServerDataListMutableLiveData().getValue();
             if (serverDataList == null || serverDataList.size() == 0) {
                 dismiss();
                 WarningDialogFragment fragment = WarningDialogFragment.newInstance(getString(R.string.required_ip));
@@ -153,10 +152,10 @@ public class AddEditServerDataDialogFragment extends DialogFragment {
     }
 
     private boolean duplicateCenterName(String input) {
-        List<ServerDataTwo> serverDataList = viewModel.getServerDataListMutableLiveData().getValue();
+        List<ServerData> serverDataList = viewModel.getServerDataListMutableLiveData().getValue();
         assert serverDataList != null;
         if (serverDataList.size() > 0) {
-            for (ServerDataTwo serverData : serverDataList) {
+            for (ServerData serverData : serverDataList) {
                 if (serverData.getCenterName().equals(input)) {
                     return true;
                 }

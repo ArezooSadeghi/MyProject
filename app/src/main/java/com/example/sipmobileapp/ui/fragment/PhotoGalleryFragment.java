@@ -20,7 +20,7 @@ import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.adapter.PhotoGalleryAdapter;
 import com.example.sipmobileapp.databinding.FragmentPhotoGalleryBinding;
 import com.example.sipmobileapp.model.AttachResult;
-import com.example.sipmobileapp.model.ServerDataTwo;
+import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
 import com.example.sipmobileapp.viewmodel.AttachmentViewModel;
@@ -86,7 +86,7 @@ public class PhotoGalleryFragment extends Fragment {
 
     private void initVariables() {
         String centerName = SipMobileAppPreferences.getCenterName(getContext());
-        ServerDataTwo serverData = viewModel.getServerData(centerName);
+        ServerData serverData = viewModel.getServerData(centerName);
         viewModel.getServiceAttachResult(serverData.getIp() + ":" + serverData.getPort());
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
 

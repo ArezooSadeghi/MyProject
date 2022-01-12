@@ -18,7 +18,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentPhotoBinding;
-import com.example.sipmobileapp.model.ServerDataTwo;
+import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.ui.dialog.QuestionDialogFragment;
 import com.example.sipmobileapp.ui.dialog.SuccessDialogFragment;
@@ -73,7 +73,7 @@ public class PhotoFragment extends Fragment {
 
     private void initVariables() {
         String centerName = SipMobileAppPreferences.getCenterName(getContext());
-        ServerDataTwo serverData = viewModel.getServerData(centerName);
+        ServerData serverData = viewModel.getServerData(centerName);
         viewModel.getServiceAttachResult(serverData.getIp() + ":" + serverData.getPort());
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
         PhotoFragmentArgs args = PhotoFragmentArgs.fromBundle(getArguments());

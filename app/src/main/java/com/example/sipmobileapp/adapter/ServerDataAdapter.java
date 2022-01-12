@@ -10,17 +10,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.ServerDataAdapterItemBinding;
-import com.example.sipmobileapp.model.ServerDataTwo;
+import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.viewmodel.LoginViewModel;
 
 import java.util.List;
 
 public class ServerDataAdapter extends RecyclerView.Adapter<ServerDataAdapter.ServerDataHolder> {
     private Context context;
-    private List<ServerDataTwo> serverDataList;
+    private List<ServerData> serverDataList;
     private LoginViewModel viewModel;
 
-    public ServerDataAdapter(Context context, List<ServerDataTwo> serverDataList, LoginViewModel viewModel) {
+    public ServerDataAdapter(Context context, List<ServerData> serverDataList, LoginViewModel viewModel) {
         this.context = context;
         this.serverDataList = serverDataList;
         this.viewModel = viewModel;
@@ -38,7 +38,7 @@ public class ServerDataAdapter extends RecyclerView.Adapter<ServerDataAdapter.Se
 
     @Override
     public void onBindViewHolder(@NonNull ServerDataHolder holder, int position) {
-        ServerDataTwo serverData = serverDataList.get(position);
+        ServerData serverData = serverDataList.get(position);
         holder.bindServerData(serverData);
 
         holder.binding.imgViewEdit.setOnClickListener(view -> viewModel.getEditClicked().setValue(serverData));
@@ -58,7 +58,7 @@ public class ServerDataAdapter extends RecyclerView.Adapter<ServerDataAdapter.Se
             this.binding = binding;
         }
 
-        public void bindServerData(ServerDataTwo serverData) {
+        public void bindServerData(ServerData serverData) {
             binding.txtCenterName.setText(serverData.getCenterName());
             binding.txtIpAddress.setText(serverData.getIp());
         }

@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.sipmobileapp.model.PatientResult;
-import com.example.sipmobileapp.model.ServerDataTwo;
+import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.repository.SipMobileAppRepository;
 
 public class PatientViewModel extends AndroidViewModel {
@@ -41,7 +41,7 @@ public class PatientViewModel extends AndroidViewModel {
         return navigateToGallery;
     }
 
-    public ServerDataTwo getServerData(String centerName) {
+    public ServerData getServerData(String centerName) {
         return repository.getServerData(centerName);
     }
 

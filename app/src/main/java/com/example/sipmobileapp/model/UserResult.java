@@ -1,26 +1,7 @@
 package com.example.sipmobileapp.model;
 
-public class UserResult {
-
-    private String errorCode;
-    private String error;
+public class UserResult extends ResultInfo {
     private UserInfo[] users;
-
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
 
     public UserInfo[] getUsers() {
         return users;
@@ -31,7 +12,6 @@ public class UserResult {
     }
 
     public class UserInfo {
-
         private int UserID;
         private int UserGroupID;
         private boolean Disable;
@@ -98,7 +78,6 @@ public class UserResult {
     }
 
     public class UserParameter {
-
         private String userName;
         private String password;
 

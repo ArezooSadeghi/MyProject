@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.adapter.ServerDataAdapter;
 import com.example.sipmobileapp.databinding.FragmentServerDataBinding;
-import com.example.sipmobileapp.model.ServerDataTwo;
+import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.ui.dialog.AddEditServerDataDialogFragment;
 import com.example.sipmobileapp.viewmodel.AttachmentViewModel;
 import com.example.sipmobileapp.viewmodel.LoginViewModel;
@@ -70,8 +70,8 @@ public class ServerDataFragment extends Fragment {
         binding.recyclerViewServerData.addItemDecoration(new DividerItemDecoration(binding.recyclerViewServerData.getContext(), DividerItemDecoration.VERTICAL));
     }
 
-    private void setupAdapter(List<ServerDataTwo> serverDataTwoList) {
-        ServerDataAdapter adapter = new ServerDataAdapter(getContext(), serverDataTwoList, viewModel);
+    private void setupAdapter(List<ServerData> serverDataList) {
+        ServerDataAdapter adapter = new ServerDataAdapter(getContext(), serverDataList, viewModel);
         binding.recyclerViewServerData.setAdapter(adapter);
     }
 

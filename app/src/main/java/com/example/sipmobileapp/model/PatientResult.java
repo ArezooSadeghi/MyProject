@@ -1,26 +1,7 @@
 package com.example.sipmobileapp.model;
 
-public class PatientResult {
-
-    private String error;
-    private String errorCode;
+public class PatientResult extends ResultInfo {
     private PatientInfo[] patients;
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
 
     public PatientInfo[] getPatients() {
         return patients;
@@ -31,7 +12,6 @@ public class PatientResult {
     }
 
     public class PatientInfo {
-
         private int sickID;
         private String Date;
         private String patientName;

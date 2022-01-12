@@ -17,7 +17,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentLoginBinding;
-import com.example.sipmobileapp.model.ServerDataTwo;
+import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.model.UserResult;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
 import com.example.sipmobileapp.ui.dialog.WarningDialogFragment;
@@ -71,10 +71,10 @@ public class LoginFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
     }
 
-    private void setupSpinner(List<ServerDataTwo> serverDataList) {
+    private void setupSpinner(List<ServerData> serverDataList) {
         List<String> centerNameList = new ArrayList<>();
-        for (ServerDataTwo serverDataTwo : serverDataList) {
-            centerNameList.add(serverDataTwo.getCenterName());
+        for (ServerData serverData : serverDataList) {
+            centerNameList.add(serverData.getCenterName());
         }
         binding.spinnerServerData.setItems(centerNameList);
         if (centerNameList.size() > 0) {
@@ -114,9 +114,9 @@ public class LoginFragment extends Fragment {
                 String password = binding.edTxtPassword.getText().toString();
 
                 UserResult.UserParameter userParameter = new UserResult().new UserParameter(userName, password);
-                ServerDataTwo serverDataTwo = viewModel.getServerData(lastValueSpinner);
+                ServerData serverData = viewModel.getServerData(lastValueSpinner);
 
-                viewModel.getUserLoginService(serverDataTwo.getIp() + ":" + serverDataTwo.getPort());
+                viewModel.getUserLoginService(serverData.getIp() + ":" + serverData.getPort());
                 String path = "/api/v1/users/login/";
                 viewModel.login(path, userParameter);
             }
@@ -171,9 +171,9 @@ public class LoginFragment extends Fragment {
             handleError(message);
         });
 
-        viewModel.getServerDataListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<ServerDataTwo>>() {
+        viewModel.getServerDataListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<ServerData>>() {
             @Override
-            public void onChanged(List<ServerDataTwo> serverDataList) {
+            public void onChanged(List<ServerData> serverDataList) {
                 setupSpinner(serverDataList);
                 if (serverDataList == null || serverDataList.size() == 0) {
                     WarningDialogFragment fragment = WarningDialogFragment.newInstance(getString(R.string.required_ip));
