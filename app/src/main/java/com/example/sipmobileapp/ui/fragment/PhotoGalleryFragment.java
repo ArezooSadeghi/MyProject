@@ -247,8 +247,9 @@ public class PhotoGalleryFragment extends Fragment {
             else {
                 if (filePathList.size() != 0)
                     setupAdapter();
-                else
+                else {
                     binding.progressBarLoading.setVisibility(View.GONE);
+                }
             }
         });
 

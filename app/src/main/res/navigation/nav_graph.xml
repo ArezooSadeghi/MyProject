@@ -38,6 +38,9 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/photoGalleryFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_patientFragment_to_photoGalleryFragment2"
+            app:destination="@id/photoGalleryFragment" />
 
     </fragment>
 

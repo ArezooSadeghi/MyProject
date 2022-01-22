@@ -183,6 +183,12 @@ public class PatientFragment extends Fragment {
             binding.txtNoSearchResult.setVisibility(View.VISIBLE);
             handleError(msg);
         });
+
+        viewModel.getItemClicked().observe(getViewLifecycleOwner(), sickID -> {
+            PatientFragmentDirections.ActionPatientFragmentToPhotoGalleryFragment action = PatientFragmentDirections.actionPatientFragmentToPhotoGalleryFragment();
+            action.setSickID(sickID);
+            NavHostFragment.findNavController(this).navigate(action);
+        });
     }
 
     private void setupAdapter(PatientResult.PatientInfo[] patients) {

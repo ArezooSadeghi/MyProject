@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/txt_title"
+                android:id="@+id/tv_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/login_title_bg"
@@ -52,7 +52,7 @@
                 app:hintTextColor="@color/dim_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_title">
+                app:layout_constraintTop_toBottomOf="@id/tv_title">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ed_txt_user_name"
@@ -98,7 +98,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/spinner_server_data"
+                android:id="@+id/spinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="64dp"
@@ -121,10 +121,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:src="@drawable/ic_more_vertical"
-                app:layout_constraintBottom_toBottomOf="@id/spinner_server_data"
-                app:layout_constraintEnd_toStartOf="@id/spinner_server_data"
+                app:layout_constraintBottom_toBottomOf="@id/spinner"
+                app:layout_constraintEnd_toStartOf="@id/spinner"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/spinner_server_data"
+                app:layout_constraintTop_toTopOf="@id/spinner"
                 app:tint="@color/black" />
 
             <ImageView
@@ -134,7 +134,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinner_server_data" />
+                app:layout_constraintTop_toBottomOf="@id/spinner" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

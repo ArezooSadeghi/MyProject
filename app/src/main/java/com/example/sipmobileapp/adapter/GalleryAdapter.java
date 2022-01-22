@@ -19,11 +19,11 @@ import java.util.List;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryHolder> {
     private final AttachmentViewModel viewModel;
-    private List<String> fileList;
+    private final List<String> files;
 
-    public GalleryAdapter(AttachmentViewModel viewModel, List<String> fileList) {
+    public GalleryAdapter(AttachmentViewModel viewModel, List<String> files) {
         this.viewModel = viewModel;
-        this.fileList = fileList;
+        this.files = files;
     }
 
     @NonNull
@@ -38,21 +38,21 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryH
 
     @Override
     public void onBindViewHolder(@NonNull GalleryHolder holder, int position) {
-        String file = fileList.get(position);
+        String file = files.get(position);
         holder.bindFile(file);
         holder.binding.getRoot().setOnClickListener(v -> viewModel.getPhotoClicked().setValue(file));
     }
 
     @Override
     public int getItemCount() {
-        return fileList != null ? fileList.size() : 0;
+        return files != null ? files.size() : 0;
     }
 
     public void updateFileList(List<String> newFileList) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new GalleryDiffUtil(fileList, newFileList));
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new GalleryDiffUtil(files, newFileList));
         diffResult.dispatchUpdatesTo(this);
-        fileList.clear();
-        fileList.addAll(newFileList);
+        files.clear();
+        files.addAll(newFileList);
     }
 
     public class GalleryHolder extends RecyclerView.ViewHolder {

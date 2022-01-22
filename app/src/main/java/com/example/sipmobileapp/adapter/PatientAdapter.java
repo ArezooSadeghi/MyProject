@@ -19,11 +19,11 @@ import java.util.List;
 
 public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientHolder> {
     private final PatientViewModel viewModel;
-    private List<PatientResult.PatientInfo> patientList;
+    private final List<PatientResult.PatientInfo> patients;
 
-    public PatientAdapter(PatientViewModel viewModel, List<PatientResult.PatientInfo> patientList) {
+    public PatientAdapter(PatientViewModel viewModel, List<PatientResult.PatientInfo> patients) {
         this.viewModel = viewModel;
-        this.patientList = patientList;
+        this.patients = patients;
     }
 
     @NonNull
@@ -38,8 +38,8 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
 
     @Override
     public void onBindViewHolder(@NonNull PatientHolder holder, int position) {
-        PatientResult.PatientInfo patient = patientList.get(position);
-        holder.bindPatient(patient);
+        PatientResult.PatientInfo info = patients.get(position);
+        holder.bindPatient(info);
 
         holder.binding.ivMore.setOnClickListener(view -> {
             PowerMenu powerMenu = new PowerMenu.Builder(holder.binding.getRoot().getContext())
@@ -49,17 +49,19 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
 
             powerMenu.setOnMenuItemClickListener((i, item) -> {
                 if (i == 0) {
-                    viewModel.getAttachmentsItemClicked().setValue(patient.getSickID());
+                    viewModel.getAttachmentsItemClicked().setValue(info.getSickID());
                     powerMenu.dismiss();
                 }
             });
             powerMenu.showAsDropDown(view);
         });
+
+        holder.binding.getRoot().setOnClickListener(view -> viewModel.getItemClicked().setValue(info.getSickID()));
     }
 
     @Override
     public int getItemCount() {
-        return patientList != null ? patientList.size() : 0;
+        return patients != null ? patients.size() : 0;
     }
 
     public class PatientHolder extends RecyclerView.ViewHolder {
@@ -70,11 +72,11 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
             this.binding = binding;
         }
 
-        public void bindPatient(PatientResult.PatientInfo patient) {
-            binding.txtPatientID.setText(String.valueOf(patient.getSickID()));
-            binding.txtDate.setText(patient.getDate());
-            binding.txtPatientName.setText(Converter.letterConverter(patient.getPatientName()));
-            binding.txtServices.setText(Converter.letterConverter(patient.getServices()));
+        public void bindPatient(PatientResult.PatientInfo info) {
+            binding.txtPatientID.setText(String.valueOf(info.getSickID()));
+            binding.txtDate.setText(info.getDate());
+            binding.txtPatientName.setText(Converter.letterConverter(info.getPatientName()));
+            binding.txtServices.setText(Converter.letterConverter(info.getServices()));
         }
     }
 }

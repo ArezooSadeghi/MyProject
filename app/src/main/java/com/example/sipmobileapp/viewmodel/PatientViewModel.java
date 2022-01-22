@@ -16,6 +16,7 @@ public class PatientViewModel extends AndroidViewModel {
     private SingleLiveEvent<String> noConnectionExceptionHappenSingleLiveEvent;
     private SingleLiveEvent<String> timeoutExceptionHappenSingleLiveEvent;
     private SingleLiveEvent<Integer> navigateToGallery = new SingleLiveEvent<>();
+    private SingleLiveEvent<Integer> itemClicked = new SingleLiveEvent<>();
 
     public PatientViewModel(@NonNull Application application) {
         super(application);
@@ -39,6 +40,10 @@ public class PatientViewModel extends AndroidViewModel {
 
     public SingleLiveEvent<Integer> getAttachmentsItemClicked() {
         return navigateToGallery;
+    }
+
+    public SingleLiveEvent<Integer> getItemClicked() {
+        return itemClicked;
     }
 
     public ServerData getServerData(String centerName) {

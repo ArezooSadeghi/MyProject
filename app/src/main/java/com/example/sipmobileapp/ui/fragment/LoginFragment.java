@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -31,7 +30,7 @@ import java.util.Objects;
 public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private LoginViewModel viewModel;
-    private String lastValueSpinner;
+    private String centerName;
 
     public static LoginFragment newInstance() {
         LoginFragment fragment = new LoginFragment();
@@ -72,18 +71,24 @@ public class LoginFragment extends Fragment {
     }
 
     private void setupSpinner(List<ServerData> serverDataList) {
-        List<String> centerNameList = new ArrayList<>();
+        List<String> centerNames = new ArrayList<>();
         for (ServerData serverData : serverDataList) {
-            centerNameList.add(serverData.getCenterName());
+            centerNames.add(serverData.getCenterName());
         }
-        binding.spinnerServerData.setItems(centerNameList);
-        if (centerNameList.size() > 0) {
-            lastValueSpinner = centerNameList.get(0);
-        }
+        binding.spinner.setItems(centerNames);
+        if (centerNames.size() > 0)
+            centerName = centerNames.get(0);
     }
 
-    private void handleError(String message) {
-        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(message);
+    private void login(UserResult.UserParameter parameter) {
+        ServerData serverData = viewModel.getServerData(centerName);
+        viewModel.getUserLoginService(serverData.getIp() + ":" + serverData.getPort());
+        String path = "/api/v1/users/login/";
+        viewModel.login(path, parameter);
+    }
+
+    private void handleError(String msg) {
+        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(msg);
         fragment.show(getParentFragmentManager(), ErrorDialogFragment.TAG);
     }
 
@@ -113,16 +118,12 @@ public class LoginFragment extends Fragment {
                 String userName = binding.edTxtUserName.getText().toString();
                 String password = binding.edTxtPassword.getText().toString();
 
-                UserResult.UserParameter userParameter = new UserResult().new UserParameter(userName, password);
-                ServerData serverData = viewModel.getServerData(lastValueSpinner);
-
-                viewModel.getUserLoginService(serverData.getIp() + ":" + serverData.getPort());
-                String path = "/api/v1/users/login/";
-                viewModel.login(path, userParameter);
+                UserResult.UserParameter parameter = new UserResult().new UserParameter(userName, password);
+                login(parameter);
             }
         });
 
-        binding.spinnerServerData.setOnItemSelectedListener((view, position, id, item) -> lastValueSpinner = (String) item);
+        binding.spinner.setOnItemSelectedListener((view, position, id, item) -> centerName = (String) item);
     }
 
     private void setupObserver() {
@@ -130,7 +131,7 @@ public class LoginFragment extends Fragment {
             if (userResult != null) {
                 if (userResult.getErrorCode().equals("0")) {
                     SipMobileAppPreferences.setUserLoginKey(getContext(), userResult.getUsers()[0].getUserLoginKey());
-                    SipMobileAppPreferences.setCenterName(getContext(), lastValueSpinner);
+                    SipMobileAppPreferences.setCenterName(getContext(), centerName);
                     NavDirections action = LoginFragmentDirections.actionLoginFragmentToPatientFragment();
                     NavHostFragment.findNavController(this).navigate(action);
                 } else {
@@ -144,41 +145,38 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+        viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), msg -> {
             binding.progressBarLoading.setVisibility(View.GONE);
             binding.edTxtUserName.setEnabled(true);
             binding.edTxtPassword.setEnabled(true);
             binding.btnLogin.setEnabled(true);
             binding.ivMore.setEnabled(true);
-            handleError(message);
+            handleError(msg);
         });
 
-        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+        viewModel.getTimeoutExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), msg -> {
             binding.progressBarLoading.setVisibility(View.GONE);
             binding.edTxtUserName.setEnabled(true);
             binding.edTxtPassword.setEnabled(true);
             binding.btnLogin.setEnabled(true);
             binding.ivMore.setEnabled(true);
-            handleError(message);
+            handleError(msg);
         });
 
-        viewModel.getWrongIpAddressSingleLiveEvent().observe(getViewLifecycleOwner(), message -> {
+        viewModel.getWrongIpAddressSingleLiveEvent().observe(getViewLifecycleOwner(), msg -> {
             binding.progressBarLoading.setVisibility(View.GONE);
             binding.edTxtUserName.setEnabled(true);
             binding.edTxtPassword.setEnabled(true);
             binding.btnLogin.setEnabled(true);
             binding.ivMore.setEnabled(true);
-            handleError(message);
+            handleError(msg);
         });
 
-        viewModel.getServerDataListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<ServerData>>() {
-            @Override
-            public void onChanged(List<ServerData> serverDataList) {
-                setupSpinner(serverDataList);
-                if (serverDataList == null || serverDataList.size() == 0) {
-                    WarningDialogFragment fragment = WarningDialogFragment.newInstance(getString(R.string.required_ip));
-                    fragment.show(getParentFragmentManager(), WarningDialogFragment.TAG);
-                }
+        viewModel.getServerDataListMutableLiveData().observe(getViewLifecycleOwner(), serverDataList -> {
+            setupSpinner(serverDataList);
+            if (serverDataList.size() == 0) {
+                WarningDialogFragment fragment = WarningDialogFragment.newInstance(getString(R.string.required_ip));
+                fragment.show(getParentFragmentManager(), WarningDialogFragment.TAG);
             }
         });
     }

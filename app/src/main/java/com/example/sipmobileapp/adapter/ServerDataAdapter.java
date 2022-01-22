@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ServerDataAdapter extends RecyclerView.Adapter<ServerDataAdapter.ServerDataHolder> {
     private final LoginViewModel viewModel;
-    private List<ServerData> serverDataList;
+    private final List<ServerData> serverDataList;
 
     public ServerDataAdapter(LoginViewModel viewModel, List<ServerData> serverDataList) {
         this.viewModel = viewModel;
