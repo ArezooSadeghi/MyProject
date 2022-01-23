@@ -80,5 +80,10 @@ public class SuccessAttachDialogFragment extends DialogFragment {
             viewModel.getShowAttachAgainDialog().setValue(true);
             dismiss();
         });
+
+        binding.ivClose.setOnClickListener(view -> {
+            viewModel.getShowAttachAgainDialog().setValue(true);
+            dismiss();
+        });
     }
 }

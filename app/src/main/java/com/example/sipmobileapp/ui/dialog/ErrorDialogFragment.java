@@ -69,5 +69,7 @@ public class ErrorDialogFragment extends DialogFragment {
 
     private void handleEvents() {
         binding.btnClose.setOnClickListener(view -> dismiss());
+
+        binding.ivClose.setOnClickListener(view -> dismiss());
     }
 }
