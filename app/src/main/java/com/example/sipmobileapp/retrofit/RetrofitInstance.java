@@ -20,9 +20,9 @@ public class RetrofitInstance {
     public static Retrofit getRI(Type type, Object typeAdapter, Context context) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new ConnectivityInterceptor(context))
-                .connectTimeout(1, TimeUnit.MINUTES)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(2, TimeUnit.MINUTES)
+                .readTimeout(50, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
                 .cache(null)
                 .build();
 
