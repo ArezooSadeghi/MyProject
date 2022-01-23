@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,6 +24,7 @@ import com.example.sipmobileapp.viewmodel.AttachmentViewModel;
 import com.example.sipmobileapp.viewmodel.LoginViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ServerDataFragment extends Fragment {
     private FragmentServerDataBinding binding;
@@ -67,7 +69,9 @@ public class ServerDataFragment extends Fragment {
 
     private void initViews() {
         binding.recyclerViewServerData.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerViewServerData.addItemDecoration(new DividerItemDecoration(binding.recyclerViewServerData.getContext(), DividerItemDecoration.VERTICAL));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(requireContext(), R.drawable.custom_divider_recycler_view)));
+        binding.recyclerViewServerData.addItemDecoration(dividerItemDecoration);
     }
 
     private void setupAdapter(List<ServerData> serverDataList) {

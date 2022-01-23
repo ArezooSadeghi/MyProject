@@ -29,7 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/black"
             android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/txt_center_name"
             app:layout_constraintTop_toBottomOf="@id/txt_center_name" />
 
@@ -38,11 +41,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="16dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_edit"
+            app:layout_constraintBottom_toBottomOf="@id/txt_center_name"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txt_center_name"
             app:tint="@color/black" />
 
         <ImageView
@@ -50,12 +53,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="@id/txt_ip_address"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/img_view_edit"
+            app:layout_constraintTop_toTopOf="@id/txt_ip_address"
             app:tint="@color/black" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
