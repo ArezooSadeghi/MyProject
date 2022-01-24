@@ -38,6 +38,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_default="spread" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/tool_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_default="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_default="spread" />
+
         <ProgressBar
             android:id="@+id/progress_bar_loading"
             android:layout_width="wrap_content"

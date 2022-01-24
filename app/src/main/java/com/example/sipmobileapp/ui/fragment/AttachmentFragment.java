@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,9 +28,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.sipmobileapp.R;
+import com.example.sipmobileapp.adapter.AttachAdapter;
 import com.example.sipmobileapp.databinding.FragmentAttachmentBinding;
 import com.example.sipmobileapp.model.AttachResult;
 import com.example.sipmobileapp.model.ServerData;
@@ -43,6 +47,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,11 +60,14 @@ public class AttachmentFragment extends Fragment {
     private Bitmap bitmap;
     private Matrix matrix;
     private String image;
-    private int numberOfRotate, sickID;
+    private List<Uri> uris;
+    private GridLayoutManager gridLayoutManager;
+    private int numberOfRotate, sickID, index;
 
     private static final int REQUEST_CODE_TAKE_PHOTO = 0;
     private static final int REQUEST_CODE_PICK_PHOTO = 1;
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 2;
+    private static final int SPAN_COUNT = 3;
 
     private static final String TAG = AttachmentFragment.class.getSimpleName();
     private static final String AUTHORITY = "com.example.sipmobileapp.fileProvider";
@@ -88,6 +96,7 @@ public class AttachmentFragment extends Fragment {
                 container,
                 false);
 
+        initViews();
         handleEvents();
 
         return binding.getRoot();
@@ -107,7 +116,8 @@ public class AttachmentFragment extends Fragment {
                     if (photoFile.length() != 0) {
                         try {
                             photoUri = FileProvider.getUriForFile(getContext(), AUTHORITY, photoFile);
-                            bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), photoUri);
+                            uris.add(photoUri);
+                            bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uris.get(0));
 
                             if (bitmap.getWidth() > bitmap.getHeight()) {
                                 matrix.postRotate(90);
@@ -115,6 +125,7 @@ public class AttachmentFragment extends Fragment {
                             }
 
                             binding.ivEmpty.setVisibility(View.GONE);
+                            binding.recyclerView.setVisibility(View.GONE);
                             binding.ivPhoto.setVisibility(View.VISIBLE);
                             Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
                         } catch (IOException e) {
@@ -124,17 +135,16 @@ public class AttachmentFragment extends Fragment {
                     getActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                     break;
                 case REQUEST_CODE_PICK_PHOTO:
-                    assert data != null;
-                    photoUri = data.getData();
-                    if (photoUri != null) {
-                        try {
-                            bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), photoUri);
-                            binding.ivEmpty.setVisibility(View.GONE);
-                            binding.ivPhoto.setVisibility(View.VISIBLE);
-                            Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
-                        } catch (IOException e) {
-                            Log.e(TAG, e.getMessage());
+                    if (data.getClipData() != null) {
+                        int count = data.getClipData().getItemCount();
+                        for (int i = 0; i < count; i++) {
+                            uris.add(data.getClipData().getItemAt(i).getUri());
                         }
+                        binding.ivEmpty.setVisibility(View.GONE);
+                        binding.ivPhoto.setVisibility(View.GONE);
+                        binding.recyclerView.setVisibility(View.VISIBLE);
+                        setupAdapter(uris);
+                        startAttach();
                     }
                     break;
             }
@@ -164,6 +174,17 @@ public class AttachmentFragment extends Fragment {
         AttachmentFragmentArgs args = AttachmentFragmentArgs.fromBundle(getArguments());
         sickID = args.getSickID();
         matrix = new Matrix();
+        uris = new ArrayList<>();
+    }
+
+    private void initViews() {
+        gridLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
+        binding.recyclerView.setLayoutManager(gridLayoutManager);
+    }
+
+    private void setupAdapter(List<Uri> uris) {
+        AttachAdapter adapter = new AttachAdapter(uris);
+        binding.recyclerView.setAdapter(adapter);
     }
 
     private boolean hasCameraPermission() {
@@ -219,6 +240,7 @@ public class AttachmentFragment extends Fragment {
         binding.ivAttach.setOnClickListener(view -> {
             Intent starter = new Intent();
             starter.setType("image/*");
+            starter.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             starter.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(starter, getString(R.string.chooser_title)), REQUEST_CODE_PICK_PHOTO);
         });
@@ -257,37 +279,29 @@ public class AttachmentFragment extends Fragment {
         });
 
         binding.ivSend.setOnClickListener(view -> {
-            if (photoUri != null) {
-                binding.progressBarLoading.setVisibility(View.VISIBLE);
-                binding.ivSend.setEnabled(false);
-                binding.ivRotate.setEnabled(false);
-                binding.ivAttach.setEnabled(false);
-                binding.ivCamera.setEnabled(false);
-                AttachResult.AttachParameter attachParameter = new AttachResult().new AttachParameter();
-                image = convertBitmapToBase64(bitmap);
-                attachParameter.setImage(image);
-                attachParameter.setSickID(sickID);
-                String description = binding.edTxtDescription.getText().toString();
-                attachParameter.setDescription(description);
-                attachParameter.setAttachTypeID(1);
-                attachParameter.setImageTypeID(2);
-                new Thread(() -> attach(attachParameter)).start();
-            } else
-                handleError(getString(R.string.select_file));
+            try {
+                if (uris.size() == 0)
+                    handleError(getString(R.string.select_file));
+                else
+                    startAttach();
+            } catch (Exception e) {
+                handleError(e.getMessage());
+            }
         });
     }
 
     private void setupObserver() {
         viewModel.getAttachResultSingleLiveEvent().observe(getViewLifecycleOwner(), attachResult -> {
-            binding.progressBarLoading.setVisibility(View.GONE);
-            binding.ivSend.setEnabled(true);
-            binding.ivCamera.setEnabled(true);
-            binding.edTxtDescription.setEnabled(true);
-            binding.ivRotate.setEnabled(true);
-            binding.ivAttach.setEnabled(true);
-
             if (attachResult != null) {
                 if (attachResult.getErrorCode().equals("0")) {
+                    AttachAdapter.AttachHolder attachHolder = (AttachAdapter.AttachHolder) binding.recyclerView.findViewHolderForAdapterPosition(index);
+                    if (attachHolder != null) {
+                        ImageView imageView = attachHolder.itemView.findViewById(R.id.iv_done);
+                        ProgressBar progressBar = attachHolder.itemView.findViewById(R.id.progress_bar_loading);
+                        imageView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                    }
+                    binding.progressBarLoading.setVisibility(View.GONE);
                     new Thread(() -> {
                         try {
                             write(attachResult.getAttachs()[0].getAttachID());
@@ -295,9 +309,11 @@ public class AttachmentFragment extends Fragment {
                             Log.e(TAG, e.getMessage());
                         }
                     }).start();
-                    showSuccessDialog(getString(R.string.success_attach));
-                } else
-                    handleError(attachResult.getError());
+
+                } else {
+                    index++;
+                    startAttach();
+                }
             }
         });
 
@@ -314,10 +330,18 @@ public class AttachmentFragment extends Fragment {
 
         viewModel.getYesAttachAgain().observe(getViewLifecycleOwner(), yesAttachAgain -> {
             photoUri = null;
+            uris = new ArrayList<>();
+            index = 0;
             binding.ivPhoto.setImageResource(0);
             binding.edTxtDescription.setText("");
             binding.ivEmpty.setVisibility(View.VISIBLE);
             binding.ivPhoto.setVisibility(View.GONE);
+            binding.recyclerView.setVisibility(View.GONE);
+            binding.ivSend.setEnabled(true);
+            binding.ivCamera.setEnabled(true);
+            binding.edTxtDescription.setEnabled(true);
+            binding.ivRotate.setEnabled(true);
+            binding.ivAttach.setEnabled(true);
         });
 
         viewModel.getNoConnectionExceptionHappenSingleLiveEvent().observe(getViewLifecycleOwner(), msg -> {
@@ -339,6 +363,18 @@ public class AttachmentFragment extends Fragment {
             binding.ivAttach.setEnabled(true);
             handleError(msg);
         });
+
+        viewModel.getNewDoneWrite().observe(getViewLifecycleOwner(), doneWrite -> {
+            try {
+                index++;
+                if (index >= uris.size())
+                    showSuccessDialog(getString(R.string.success_attach));
+                else
+                    startAttach();
+            } catch (Exception e) {
+                handleError(e.getMessage());
+            }
+        });
     }
 
     private void write(int attachID) throws IOException {
@@ -353,9 +389,43 @@ public class AttachmentFragment extends Fragment {
                 fileOutputStream.close();
             }
         }
+        viewModel.getNewDoneWrite().postValue(true);
     }
 
     private boolean externalMemoryAvailable() {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+    }
+
+    private void startAttach() {
+        if (uris.size() != 0 && index < uris.size()) {
+            try {
+
+                if (photoUri != null)
+                    binding.progressBarLoading.setVisibility(View.VISIBLE);
+
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uris.get(index));
+                binding.ivSend.setEnabled(false);
+                binding.ivRotate.setEnabled(false);
+                binding.ivAttach.setEnabled(false);
+                binding.ivCamera.setEnabled(false);
+                AttachResult.AttachParameter attachParameter = new AttachResult().new AttachParameter();
+                image = convertBitmapToBase64(bitmap);
+                attachParameter.setImage(image);
+                attachParameter.setSickID(sickID);
+                String description = binding.edTxtDescription.getText().toString();
+                attachParameter.setDescription(description);
+                attachParameter.setAttachTypeID(1);
+                attachParameter.setImageTypeID(2);
+                new Thread(() -> attach(attachParameter)).start();
+            } catch (IOException e) {
+                handleError(e.getMessage());
+            }
+        } else {
+            binding.ivSend.setEnabled(true);
+            binding.ivCamera.setEnabled(true);
+            binding.edTxtDescription.setEnabled(true);
+            binding.ivRotate.setEnabled(true);
+            binding.ivAttach.setEnabled(true);
+        }
     }
 }

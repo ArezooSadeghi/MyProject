@@ -39,8 +39,8 @@ public class PhotoGalleryFragment extends Fragment {
     private List<String> filePathList;
     private List<Integer> attachIDList;
     private int sickID, index;
-    private static final int SPAN_COUNT = 3;
 
+    private static final int SPAN_COUNT = 3;
     private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
 
     public static PhotoGalleryFragment newInstance() {

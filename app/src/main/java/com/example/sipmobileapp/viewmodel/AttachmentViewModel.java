@@ -24,6 +24,7 @@ public class AttachmentViewModel extends AndroidViewModel {
     private SingleLiveEvent<Boolean> noAttachAgain = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> yesAttachAgain = new SingleLiveEvent<>();
     private SingleLiveEvent<Boolean> closeClicked = new SingleLiveEvent<>();
+    private SingleLiveEvent<Boolean> newDoneWrite = new SingleLiveEvent<>();
 
     public AttachmentViewModel(@NonNull Application application) {
         super(application);
@@ -86,6 +87,10 @@ public class AttachmentViewModel extends AndroidViewModel {
 
     public SingleLiveEvent<Boolean> getSuccessDialogDismissed() {
         return closeClicked;
+    }
+
+    public SingleLiveEvent<Boolean> getNewDoneWrite() {
+        return newDoneWrite;
     }
 
     public ServerData getServerData(String centerName) {
