@@ -36,4 +36,7 @@
     <string name="login_title">برنامه پوست و مو</string>
     <string name="test_item_title">تست</string>
     <string name="description_hint">توضیحات</string>
+    <string name="scan_item_title">اسکن QR Code</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

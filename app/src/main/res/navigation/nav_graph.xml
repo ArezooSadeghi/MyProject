@@ -38,9 +38,14 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/photoGalleryFragment"
             app:popUpToInclusive="true" />
+
         <action
             android:id="@+id/action_patientFragment_to_photoGalleryFragment2"
             app:destination="@id/photoGalleryFragment" />
+
+        <action
+            android:id="@+id/action_patientFragment_to_scanFragment"
+            app:destination="@id/scanFragment" />
 
     </fragment>
 
@@ -113,6 +118,17 @@
             app:destination="@id/photoGalleryFragment"
             app:popUpTo="@id/photoGalleryFragment"
             app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/scanFragment"
+        android:name="com.example.sipmobileapp.ui.fragment.ScanFragment"
+        android:label="ScanFragment">
+
+        <action
+            android:id="@+id/action_scanFragment_to_patientFragment"
+            app:destination="@id/patientFragment" />
 
     </fragment>
 
