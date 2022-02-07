@@ -11,12 +11,11 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 public class PatientResultDeserializer implements JsonDeserializer<PatientResult> {
+
     @Override
     public PatientResult deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-
         JsonObject bodyObject = json.getAsJsonObject();
         Gson gson = new Gson();
-
         return gson.fromJson(bodyObject.toString(), PatientResult.class);
     }
 }

@@ -49,6 +49,7 @@ public class SipMobileAppRepository {
     private SingleLiveEvent<UserResult> loginResultSingleLiveEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<PatientResult> patientsResultSingleLiveEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<AttachResult> patientAttachmentsResultSingleLiveEvent = new SingleLiveEvent<>();
+    private SingleLiveEvent<PatientResult> patientInfoResultSingleLiveEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<AttachResult> attachInfoResultSingleLiveEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<AttachResult> attachResultSingleLiveEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<AttachResult> deleteAttachResultSingleLiveEvent = new SingleLiveEvent<>();
@@ -126,6 +127,10 @@ public class SipMobileAppRepository {
 
     public LiveData<List<ServerData>> getServerDataListMutableLiveData() {
         return serverDataListMutableLiveData;
+    }
+
+    public SingleLiveEvent<PatientResult> getPatientInfoResultSingleLiveEvent() {
+        return patientInfoResultSingleLiveEvent;
     }
 
     public void login(String path, UserResult.UserParameter userParameter) {

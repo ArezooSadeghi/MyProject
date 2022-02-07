@@ -9,22 +9,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavDirections;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.databinding.FragmentScanBinding;
+import com.example.sipmobileapp.ui.dialog.OptionDialogFragment;
 import com.example.sipmobileapp.utils.SipMobileAppPreferences;
+import com.example.sipmobileapp.viewmodel.ScanViewModel;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class ScanFragment extends Fragment implements ZXingScannerView.ResultHandler {
     private FragmentScanBinding binding;
+    private ScanViewModel viewModel;
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 0;
 
     public static ScanFragment newInstance() {
@@ -37,6 +40,7 @@ public class ScanFragment extends Fragment implements ZXingScannerView.ResultHan
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(ScanViewModel.class);
     }
 
     @Override
@@ -58,6 +62,12 @@ public class ScanFragment extends Fragment implements ZXingScannerView.ResultHan
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupObserver();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         binding.ZXingScannerView.setResultHandler(this);
@@ -74,8 +84,8 @@ public class ScanFragment extends Fragment implements ZXingScannerView.ResultHan
     public void handleResult(Result rawResult) {
         SipMobileAppPreferences.setQrCode(getContext(), rawResult.getText());
         binding.ZXingScannerView.stopCamera();
-        NavDirections action = ScanFragmentDirections.actionScanFragmentToPatientFragment();
-        NavHostFragment.findNavController(this).navigate(action);
+        OptionDialogFragment fragment = OptionDialogFragment.newInstance();
+        fragment.show(getParentFragmentManager(), OptionDialogFragment.TAG);
     }
 
     @Override
@@ -93,5 +103,12 @@ public class ScanFragment extends Fragment implements ZXingScannerView.ResultHan
 
     private void requestCameraPermission() {
         requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
+    }
+
+    private void setupObserver() {
+        viewModel.getCloseClicked().observe(getViewLifecycleOwner(), closeClicked -> {
+            binding.ZXingScannerView.startCamera();
+            binding.ZXingScannerView.setResultHandler(this);
+        });
     }
 }

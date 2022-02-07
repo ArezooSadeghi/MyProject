@@ -124,12 +124,6 @@
     <fragment
         android:id="@+id/scanFragment"
         android:name="com.example.sipmobileapp.ui.fragment.ScanFragment"
-        android:label="ScanFragment">
-
-        <action
-            android:id="@+id/action_scanFragment_to_patientFragment"
-            app:destination="@id/patientFragment" />
-
-    </fragment>
+        android:label="ScanFragment" />
 
 </navigation>
