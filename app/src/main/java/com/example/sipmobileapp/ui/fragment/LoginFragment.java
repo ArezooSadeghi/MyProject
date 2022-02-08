@@ -132,7 +132,9 @@ public class LoginFragment extends Fragment {
                 if (userResult.getErrorCode().equals("0")) {
                     SipMobileAppPreferences.setUserLoginKey(getContext(), userResult.getUsers()[0].getUserLoginKey());
                     SipMobileAppPreferences.setCenterName(getContext(), centerName);
-                    NavDirections action = LoginFragmentDirections.actionLoginFragmentToPatientFragment();
+                    /*NavDirections action = LoginFragmentDirections.actionLoginFragmentToPatientFragment();
+                    NavHostFragment.findNavController(this).navigate(action);*/
+                    NavDirections action = LoginFragmentDirections.actionLoginFragmentToOptionsFragment();
                     NavHostFragment.findNavController(this).navigate(action);
                 } else {
                     binding.progressBarLoading.setVisibility(View.GONE);

@@ -15,7 +15,7 @@
             android:id="@+id/search_bar_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#B0E0E6"
+            android:background="#1d2951"
             app:layout_constraintTop_toTopOf="parent">
 
             <EditText
@@ -37,7 +37,7 @@
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textCursorDrawable="@drawable/custom_cursor"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_more"
                 app:layout_constraintHeight_default="spread"
@@ -52,13 +52,25 @@
                 android:layout_marginLeft="16dp"
                 android:background="@drawable/rounded_button"
                 android:drawableLeft="@drawable/ic_search"
-                android:drawableTint="@color/black"
+                android:drawableTint="@color/white"
                 android:gravity="center"
                 android:paddingLeft="32dp"
-                app:backgroundTint="@color/light_blue"
+                app:backgroundTint="#4682B4"
                 app:layout_constraintBottom_toBottomOf="@id/ed_txt_search"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_search_by_qr_code"
                 app:layout_constraintTop_toTopOf="@id/ed_txt_search" />
+
+            <ImageView
+                android:id="@+id/iv_search_by_qr_code"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/qr_code_icon"
+                app:layout_constraintBottom_toBottomOf="@id/btn_search"
+                app:layout_constraintEnd_toStartOf="@id/btn_search"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/btn_search"
+                app:tint="@color/white" />
 
             <ImageView
                 android:id="@+id/iv_more"
@@ -70,7 +82,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/ed_txt_search"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/ed_txt_search"
-                app:tint="@color/black" />
+                app:tint="@color/white" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
