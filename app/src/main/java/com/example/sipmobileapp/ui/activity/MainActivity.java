@@ -28,13 +28,13 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        if (SipMobileAppPreferences.getUserLoginKey(this) != null) {
+       /* if (SipMobileAppPreferences.getUserLoginKey(this) != null) {
             NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
             NavInflater navInflater = navHostFragment.getNavController().getNavInflater();
             NavGraph navGraph = navInflater.inflate(R.navigation.nav_graph);
             navGraph.setStartDestination(R.id.patientFragment);
             navHostFragment.getNavController().setGraph(navGraph);
-        }
+        }*/
     }
 
     @Override

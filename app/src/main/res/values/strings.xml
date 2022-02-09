@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">پوست و مو</string>
+    <string name="app_name">سیپ اپ</string>
     <string name="fill_required_fields">لطفا فیلدهای مربوطه را پر کنید</string>
     <string name="wrong_ip_format">فرمت ip نادرست است</string>
     <string name="duplicate_name">نام مرکز تکراری است</string>
