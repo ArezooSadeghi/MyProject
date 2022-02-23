@@ -18,6 +18,7 @@
         <action
             android:id="@+id/action_loginFragment_to_serverDataFragment"
             app:destination="@id/serverDataFragment" />
+
         <action
             android:id="@+id/action_loginFragment_to_optionsFragment"
             app:destination="@id/optionsFragment" />
@@ -128,9 +129,16 @@
         android:id="@+id/scanFragment"
         android:name="com.example.sipmobileapp.ui.fragment.ScanFragment"
         android:label="ScanFragment" />
+
     <fragment
         android:id="@+id/optionsFragment"
         android:name="com.example.sipmobileapp.ui.fragment.OptionsFragment"
-        android:label="OptionsFragment" />
+        android:label="OptionsFragment">
+
+        <action
+            android:id="@+id/action_optionsFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+
+    </fragment>
 
 </navigation>
