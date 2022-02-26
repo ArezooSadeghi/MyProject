@@ -19,6 +19,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -62,13 +65,10 @@ public class AttachmentFragment extends Fragment {
     private String image;
     private List<Uri> uris;
     private GridLayoutManager gridLayoutManager;
+    private ActivityResultLauncher activityResultLauncherCameraPermission, activityResultLauncherTakePhoto, activityResultLauncherPickPhoto;
     private int numberOfRotate, sickID, index;
 
-    private static final int REQUEST_CODE_TAKE_PHOTO = 0;
-    private static final int REQUEST_CODE_PICK_PHOTO = 1;
-    private static final int REQUEST_CODE_CAMERA_PERMISSION = 2;
     private static final int SPAN_COUNT = 3;
-
     private static final String TAG = AttachmentFragment.class.getSimpleName();
     private static final String AUTHORITY = "com.example.sipmobileapp.fileProvider";
 
@@ -108,60 +108,6 @@ public class AttachmentFragment extends Fragment {
         setupObserver();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_CODE_TAKE_PHOTO:
-                    if (photoFile.length() != 0) {
-                        try {
-                            photoUri = FileProvider.getUriForFile(getContext(), AUTHORITY, photoFile);
-                            uris.add(photoUri);
-                            bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uris.get(0));
-
-                            if (bitmap.getWidth() > bitmap.getHeight()) {
-                                matrix.postRotate(90);
-                                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                            }
-
-                            binding.ivEmpty.setVisibility(View.GONE);
-                            binding.recyclerView.setVisibility(View.GONE);
-                            binding.ivPhoto.setVisibility(View.VISIBLE);
-                            Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
-                        } catch (IOException e) {
-                            Log.e(TAG, e.getMessage());
-                        }
-                    }
-                    getActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    break;
-                case REQUEST_CODE_PICK_PHOTO:
-                    if (data.getClipData() != null) {
-                        int count = data.getClipData().getItemCount();
-                        for (int i = 0; i < count; i++) {
-                            uris.add(data.getClipData().getItemAt(i).getUri());
-                        }
-                        binding.ivEmpty.setVisibility(View.GONE);
-                        binding.ivPhoto.setVisibility(View.GONE);
-                        binding.recyclerView.setVisibility(View.VISIBLE);
-                        setupAdapter(uris);
-                        startAttach();
-                    }
-                    break;
-            }
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (grantResults.length == 0)
-            return;
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            openCamera();
-        else
-            handleError(getString(R.string.camera_permission_denied));
-    }
-
     private void createViewModel() {
         viewModel = new ViewModelProvider(requireActivity()).get(AttachmentViewModel.class);
     }
@@ -175,6 +121,54 @@ public class AttachmentFragment extends Fragment {
         sickID = args.getSickID();
         matrix = new Matrix();
         uris = new ArrayList<>();
+
+        activityResultLauncherCameraPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), (ActivityResultCallback<Boolean>) granted -> {
+            if (granted)
+                openCamera();
+            else
+                handleError(getString(R.string.camera_permission_denied));
+        });
+
+        activityResultLauncherTakePhoto = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                if (photoFile.length() != 0) {
+                    try {
+                        photoUri = FileProvider.getUriForFile(getContext(), AUTHORITY, photoFile);
+                        uris.add(photoUri);
+                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uris.get(0));
+
+                        if (bitmap.getWidth() > bitmap.getHeight()) {
+                            matrix.postRotate(90);
+                            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                        }
+
+                        binding.ivEmpty.setVisibility(View.GONE);
+                        binding.recyclerView.setVisibility(View.GONE);
+                        binding.ivPhoto.setVisibility(View.VISIBLE);
+                        Glide.with(getContext()).load(bitmap).into(binding.ivPhoto);
+                    } catch (IOException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+                getActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            }
+        });
+
+        activityResultLauncherPickPhoto = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                if (result.getData().getClipData() != null) {
+                    int count = result.getData().getClipData().getItemCount();
+                    for (int i = 0; i < count; i++) {
+                        uris.add(result.getData().getClipData().getItemAt(i).getUri());
+                    }
+                    binding.ivEmpty.setVisibility(View.GONE);
+                    binding.ivPhoto.setVisibility(View.GONE);
+                    binding.recyclerView.setVisibility(View.VISIBLE);
+                    setupAdapter(uris);
+                    startAttach();
+                }
+            }
+        });
     }
 
     private void initViews() {
@@ -192,7 +186,7 @@ public class AttachmentFragment extends Fragment {
     }
 
     private void requestCameraPermission() {
-        requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_PERMISSION);
+        activityResultLauncherCameraPermission.launch(Manifest.permission.CAMERA);
     }
 
     private void openCamera() {
@@ -208,7 +202,7 @@ public class AttachmentFragment extends Fragment {
                     getActivity().grantUriPermission(activity.activityInfo.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 }
                 starter.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                startActivityForResult(starter, REQUEST_CODE_TAKE_PHOTO);
+                activityResultLauncherTakePhoto.launch(starter);
             }
         }
     }
@@ -242,7 +236,7 @@ public class AttachmentFragment extends Fragment {
             starter.setType("image/*");
             starter.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             starter.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(starter, getString(R.string.chooser_title)), REQUEST_CODE_PICK_PHOTO);
+            activityResultLauncherPickPhoto.launch(starter);
         });
 
         binding.ivRotate.setOnClickListener(view -> {

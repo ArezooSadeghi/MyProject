@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.sipmobileapp.R;
 import com.example.sipmobileapp.adapter.GalleryAdapter;
-import com.example.sipmobileapp.databinding.FragmentPhotoGalleryBinding;
+import com.example.sipmobileapp.databinding.FragmentGalleryBinding;
 import com.example.sipmobileapp.model.AttachResult;
 import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.ui.dialog.ErrorDialogFragment;
@@ -31,8 +31,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhotoGalleryFragment extends Fragment {
-    private FragmentPhotoGalleryBinding binding;
+public class GalleryFragment extends Fragment {
+    private FragmentGalleryBinding binding;
     private AttachmentViewModel viewModel;
     private String userLoginKey;
     private GalleryAdapter adapter;
@@ -41,10 +41,10 @@ public class PhotoGalleryFragment extends Fragment {
     private int sickID, index;
 
     private static final int SPAN_COUNT = 3;
-    private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
+    private static final String TAG = GalleryFragment.class.getSimpleName();
 
-    public static PhotoGalleryFragment newInstance() {
-        PhotoGalleryFragment fragment = new PhotoGalleryFragment();
+    public static GalleryFragment newInstance() {
+        GalleryFragment fragment = new GalleryFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -60,7 +60,7 @@ public class PhotoGalleryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.fragment_photo_gallery,
+                R.layout.fragment_gallery,
                 container,
                 false);
 
@@ -90,7 +90,7 @@ public class PhotoGalleryFragment extends Fragment {
         viewModel.getServiceAttachResult(serverData.getIp() + ":" + serverData.getPort());
         userLoginKey = SipMobileAppPreferences.getUserLoginKey(getContext());
 
-        PhotoGalleryFragmentArgs args = PhotoGalleryFragmentArgs.fromBundle(getArguments());
+        GalleryFragmentArgs args = GalleryFragmentArgs.fromBundle(getArguments());
         sickID = args.getSickID();
         if (sickID > 0)
             SipMobileAppPreferences.setSickID(getContext(), sickID);
@@ -203,7 +203,7 @@ public class PhotoGalleryFragment extends Fragment {
 
     private void handleEvents() {
         binding.fabAdd.setOnClickListener(view -> {
-            PhotoGalleryFragmentDirections.ActionPhotoGalleryFragmentToAttachmentFragment action = PhotoGalleryFragmentDirections.actionPhotoGalleryFragmentToAttachmentFragment();
+            GalleryFragmentDirections.ActionPhotoGalleryFragmentToAttachmentFragment action = GalleryFragmentDirections.actionPhotoGalleryFragmentToAttachmentFragment();
             action.setSickID(sickID);
             NavHostFragment.findNavController(this).navigate(action);
         });
@@ -257,7 +257,7 @@ public class PhotoGalleryFragment extends Fragment {
             File file = new File(filePath);
             String fileName = file.getName().replace(".jpg", "");
             int attachID = Integer.parseInt(fileName);
-            PhotoGalleryFragmentDirections.ActionPhotoGalleryFragmentToFullScreenPhotoFragment action = PhotoGalleryFragmentDirections.actionPhotoGalleryFragmentToFullScreenPhotoFragment(filePath);
+            GalleryFragmentDirections.ActionPhotoGalleryFragmentToFullScreenPhotoFragment action = GalleryFragmentDirections.actionPhotoGalleryFragmentToFullScreenPhotoFragment(filePath);
             action.setAttachID(attachID);
             NavHostFragment.findNavController(this).navigate(action);
         });

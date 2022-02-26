@@ -49,7 +49,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE|WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override
@@ -139,10 +139,10 @@ public class LoginFragment extends Fragment {
                 if (userResult.getErrorCode().equals("0")) {
                     SipMobileAppPreferences.setUserLoginKey(getContext(), userResult.getUsers()[0].getUserLoginKey());
                     SipMobileAppPreferences.setCenterName(getContext(), centerName);
-                    /*NavDirections action = LoginFragmentDirections.actionLoginFragmentToPatientFragment();
-                    NavHostFragment.findNavController(this).navigate(action);*/
-                    NavDirections action = LoginFragmentDirections.actionLoginFragmentToOptionsFragment();
+                    NavDirections action = LoginFragmentDirections.actionLoginFragmentToPatientFragment();
                     NavHostFragment.findNavController(this).navigate(action);
+                    /*NavDirections action = LoginFragmentDirections.actionLoginFragmentToOptionsFragment();
+                    NavHostFragment.findNavController(this).navigate(action);*/
                 } else {
                     binding.progressBarLoading.setVisibility(View.GONE);
                     binding.edTxtUserName.setEnabled(true);

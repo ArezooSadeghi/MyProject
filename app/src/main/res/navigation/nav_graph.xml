@@ -60,7 +60,7 @@
 
     <fragment
         android:id="@+id/photoGalleryFragment"
-        android:name="com.example.sipmobileapp.ui.fragment.PhotoGalleryFragment"
+        android:name="com.example.sipmobileapp.ui.fragment.GalleryFragment"
         android:label="PhotoGalleryFragment">
 
         <argument
