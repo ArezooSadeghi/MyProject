@@ -81,7 +81,7 @@
                 android:insetTop="0dp"
                 android:insetRight="0dp"
                 android:insetBottom="0dp"
-                app:icon="@drawable/ic_lock"
+                app:icon="@drawable/ic_lock_one"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
                 app:iconTint="@android:color/transparent"

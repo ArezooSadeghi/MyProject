@@ -19,7 +19,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     private SingleLiveEvent<ServerData> editClicked = new SingleLiveEvent<>();
 
-    private SingleLiveEvent<ServerData> deleteClicked = new SingleLiveEvent<>();
+    private SingleLiveEvent<String> deleteClicked = new SingleLiveEvent<>();
 
     private SingleLiveEvent<String> noConnectionExceptionHappenSingleLiveEvent;
     private SingleLiveEvent<String> timeoutExceptionHappenSingleLiveEvent;
@@ -28,6 +28,8 @@ public class LoginViewModel extends AndroidViewModel {
     private SingleLiveEvent<UserResult> loginResultSingleLiveEvent;
 
     private LiveData<List<ServerData>> serverDataListMutableLiveData;
+
+    private SingleLiveEvent<Boolean> yesDeleteClicked = new SingleLiveEvent<>();
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
@@ -47,7 +49,7 @@ public class LoginViewModel extends AndroidViewModel {
         return editClicked;
     }
 
-    public SingleLiveEvent<ServerData> getDeleteClicked() {
+    public SingleLiveEvent<String> getDeleteClicked() {
         return deleteClicked;
     }
 
@@ -81,6 +83,10 @@ public class LoginViewModel extends AndroidViewModel {
 
     public SingleLiveEvent<UserResult> getLoginResultSingleLiveEvent() {
         return loginResultSingleLiveEvent;
+    }
+
+    public SingleLiveEvent<Boolean> getYesDeleteClicked() {
+        return yesDeleteClicked;
     }
 
     public void login(String path, UserResult.UserParameter userParameter) {

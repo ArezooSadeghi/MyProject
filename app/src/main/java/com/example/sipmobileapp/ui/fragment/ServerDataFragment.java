@@ -20,6 +20,7 @@ import com.example.sipmobileapp.adapter.ServerDataAdapter;
 import com.example.sipmobileapp.databinding.FragmentServerDataBinding;
 import com.example.sipmobileapp.model.ServerData;
 import com.example.sipmobileapp.ui.dialog.AddEditServerDataDialogFragment;
+import com.example.sipmobileapp.ui.dialog.QuestionDeleteServerDataDialogFragment;
 import com.example.sipmobileapp.viewmodel.AttachmentViewModel;
 import com.example.sipmobileapp.viewmodel.LoginViewModel;
 
@@ -29,6 +30,7 @@ import java.util.Objects;
 public class ServerDataFragment extends Fragment {
     private FragmentServerDataBinding binding;
     private LoginViewModel viewModel;
+    private String centerName;
     private AttachmentViewModel attachmentViewModel;
 
     public static final String TAG = ServerDataFragment.class.getSimpleName();
@@ -92,8 +94,14 @@ public class ServerDataFragment extends Fragment {
             fragment.show(getChildFragmentManager(), AddEditServerDataDialogFragment.TAG);
         });
 
-        viewModel.getDeleteClicked().observe(this, serverDataTwo -> {
-            viewModel.delete(serverDataTwo.getCenterName());
+        viewModel.getDeleteClicked().observe(this, centerName -> {
+            this.centerName = centerName;
+            QuestionDeleteServerDataDialogFragment fragment = QuestionDeleteServerDataDialogFragment.newInstance(getString(R.string.question_delete_server_data_msg));
+            fragment.show(getParentFragmentManager(), QuestionDeleteServerDataDialogFragment.TAG);
+        });
+
+        viewModel.getYesDeleteClicked().observe(this, yesDeleteClicked -> {
+            viewModel.delete(centerName);
         });
 
         viewModel.getServerDataListMutableLiveData().observe(this, serverDataList -> {

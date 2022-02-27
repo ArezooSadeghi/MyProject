@@ -38,7 +38,7 @@ public class ServerDataAdapter extends RecyclerView.Adapter<ServerDataAdapter.Se
         ServerData serverData = serverDataList.get(position);
         holder.bindServerData(serverData);
         holder.binding.imgViewEdit.setOnClickListener(view -> viewModel.getEditClicked().setValue(serverData));
-        holder.binding.imgViewDelete.setOnClickListener(view -> viewModel.getDeleteClicked().setValue(serverData));
+        holder.binding.imgViewDelete.setOnClickListener(view -> viewModel.getDeleteClicked().setValue(serverData.getCenterName()));
     }
 
     @Override

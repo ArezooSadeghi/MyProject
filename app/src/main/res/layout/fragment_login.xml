@@ -87,7 +87,7 @@
                     android:id="@+id/ed_txt_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_lock"
+                    android:drawableLeft="@drawable/ic_lock_two"
                     android:drawableTint="@color/black"
                     android:inputType="textPassword"
                     android:maxLines="1"
