@@ -40,10 +40,8 @@
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_more"
-                app:layout_constraintHeight_default="spread"
                 app:layout_constraintStart_toEndOf="@id/btn_search"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_default="spread" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/btn_search"
@@ -93,10 +91,8 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_default="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/search_bar_container"
-            app:layout_constraintWidth_default="spread" />
+            app:layout_constraintTop_toBottomOf="@id/search_bar_container" />
 
         <ProgressBar
             android:id="@+id/progress_bar_loading"

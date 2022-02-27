@@ -14,214 +14,137 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/inner_container_one"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_secretory"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonOne"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="6dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/regular"
                 android:text="منشی"
-                android:textColor="@color/black"
                 app:icon="@drawable/ic_secretary"
-                app:iconGravity="textTop"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@id/btn_doctor"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_doctor"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonOne"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="4dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/regular"
                 android:text="دکتر"
-                android:textColor="@color/black"
                 app:icon="@drawable/ic_doctor"
-                app:iconGravity="textTop"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintEnd_toStartOf="@id/btn_secretory"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@id/btn_professional"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_professional"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonOne"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="4dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/regular"
                 android:text="حرفه ای"
-                android:textColor="@color/black"
                 app:icon="@drawable/ic_professional"
-                app:iconGravity="textTop"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintEnd_toStartOf="@id/btn_doctor"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@id/btn_insurance_list"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_insurance_list"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonOne"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="4dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/regular"
                 android:text="لیست بیمه"
-                android:textColor="@color/black"
                 app:icon="@drawable/ic_insurance_list"
-                app:iconGravity="textTop"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintEnd_toStartOf="@id/btn_professional"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@id/btn_change_password"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_change_password"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonOne"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="4dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/regular"
                 android:text="تغییر رمز"
-                android:textColor="@color/black"
                 app:icon="@drawable/ic_change_password"
-                app:iconGravity="textTop"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintEnd_toStartOf="@id/btn_insurance_list"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/inner_container_two"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/inner_container_one">
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_any_desk"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonOne"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="6dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/regular"
                 android:text="انی دسک"
-                android:textColor="@color/black"
                 app:icon="@drawable/ic_any_desk"
-                app:iconGravity="textTop"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@id/btn_phone_book"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_phone_book"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonOne"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="4dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/regular"
                 android:text="دفتر تلفن"
-                android:textColor="@color/black"
                 app:icon="@drawable/ic_phone_book"
-                app:iconGravity="textTop"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintEnd_toStartOf="@id/btn_any_desk"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@id/btn_store"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_store"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonOne"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="4dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/regular"
                 android:text="انبار"
-                android:textColor="@color/black"
                 app:icon="@drawable/ic_store"
-                app:iconGravity="textTop"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintEnd_toStartOf="@id/btn_phone_book"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@id/btn_download"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_download"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonOne"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="4dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/regular"
                 android:text="دانلود"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
                 app:icon="@drawable/ic_download"
-                app:iconGravity="textTop"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintEnd_toStartOf="@id/btn_store"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@id/btn_extra_one"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_extra_one"

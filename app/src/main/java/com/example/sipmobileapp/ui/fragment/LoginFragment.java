@@ -82,7 +82,7 @@ public class LoginFragment extends Fragment {
         for (ServerData serverData : serverDataList) {
             centerNames.add(serverData.getCenterName());
         }
-        binding.spinner.setItems(centerNames);
+        binding.spinnerServerData.setItems(centerNames);
         if (centerNames.size() > 0)
             centerName = centerNames.get(0);
     }
@@ -130,7 +130,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        binding.spinner.setOnItemSelectedListener((view, position, id, item) -> centerName = (String) item);
+        binding.spinnerServerData.setOnItemSelectedListener((view, position, id, item) -> centerName = (String) item);
     }
 
     private void setupObserver() {

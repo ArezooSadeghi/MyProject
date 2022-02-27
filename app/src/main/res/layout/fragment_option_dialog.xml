@@ -25,13 +25,13 @@
                 android:id="@+id/item_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/title_server_data_bg"
+                android:background="@drawable/login_title_bg"
+                android:backgroundTint="@color/light_gray"
                 android:orientation="vertical"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_default="spread">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/tv_title"
@@ -159,8 +159,7 @@
                 android:weightSum="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/item_container_one"
-                app:layout_constraintWidth_default="spread">
+                app:layout_constraintTop_toBottomOf="@id/item_container_one">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_login"
@@ -220,7 +219,6 @@
             android:textColor="@color/white"
             android:textSize="12sp"
             app:backgroundTint="@color/light_gray"
-            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="@id/layout_dialog"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

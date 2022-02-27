@@ -32,8 +32,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_default="spread" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/iv_close"
@@ -61,8 +60,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_title"
-                app:layout_constraintWidth_default="spread" />
+                app:layout_constraintTop_toBottomOf="@id/txt_title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -76,7 +74,6 @@
             android:textColor="@color/white"
             android:textSize="12sp"
             app:backgroundTint="@color/green"
-            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="@id/layoutDialog"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

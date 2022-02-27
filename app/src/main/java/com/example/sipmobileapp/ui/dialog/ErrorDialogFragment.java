@@ -64,7 +64,7 @@ public class ErrorDialogFragment extends DialogFragment {
     private void initViews() {
         assert getArguments() != null;
         String msg = Converter.letterConverter(getArguments().getString(MSG));
-        binding.txtMsg.setText(msg);
+        binding.tvMsg.setText(msg);
     }
 
     private void handleEvents() {

@@ -63,7 +63,7 @@ public class WarningDialogFragment extends DialogFragment {
     private void initViews() {
         assert getArguments() != null;
         String msg = getArguments().getString(ARGS_MSG);
-        binding.txtMsg.setText(msg);
+        binding.tvMsg.setText(msg);
     }
 
     private void handleEvents() {

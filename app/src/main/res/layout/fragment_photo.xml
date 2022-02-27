@@ -19,10 +19,8 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_default="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tool_container"
-            app:layout_constraintWidth_default="spread" />
+            app:layout_constraintTop_toBottomOf="@id/tool_container" />
 
         <ProgressBar
             android:id="@+id/progress_bar_loading"
@@ -41,8 +39,7 @@
             android:alpha="0.8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_default="spread">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/iv_delete"

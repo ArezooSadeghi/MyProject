@@ -7,21 +7,19 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutDialogContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/login_bg"
-        android:layoutDirection="ltr"
+        android:background="@color/dark_blue"
         android:padding="20dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutDialog"
+            android:id="@+id/layout_dialog"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/dialog_bg"
-            app:layout_constraintTop_toTopOf="parent">
+            android:backgroundTint="@color/white">
 
             <TextView
                 android:id="@+id/tv_title"
@@ -35,17 +33,16 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_default="spread" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/user_name_container"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:hint="@string/username_hint"
                 android:textColorHint="@color/dim_gray"
                 app:boxStrokeColor="@color/dark_gray"
@@ -58,12 +55,12 @@
                     android:id="@+id/ed_txt_user_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_person"
+                    android:drawableLeft="@drawable/ic_user_two"
                     android:drawableTint="@color/black"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:textColor="@color/black"
-                    android:textCursorDrawable="@drawable/custom_cursor"
-                    android:textDirection="rtl" />
+                    android:textCursorDrawable="@drawable/custom_cursor" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,9 +69,9 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:hint="@string/password_hint"
                 android:textColorHint="@color/dim_gray"
                 app:boxStrokeColor="@color/dark_gray"
@@ -98,21 +95,24 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/spinner"
+                android:id="@+id/spinner_server_data"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
+                android:ellipsize="end"
                 android:fontFamily="@font/regular"
+                android:maxLines="1"
                 android:textColor="@color/black"
                 android:textDirection="rtl"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_more"
                 app:layout_constraintTop_toBottomOf="@id/password_container"
                 app:ms_arrow_tint="@color/black"
-                app:ms_background_color="#F5F5F5"
+                app:ms_background_color="@color/light_white"
+                app:ms_padding_left="16dp"
                 app:ms_padding_right="16dp" />
 
             <ImageView
@@ -121,10 +121,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:src="@drawable/ic_more_vertical"
-                app:layout_constraintBottom_toBottomOf="@id/spinner"
-                app:layout_constraintEnd_toStartOf="@id/spinner"
+                app:layout_constraintBottom_toBottomOf="@id/spinner_server_data"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/spinner"
+                app:layout_constraintTop_toTopOf="@id/spinner_server_data"
                 app:tint="@color/black" />
 
             <ImageView
@@ -134,7 +133,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinner" />
+                app:layout_constraintTop_toBottomOf="@id/spinner_server_data" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -150,12 +149,11 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:backgroundTint="#4169e1"
-            app:layout_constraintBottom_toBottomOf="@id/layoutDialog"
+            app:backgroundTint="@color/light_blue"
+            app:layout_constraintBottom_toBottomOf="@id/layout_dialog"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layoutDialog"
-            app:layout_constraintWidth_default="spread" />
+            app:layout_constraintTop_toBottomOf="@id/layout_dialog" />
 
         <ProgressBar
             android:id="@+id/progress_bar_loading"

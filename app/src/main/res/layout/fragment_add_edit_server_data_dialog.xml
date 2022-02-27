@@ -7,26 +7,25 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutDialogContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:layoutDirection="ltr"
         android:padding="20dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutDialog"
+            android:id="@+id/layout_dialog"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/dialog_bg"
-            android:paddingBottom="32dp"
-            app:layout_constraintTop_toTopOf="parent">
+            android:backgroundTint="@color/white"
+            android:paddingBottom="32dp">
 
             <TextView
-                android:id="@+id/txt_title"
+                android:id="@+id/tv_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/title_server_data_bg"
+                android:background="@drawable/login_title_bg"
+                android:backgroundTint="@color/light_gray"
                 android:fontFamily="@font/bold"
                 android:padding="10dp"
                 android:text="@string/center_info"
@@ -34,8 +33,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_default="spread" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/center_name_container"
@@ -51,14 +49,14 @@
                 app:hintTextColor="@color/dim_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_title"
-                app:layout_constraintWidth_default="spread">
+                app:layout_constraintTop_toBottomOf="@id/tv_title">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ed_txt_center_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/regular"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textCursorDrawable="@drawable/custom_cursor"
@@ -80,14 +78,14 @@
                 app:hintTextColor="@color/dim_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/center_name_container"
-                app:layout_constraintWidth_default="spread">
+                app:layout_constraintTop_toBottomOf="@id/center_name_container">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ed_txt_ip"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/regular"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textCursorDrawable="@drawable/custom_cursor"
@@ -111,14 +109,14 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ip_container"
-                app:layout_constraintWidth_default="spread">
+                app:layout_constraintTop_toBottomOf="@id/ip_container">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ed_txt_port"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/regular"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textCursorDrawable="@drawable/custom_cursor"
@@ -138,11 +136,10 @@
             android:textColor="@color/white"
             android:textSize="12sp"
             app:backgroundTint="@color/light_gray"
-            app:layout_constraintBottom_toBottomOf="@id/layoutDialog"
+            app:layout_constraintBottom_toBottomOf="@id/layout_dialog"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight="true"
             app:layout_constraintStart_toEndOf="@id/btn_close"
-            app:layout_constraintTop_toBottomOf="@id/layoutDialog" />
+            app:layout_constraintTop_toBottomOf="@id/layout_dialog" />
 
         <Button
             android:id="@+id/btn_close"
@@ -154,11 +151,10 @@
             android:textColor="@color/white"
             android:textSize="12sp"
             app:backgroundTint="@color/light_gray"
-            app:layout_constraintBottom_toBottomOf="@id/layoutDialog"
+            app:layout_constraintBottom_toBottomOf="@id/layout_dialog"
             app:layout_constraintEnd_toStartOf="@id/btn_save"
-            app:layout_constraintHeight="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layoutDialog" />
+            app:layout_constraintTop_toBottomOf="@id/layout_dialog" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

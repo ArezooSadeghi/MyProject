@@ -13,221 +13,118 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container_one"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/light_gray"
             android:padding="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="spread_inside">
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_close"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="64dp"
-                android:backgroundTint="@color/white"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
                 app:icon="@drawable/ic_close_two"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_file"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
-                android:backgroundTint="@color/white"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
                 app:icon="@drawable/ic_file"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_lock"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_lock"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
-                android:backgroundTint="@color/white"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
                 app:icon="@drawable/ic_lock_one"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_color"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_color"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
-                android:backgroundTint="@color/white"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
                 app:icon="@drawable/ic_color"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_coin"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_coin"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
-                android:backgroundTint="@color/white"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
                 app:icon="@drawable/ic_coin"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_help"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_help"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
-                android:backgroundTint="@color/white"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
                 app:icon="@drawable/ic_help"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_phone"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_phone"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
-                android:backgroundTint="@color/white"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
                 app:icon="@drawable/ic_phone"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_talk"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_talk"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
-                android:backgroundTint="@color/white"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
                 app:icon="@drawable/ic_talk"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_setting"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.sipmobileapp.SquareButton
                 android:id="@+id/btn_setting"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/customMaterialButtonTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
                 app:icon="@drawable/ic_setting"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/light_gray"
-                app:strokeColor="@color/light_gray" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container_two"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/light_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/container_one">
 
             <com.jaredrummler.materialspinner.MaterialSpinner
@@ -261,12 +158,10 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container_three"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/light_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_user"
@@ -279,7 +174,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                app:icon="@drawable/ic_user"
+                app:icon="@drawable/ic_user_one"
                 app:iconGravity="textStart"
                 app:iconPadding="4dp"
                 app:iconTint="@android:color/transparent"
